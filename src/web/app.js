@@ -1400,7 +1400,7 @@ document.addEventListener('mousedown', (e) => {
 }, true);   // 캡처 단계 — 가장자리에 걸친 다른 요소보다 먼저 처리
 
 // 버튼
-let appVersion = '';   // 버전은 ⋯ 메뉴에 표시 (C#의 app 메시지로 수신)
+let appVersion = '';   // 버전은 🌐 언어 메뉴 하단에 표시 (C#의 app 메시지로 수신)
 els.openBtn.addEventListener('click', openFile);
 els.toggleBtn.addEventListener('click', toggleMode);
 els.saveBtn.addEventListener('click', save);
