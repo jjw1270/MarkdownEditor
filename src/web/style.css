@@ -251,21 +251,24 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
   align-items: flex-start;
 }
 #tocRail[hidden] { display: none; }
+/* 툴바(#tabrow > button)와 동일한 플랫 아이콘 버튼 */
 #tocBtn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--bar);
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+  transition: background-color .15s ease, color .15s ease;
 }
-#tocBtn:hover { color: var(--accent); border-color: var(--accent); }
-#tocBtn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+#tocBtn:hover { background: var(--btn-hover); color: var(--fg); }
+#tocBtn:active { background: var(--btn-press); }
+#tocBtn.active { background: var(--btn-press); color: var(--accent); }
 
 /* 목차 사이드바 (미리보기 전용, ☰ 버튼으로 토글)
    헤더(제목 + 토글 버튼)는 고정, 리스트만 스크롤 */
@@ -282,12 +285,12 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
 }
 #toc[hidden] { display: none; }
 /* 헤더의 ☰ 버튼은 닫힘 상태(레일)와 화면상 같은 위치에 오도록 정렬
-   (레일: 폭 46, 버튼 32 중앙 → 좌측 7px / 패널 padding-left 14 - 7 보정) */
+   (레일: 폭 46, 버튼 34 중앙 → 좌측 6px / 패널 padding-left 14 - 6 보정) */
 #tocHead {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: -7px;
+  margin-left: -8px;
   margin-bottom: 8px;
 }
 #tocTitle { font-weight: 600; color: var(--muted); font-size: 12px; }

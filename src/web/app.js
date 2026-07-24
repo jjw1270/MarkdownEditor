@@ -988,6 +988,8 @@ function showMenuAt(items, anchor, align) {
     }
     const el = document.createElement('div');
     el.className = 'ctx-item' + (it.disabled ? ' disabled' : '');
+    el.setAttribute('role', 'menuitem');            // 접근성: 스크린리더/자동화가 메뉴 항목으로 인식
+    if (it.disabled) el.setAttribute('aria-disabled', 'true');
     el.textContent = it.label;
     if (it.tip) el.title = it.tip;
     if (!it.disabled) el.addEventListener('click', (e) => { e.stopPropagation(); hideTabMenu(); it.act(); });
