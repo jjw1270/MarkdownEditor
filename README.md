@@ -7,6 +7,8 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
 ![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
+[![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
+[![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
 [English README](README.en.md)
 
