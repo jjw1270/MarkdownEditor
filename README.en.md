@@ -24,17 +24,17 @@ Double-click a `.md` file and it just opens — no installation required.
 - **Table of contents sidebar** — with scroll-spy highlighting of the current section.
 - **Edit ↔ Preview** — `Ctrl+E`, with scroll position synchronized between the two modes.
 - **Find / Replace** — `Ctrl+F` works in both preview (full-match highlighting) and edit mode; `Ctrl+H` replaces in edit mode.
-- **PDF export** — from the `⋯` menu or `Ctrl+P`, always in light theme.
+- **PDF export** — the `📄` button next to Save, or `Ctrl+P`, always in light theme.
 - **Paste images from clipboard** — saved to an `images/` folder next to the document, link inserted automatically.
 - **Auto reload on external change** — edits from other programs (IDE, editor) refresh the open tab; your unsaved edits are never silently overwritten.
 - **Auto backup & crash recovery** — unsaved changes are snapshotted every 30 s and offered for recovery on next start.
 - **Session restore** — when launched without a file, the previously open tabs are reopened. Recent files are available from the 🕘 button.
 - **Korean encoding detection** — BOM-less CP949/EUC-KR files open correctly alongside UTF-8.
-- **Dark / Light theme** — toggled from the `⋯` menu, remembered across runs, including the Windows title bar.
-- **Localized UI — 10 languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Follows the OS language by default; switch anytime from the `⋯` menu → Language.
+- **Dark / Light theme** — toggled with the title-bar `🌙`/`☀` button, remembered across runs, including the Windows title bar.
+- **Localized UI — 10 languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Follows the OS language by default; switch anytime from the title-bar `🌐` button.
 - **Notepad-style compact chrome** — tabs and tools live in a custom title bar (drag the blank area to move, double-click to maximize).
 
-![⋯ menu](docs/images/menu.png)
+![Language menu](docs/images/menu.png)
 
 ## Getting started
 

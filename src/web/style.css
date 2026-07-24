@@ -158,9 +158,15 @@ body {
 #toggleBtn.active .ic-edit { display: none; }
 #toggleBtn.active .ic-preview { display: block; }
 
-/* 창 제어 버튼 (커스텀 타이틀바) — 닫기는 Windows 관례대로 호버 시 빨간 배경 */
+/* 테마 토글: 현재 테마의 "반대" 아이콘 하나만 표시 (라이트→달, 다크→해) */
+#themeBtn .ic-sun { display: none; }
+[data-theme="dark"] #themeBtn .ic-moon { display: none; }
+[data-theme="dark"] #themeBtn .ic-sun { display: block; }
+
+/* 창 제어 버튼 (커스텀 타이틀바) — 닫기는 Windows 관례대로 호버 시 빨간 배경.
+   설정 버튼(테마·언어) 무리와는 여백을 넓혀 오클릭 방지 */
 #bar .winbtn { width: 40px; }
-#bar #minBtn { margin-left: 8px; }
+#bar #minBtn { margin-left: 14px; }
 #bar .winbtn-close:hover { background: #c42b1c; color: #fff; }
 #bar .winbtn-close:active { background: #b3271a; color: #fff; }
 /* 최대화↔복원 아이콘 전환 */

@@ -17,7 +17,9 @@ const els = {
   tocRail: document.getElementById('tocRail'),
   lightbox: document.getElementById('lightbox'),
   lightboxImg: document.getElementById('lightboxImg'),
-  moreBtn: document.getElementById('moreBtn'),
+  pdfBtn: document.getElementById('pdfBtn'),
+  themeBtn: document.getElementById('themeBtn'),
+  langBtn: document.getElementById('langBtn'),
   toast: document.getElementById('toast'),
   ctxmenu: document.getElementById('ctxmenu'),
   toggleBtn: document.getElementById('toggleBtn'),
@@ -45,7 +47,7 @@ const els = {
 // 시작은 브라우저 언어로 추정하고, C#이 ready 후 확정값(언어 설정 > MDE_LANG > OS 언어)을 보내면 재적용.
 let langCurrent = resolveLang(navigator.language);   // 현재 적용된 언어 코드
 let L = I18N[langCurrent] || I18N.en;
-let langMode = 'auto';     // 'auto' 또는 언어 코드 — ⋯ 메뉴의 체크 표시용
+let langMode = 'auto';     // 'auto' 또는 언어 코드 — 🌐 언어 메뉴의 체크 표시용
 let winMaximized = false;  // 창 최대화 상태 (커스텀 타이틀바 — applyLocale의 복원/최대화 툴팁에도 사용)
 
 // 접근성: 시스템의 "동작 줄이기" 설정 시 부드러운 스크롤 대신 즉시 이동
@@ -65,7 +67,9 @@ function applyLocale(lang) {
   setTitle(els.openBtn, L.openTitle);
   setTitle(els.recentBtn, L.recentTitle);
   setTitle(els.saveBtn, L.saveTitle);
-  setTitle(els.moreBtn, L.moreTitle);
+  setTitle(els.pdfBtn, L.menuPdf);
+  setTitle(els.langBtn, `${L.menuLang} — ${langCurrent.toUpperCase()}`);
+  updateThemeTitle();
   setTitle(els.backBtn, L.backTitle);
   setTitle(els.fwdBtn, L.fwdTitle);
   setTitle(els.tocBtn, L.tocBtnTitle);
@@ -186,9 +190,10 @@ async function applyPrintTheme(light) {
 }
 
 // ---- 테마 (다크/라이트) ----
-function applyTheme(theme) {           // 'dark' | 'light'  (전환은 ⋯ 메뉴에서)
+function applyTheme(theme) {           // 'dark' | 'light'  (전환은 타이틀바 🌙/☀ 버튼)
   document.documentElement.setAttribute('data-theme', theme);
   try { localStorage.setItem('theme', theme); } catch (_) {}
+  updateThemeTitle();                  // 버튼 툴팁을 "누르면 바뀔 테마"로 갱신
   // mermaid는 테마가 SVG에 박제되므로 재초기화 후 미리보기를 다시 그림
   if (typeof mermaid !== 'undefined') {
     mermaidInit(theme);
@@ -1032,26 +1037,17 @@ function showRecentMenu() {
 }
 menuButton(els.recentBtn, showRecentMenu);
 
-// ---- ⋯ 메뉴 (PDF 내보내기 · 테마 · 언어 · 버전) ----
-function showMoreMenu() {
-  showMenuAt([
-    { label: L.menuPdf, act: exportPdf },
-    {
-      label: currentTheme() === 'dark' ? L.menuThemeLight : L.menuThemeDark,
-      act: () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'),
-    },
-    // 현재 언어를 코드(대문자)로 함께 표시 — 클릭하면 언어 목록으로 전환
-    { label: `${L.menuLang} — ${langCurrent.toUpperCase()}`, act: showLangMenu },
-    'sep',
-    {
-      label: `MarkDownEditor v${appVersion || '?'}`,
-      act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' }); },
-    },
-  ], els.moreBtn, 'right');
-}
-menuButton(els.moreBtn, showMoreMenu);
+// ---- PDF·테마 버튼 (구 ⋯ 메뉴 해체 — 언어·버전만 🌐 메뉴에 남음) ----
+els.pdfBtn.addEventListener('click', exportPdf);
+els.themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
 
-// 언어 하위 메뉴 — 선택은 C#(lang.txt)이 저장하고, 확정값을 app 메시지로 돌려준다
+// 테마 버튼 툴팁은 "누르면 바뀔 테마"를 안내 — 로케일·테마가 바뀔 때마다 갱신
+function updateThemeTitle() {
+  if (!L || !els.themeBtn) return;
+  setTitle(els.themeBtn, currentTheme() === 'dark' ? L.menuThemeLight : L.menuThemeDark);
+}
+
+// 언어 메뉴 — 선택은 C#(lang.txt)이 저장하고, 확정값을 app 메시지로 돌려준다
 function showLangMenu() {
   const mark = (on) => (on ? '✓ ' : '  ');   // 숫자 폭 공백으로 정렬
   const items = [
@@ -1061,8 +1057,14 @@ function showLangMenu() {
   for (const code of Object.keys(LANG_NAMES)) {
     items.push({ label: mark(langMode === code) + LANG_NAMES[code], act: () => setLang(code) });
   }
-  showMenuAt(items, els.moreBtn, 'right');
+  // 버전 정보 (구 ⋯ 메뉴에서 이동) — 클릭하면 GitHub 저장소로
+  items.push('sep', {
+    label: `MarkDownEditor v${appVersion || '?'}`,
+    act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' }); },
+  });
+  showMenuAt(items, els.langBtn, 'right');
 }
+menuButton(els.langBtn, showLangMenu);
 function setLang(mode) {
   if (host) host.postMessage({ cmd: 'lang', value: mode });
 }
