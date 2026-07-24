@@ -1,0 +1,535 @@
+/* 라이트 (기본) */
+:root, :root[data-theme="light"] {
+  color-scheme: light;               /* 네이티브 스크롤바·컨트롤도 테마와 일치 */
+  --bg: #ffffff;
+  --fg: #24292f;
+  --muted: #6e7781;
+  --border: #d0d7de;
+  --bar: #f6f8fa;
+  --btn: #ffffff;                    /* 툴바·찾기 바 버튼 배경 */
+  --accent: #0969da;
+  --code-bg: #f6f8fa;
+  /* 코드 하이라이팅 토큰 (GitHub 라이트 계열) */
+  --hl-kw: #cf222e;
+  --hl-str: #0a3069;
+  --hl-com: #6e7781;
+  --hl-num: #0550ae;
+  --hl-fn: #8250df;
+  --hl-attr: #953800;
+  /* 미리보기 찾기 하이라이트 (전체 매치 / 현재 매치) */
+  --find-bg: #fff8a0;
+  --find-cur: #ffb54d;
+}
+/* 다크 (사용자가 명시적으로 선택)
+   구분감을 위해 밝기 사다리 유지: 본문(--bg) < 코드(--code-bg) < 바(--bar) < 버튼(--btn) < 테두리(--border) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --fg: #e6edf3;
+  --muted: #98a3af;
+  --border: #3d4552;
+  --bar: #1e2530;
+  --btn: #29303c;
+  --accent: #4493f8;
+  --code-bg: #1a212c;
+  /* 코드 하이라이팅 토큰 (GitHub 다크 계열) */
+  --hl-kw: #ff7b72;
+  --hl-str: #a5d6ff;
+  --hl-com: #8b949e;
+  --hl-num: #79c0ff;
+  --hl-fn: #d2a8ff;
+  --hl-attr: #ffa657;
+  --find-bg: rgba(202, 148, 20, .45);
+  --find-cur: rgba(255, 183, 50, .8);
+}
+/* JS 로드 전, 선택값이 없을 때만 시스템 테마를 따름 (깜빡임 방지 폴백) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #98a3af;
+    --border: #3d4552;
+    --bar: #1e2530;
+    --btn: #29303c;
+    --accent: #4493f8;
+    --code-bg: #1a212c;
+    --hl-kw: #ff7b72;
+    --hl-str: #a5d6ff;
+    --hl-com: #8b949e;
+    --hl-num: #79c0ff;
+    --hl-fn: #d2a8ff;
+    --hl-attr: #ffa657;
+    --find-bg: rgba(202, 148, 20, .45);
+    --find-cur: rgba(255, 183, 50, .8);
+  }
+}
+
+/* 부드러운 전환 */
+body, #bar, #bar button, #editor { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+/* 접근성: 시스템 "동작 줄이기" 설정 시 전환 효과 제거 (부드러운 스크롤은 JS가 함께 비활성) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  display: flex;
+  flex-direction: column;
+  font: 14px/1.6 -apple-system, "Segoe UI", "맑은 고딕", "Malgun Gothic", sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+/* 상단 바 */
+#bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  flex: 0 0 auto;
+}
+#appName { font-weight: 600; color: var(--muted); font-size: 13px; }
+.spacer { flex: 1; }
+#bar button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--btn);
+  color: var(--fg);
+  cursor: pointer;
+}
+#bar button:hover { border-color: var(--accent); color: var(--accent); }
+#bar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+#bar button:disabled { opacity: .35; cursor: default; }
+#bar button:disabled:hover { border-color: var(--border); color: var(--fg); }
+
+/* 뒤로/앞으로 내비게이션: 브라우저식 원형 아이콘 버튼 */
+#bar .navbtn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+}
+#bar .navbtn:hover { background: var(--border); color: var(--accent); }
+#bar .navbtn:disabled:hover { background: transparent; color: var(--fg); }
+
+/* 최근 문서 버튼: 열기 옆의 아이콘 버튼 */
+#recentBtn { padding: 4px 8px; margin-left: -4px; }
+
+/* 테마 버튼: 아이콘 크기는 고정, 텍스트 크기만 조절 */
+#themeBtn { display: inline-flex; align-items: center; gap: 5px; }
+#themeBtn .ic  { font-size: 15px; line-height: 1; }  /* 고정 */
+#themeBtn .lbl { font-size: 12px; }                  /* 이 값만 조절 */
+
+/* 탭 스트립 (열린 문서 목록) */
+#tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 4px 8px 0;
+  background: var(--bar);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 0 0 auto;
+  user-select: none;
+  scrollbar-width: thin;
+}
+#tabs:empty { display: none; }
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tab:hover { background: var(--bg); }
+.tab.active {
+  background: var(--bg);
+  color: var(--fg);
+  border-color: var(--border);
+}
+.tab-label { overflow: hidden; text-overflow: ellipsis; }
+.tab-dot { color: var(--accent); font-size: 10px; line-height: 1; }  /* 저장 안 됨 표시 */
+.tab-close {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 3px;
+  border-radius: 4px;
+  opacity: .55;
+}
+.tab-close:hover { opacity: 1; background: var(--border); }
+/* 탭 드래그 재정렬: 드롭 대상 표시 */
+.tab.drag-over { box-shadow: inset 2px 0 0 var(--accent); }
+/* 새 문서(+) 버튼 — 탭 줄 끝 */
+.tab-new {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 2px 3px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.tab-new:hover { background: var(--border); color: var(--accent); }
+
+/* 본문 영역 (목차 레일 + 목차 사이드바 + 미리보기 가로 배치) */
+main { flex: 1; min-height: 0; position: relative; display: flex; }
+
+/* 목차 토글 레일: 탭 바로 아래 왼쪽 고정 열.
+   별도 flex 열이라 문서를 가리지 않고, 스크롤 컨테이너(#preview) 밖이라 스크롤 영향도 없음 */
+#tocRail {
+  flex: 0 0 auto;
+  width: 46px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+#tocRail[hidden] { display: none; }
+#tocBtn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bar);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+#tocBtn:hover { color: var(--accent); border-color: var(--accent); }
+#tocBtn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* 목차 사이드바 (미리보기 전용, ☰ 버튼으로 토글)
+   헤더(제목 + 토글 버튼)는 고정, 리스트만 스크롤 */
+#toc {
+  width: 232px;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 8px 14px 14px;
+  background: var(--bar);
+  border-right: 1px solid var(--border);
+  font-size: 13px;
+  user-select: none;
+}
+#toc[hidden] { display: none; }
+/* 헤더의 ☰ 버튼은 닫힘 상태(레일)와 화면상 같은 위치에 오도록 정렬
+   (레일: 폭 46, 버튼 32 중앙 → 좌측 7px / 패널 padding-left 14 - 7 보정) */
+#tocHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: -7px;
+  margin-bottom: 8px;
+}
+#tocTitle { font-weight: 600; color: var(--muted); font-size: 12px; }
+#tocList { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+.toc-item {
+  padding: 3px 6px;
+  border-radius: 5px;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toc-item:hover { color: var(--accent); background: var(--bg); }
+.toc-item.active { color: var(--accent); background: var(--bg); font-weight: 600; }  /* 현재 보고 있는 섹션 */
+.toc-h1 { font-weight: 600; color: var(--fg); margin-top: 4px; }
+.toc-h2 { padding-left: 18px; }
+.toc-h3 { padding-left: 30px; font-size: 12px; }
+.toc-h4 { padding-left: 42px; font-size: 12px; }
+
+/* 스크롤 컨테이너는 남은 너비 전체 → 스크롤바가 항상 우측 끝에 위치 */
+#preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  outline: none;            /* 키 스크롤용 포커스에 외곽선 표시 안 함 */
+}
+/* 본문은 화면 전체 폭 사용, 좌우는 여백만 소폭 유지 */
+#preview .md-body {
+  padding: 28px 48px;
+}
+
+/* 미리보기·목차 스크롤바를 얇고 테마에 맞게 */
+#preview::-webkit-scrollbar, #tocList::-webkit-scrollbar { width: 12px; height: 12px; }
+#preview::-webkit-scrollbar-corner, #tocList::-webkit-scrollbar-corner { background: transparent; }  /* 다크 테마에서 흰 모서리 방지 */
+#preview::-webkit-scrollbar-thumb, #tocList::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+#preview::-webkit-scrollbar-thumb:hover, #tocList::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+  background-clip: content-box;
+  border: 3px solid transparent;
+}
+#preview::-webkit-scrollbar-track, #tocList::-webkit-scrollbar-track { background: transparent; }
+
+#editor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: none;
+  resize: none;
+  padding: 28px 36px;
+  font: 13px/1.7 "Cascadia Code", "D2Coding", Consolas, "맑은 고딕", monospace;
+  color: var(--fg);
+  background: var(--bg);
+  tab-size: 2;
+}
+
+/* 찾기 / 바꾸기 바 (편집 화면 우상단 오버레이) */
+#findbar {
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  z-index: 5;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bar);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .22);
+}
+#findbar[hidden] { display: none; }
+/* 바꾸기 행은 Ctrl+H(바꾸기 모드)일 때만 표시 */
+#findbar:not(.replace) .find-replace-row { display: none; }
+/* 미리보기 찾기: 바꾸기는 편집 전용이라 토글 셰브론·바꾸기 행 숨김 */
+#findbar.preview .find-toggle, #findbar.preview .find-replace-row { display: none; }
+.find-row { display: flex; align-items: center; gap: 4px; }
+/* 바꾸기 펼침/접기 토글(왼쪽 셰브론) — 두 행의 입력창이 세로로 정렬되도록 폭을 맞춤 */
+#findbar .find-toggle { min-width: 22px; padding: 4px 4px; }
+.find-replace-row { padding-left: 26px; }
+#findbar input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--fg);
+}
+#findbar input:focus { outline: none; border-color: var(--accent); }
+#findbar button {
+  font: inherit;
+  font-size: 13px;
+  min-width: 28px;
+  padding: 4px 7px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--btn);
+  color: var(--fg);
+  cursor: pointer;
+  line-height: 1;
+}
+#findbar button:hover { border-color: var(--accent); color: var(--accent); }
+#findbar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+#findbar button:disabled { opacity: .4; cursor: default; }
+#findbar button:disabled:hover { border-color: var(--border); color: var(--fg); }
+.find-count { font-size: 12px; color: var(--muted); min-width: 56px; text-align: center; white-space: nowrap; }
+
+/* 마크다운 렌더 스타일 (간결 GitHub 풍) */
+.markdown-body h1, .markdown-body h2 {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .3em;
+}
+.markdown-body h1 { font-size: 1.9em; }
+.markdown-body h2 { font-size: 1.5em; }
+.markdown-body h3 { font-size: 1.25em; }
+/* #앵커로 스크롤할 때 헤딩이 상단에 딱 붙지 않도록 여백 */
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 { scroll-margin-top: 12px; }
+.markdown-body code {
+  background: var(--code-bg);
+  padding: .2em .4em;
+  border-radius: 4px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: .9em;
+}
+.markdown-body pre {
+  background: var(--code-bg);
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow: auto;
+}
+.markdown-body pre code { background: none; padding: 0; }
+.markdown-body blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: var(--muted);
+  border-left: 3px solid var(--border);
+}
+/* 넓은 표는 문서 전체가 아니라 표 자체가 가로 스크롤 (GitHub 방식) */
+.markdown-body table {
+  border-collapse: collapse;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+}
+.markdown-body th, .markdown-body td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+}
+.markdown-body tbody tr:nth-child(2n) { background: var(--code-bg); }  /* zebra 줄무늬 (GitHub식) */
+.markdown-body img { max-width: 100%; }
+.markdown-body a { color: var(--accent); text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body hr { border: 0; border-top: 1px solid var(--border); }
+
+/* mermaid 다이어그램 (```mermaid → SVG, 테마는 JS가 mermaid.initialize로 연동) */
+.mermaid { display: flex; justify-content: center; margin: 18px 0; }
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* 코드 하이라이팅 (highlight.js 클래스 → 테마 변수 매핑, 테마 전환 자동 반영) */
+.hljs-keyword, .hljs-selector-tag, .hljs-doctag, .hljs-meta { color: var(--hl-kw); }
+.hljs-string, .hljs-regexp, .hljs-meta .hljs-string { color: var(--hl-str); }
+.hljs-comment, .hljs-quote { color: var(--hl-com); font-style: italic; }
+.hljs-number, .hljs-literal, .hljs-symbol, .hljs-bullet { color: var(--hl-num); }
+.hljs-title, .hljs-section, .hljs-name { color: var(--hl-fn); }
+.hljs-attr, .hljs-attribute, .hljs-built_in, .hljs-type,
+.hljs-selector-class, .hljs-selector-id, .hljs-variable, .hljs-template-variable { color: var(--hl-attr); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 600; }
+
+/* 미리보기 찾기 하이라이트 (CSS Custom Highlight API — DOM 변형 없이 칠함) */
+::highlight(mdfind) { background-color: var(--find-bg); }
+::highlight(mdfind-cur) { background-color: var(--find-cur); color: #1f2328; }
+
+/* 이미지 클릭 확대 (라이트박스) */
+#preview .md-body img { cursor: zoom-in; }
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(0, 0, 0, .82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+#lightbox[hidden] { display: none; }
+#lightbox img {
+  max-width: 92vw;
+  max-height: 92vh;
+  border-radius: 4px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, .55);
+}
+
+/* 하단 토스트 알림 */
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--fg);
+  color: var(--bg);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 50;
+  max-width: 70vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#toast.show { opacity: .92; transform: translateX(-50%); }
+
+/* 탭 우클릭 메뉴 */
+#ctxmenu {
+  position: fixed;
+  z-index: 60;
+  min-width: 168px;
+  padding: 5px;
+  background: var(--bar);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  user-select: none;
+}
+#ctxmenu[hidden] { display: none; }
+.ctx-item { padding: 6px 10px; border-radius: 5px; font-size: 13px; cursor: pointer; }
+.ctx-item:hover { background: var(--accent); color: #fff; }
+.ctx-item.disabled { color: var(--muted); opacity: .5; cursor: default; }
+.ctx-item.disabled:hover { background: none; color: var(--muted); }
+.ctx-sep { height: 1px; background: var(--border); margin: 4px 6px; }
+
+/* 편집 스크롤 동기화용 미러 (textarea와 동일 폭/타이포로 줄바꿈 높이 계산, 화면 밖) */
+#editorMirror {
+  position: absolute;
+  left: -99999px;
+  top: 0;
+  visibility: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* 인쇄/PDF 내보내기: 앱 UI를 숨기고 미리보기 전체를 라이트 테마로 출력 */
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme]) {
+    --bg: #ffffff;
+    --fg: #24292f;
+    --muted: #6e7781;
+    --border: #d0d7de;
+    --bar: #f6f8fa;
+    --accent: #0969da;
+    --code-bg: #f6f8fa;
+    --hl-kw: #cf222e;
+    --hl-str: #0a3069;
+    --hl-com: #6e7781;
+    --hl-num: #0550ae;
+    --hl-fn: #8250df;
+    --hl-attr: #953800;
+  }
+  #bar, #tabs, #findbar, #tocRail, #toc, #editor, #toast, #lightbox { display: none !important; }
+  ::highlight(mdfind), ::highlight(mdfind-cur) { background-color: transparent; }   /* 찾기 표시는 인쇄 제외 */
+  html, body { height: auto; }
+  main { display: block; }
+  #preview { height: auto; overflow: visible; }
+}

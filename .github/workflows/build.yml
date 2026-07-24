@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Publish (single-file, self-contained)
+        run: >
+          dotnet publish src -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+      - name: Upload artifact (exe + web assets; WebView2 Runtime is bundled only in releases)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkDownEditor-win-x64
+          path: |
+            src/bin/Release/net9.0-windows/win-x64/publish/MarkDownEditor.exe
+            src/web/**

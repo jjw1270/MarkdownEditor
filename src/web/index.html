@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <!-- 렌더된 마크다운 내부의 인라인 스크립트 실행 차단 (보안)
+       로컬 이미지는 data URI로 인라인되고, 원격 이미지는 https만 허용 (http는 mixed-content로 어차피 차단) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Markdown</title>
+</head>
+<body>
+  <header id="bar">
+    <button id="backBtn" class="navbtn" title="뒤로 (Alt+←)" disabled>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M12.5 8H3.5M7.5 4 3.5 8l4 4" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button id="fwdBtn" class="navbtn" title="앞으로 (Alt+→)" disabled>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3.5 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <strong id="appName">Markdown</strong>
+    <div class="spacer"></div>
+    <button id="themeBtn" title="다크/라이트 전환"><span class="ic">🌙</span><span class="lbl">다크</span></button>
+    <button id="openBtn" title="열기 (Ctrl+O)">📂 열기</button>
+    <button id="recentBtn" title="최근 문서">🕘</button>
+    <button id="toggleBtn" title="편집/미리보기 전환 (Ctrl+E)">✏️ 편집</button>
+    <button id="saveBtn" title="저장 (Ctrl+S)">💾 저장</button>
+    <button id="pdfBtn" title="미리보기를 PDF로 내보내기">📄 PDF</button>
+  </header>
+
+  <!-- 열린 문서 탭 (여러 파일을 한 창에서) -->
+  <nav id="tabs"></nav>
+
+  <main>
+    <!-- 목차 토글 레일: 탭 바로 아래 왼쪽 고정. 별도 열이라 문서를 가리지 않고 스크롤 영향도 없음 -->
+    <div id="tocRail">
+      <button id="tocBtn" title="목차 표시/숨김">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <!-- 목차 사이드바 (미리보기 전용, 레일의 ☰ 버튼으로 토글)
+         열리면 ☰ 버튼(#tocBtn)이 레일에서 패널 헤더로 이동해 온다 (applyToc) -->
+    <aside id="toc" hidden>
+      <div id="tocHead">
+        <div id="tocTitle">목차</div>
+      </div>
+      <div id="tocList"></div>
+    </aside>
+    <!-- tabindex=-1: 클릭 없이도 PageDown/화살표 키 스크롤이 되도록 포커스 가능하게 -->
+    <article id="preview" class="markdown-body" tabindex="-1"></article>
+    <textarea id="editor" spellcheck="false" hidden></textarea>
+
+    <!-- 찾기 / 바꾸기 바 (편집 모드 전용, Ctrl+F / Ctrl+H) -->
+    <div id="findbar" hidden>
+      <div class="find-row">
+        <button id="findToggle" class="find-toggle" title="바꾸기 펼치기/접기">▸</button>
+        <input id="findInput" type="text" placeholder="찾기" spellcheck="false" autocomplete="off" />
+        <span id="findCount" class="find-count"></span>
+        <button id="findPrev" title="이전 (Shift+Enter)">↑</button>
+        <button id="findNext" title="다음 (Enter)">↓</button>
+        <button id="findCase" title="대소문자 구분">Aa</button>
+        <button id="findClose" title="닫기 (Esc)">✕</button>
+      </div>
+      <div class="find-row find-replace-row">
+        <input id="replaceInput" type="text" placeholder="바꾸기" spellcheck="false" autocomplete="off" />
+        <button id="replaceOne" title="현재 항목만 바꾸기">바꾸기</button>
+        <button id="replaceAll" title="모두 바꾸기">모두</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 이미지 클릭 확대 (라이트박스): 클릭·Esc로 닫기 -->
+  <div id="lightbox" hidden><img id="lightboxImg" alt="" /></div>
+
+  <!-- 하단 토스트 알림 (PDF 저장·이미지 붙여넣기 등) -->
+  <div id="toast"></div>
+
+  <!-- 탭 우클릭 메뉴 (항목은 JS가 생성) -->
+  <div id="ctxmenu" hidden></div>
+
+  <!-- mermaid.min.js(3.4MB)는 시작 속도를 위해 여기서 로드하지 않고,
+       mermaid 블록을 처음 만날 때 app.js가 동적으로 로드한다 (ensureMermaid) -->
+  <script src="marked.min.js"></script>
+  <script src="highlight.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
