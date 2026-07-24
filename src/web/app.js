@@ -1641,6 +1641,7 @@ els.preview.addEventListener('contextmenu', (e) => {
   showMenuAtPoint(items, e.clientX, e.clientY);
 });
 
+// 서식 기능은 상단 서식 바와 중복이라 메뉴에는 텍스트 편집 동작만 담는다
 els.editor.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   const ta = els.editor;
@@ -1650,10 +1651,6 @@ els.editor.addEventListener('contextmenu', (e) => {
     { label: L.ctxCopy, act: () => { ta.focus(); document.execCommand('copy'); }, disabled: !hasSel },
     { label: L.ctxPaste, act: pasteFromClipboard },
     { label: L.ctxSelectAll, act: () => { ta.focus(); ta.select(); } },
-    'sep',
-    { label: L.fmtBold, act: () => { ta.focus(); wrapSelection('**'); } },
-    { label: L.fmtItalic, act: () => { ta.focus(); wrapSelection('*'); } },
-    { label: L.fmtLink, act: insertLink },
   ], e.clientX, e.clientY);
 });
 
