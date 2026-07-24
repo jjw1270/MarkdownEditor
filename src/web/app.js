@@ -12,7 +12,7 @@ const els = {
   tocRail: document.getElementById('tocRail'),
   lightbox: document.getElementById('lightbox'),
   lightboxImg: document.getElementById('lightboxImg'),
-  pdfBtn: document.getElementById('pdfBtn'),
+  moreBtn: document.getElementById('moreBtn'),
   toast: document.getElementById('toast'),
   ctxmenu: document.getElementById('ctxmenu'),
   toggleBtn: document.getElementById('toggleBtn'),
@@ -23,9 +23,6 @@ const els = {
   appName: document.getElementById('appName'),
   backBtn: document.getElementById('backBtn'),
   fwdBtn: document.getElementById('fwdBtn'),
-  themeBtn: document.getElementById('themeBtn'),
-  themeIc: document.querySelector('#themeBtn .ic'),
-  themeLbl: document.querySelector('#themeBtn .lbl'),
   findbar: document.getElementById('findbar'),
   findToggle: document.getElementById('findToggle'),
   findInput: document.getElementById('findInput'),
@@ -39,69 +36,11 @@ const els = {
   replaceAll: document.getElementById('replaceAll'),
 };
 
-// ---- 로케일 (ko/en) ----
-// 시작은 브라우저 언어로 추정하고, C#이 ready 후 확정값(OS 언어 + MDE_LANG 오버라이드)을 보내면 재적용.
-const L_KO = {
-  newDoc: '새 문서',
-  dark: '다크', light: '라이트', themeTitle: '다크/라이트 전환',
-  open: '📂 열기', openTitle: '열기 (Ctrl+O)',
-  recentTitle: '최근 문서',
-  edit: '✏️ 편집', preview: '👁 미리보기', toggleTitle: '편집/미리보기 전환 (Ctrl+E)',
-  save: '💾 저장', saveTitle: '저장 (Ctrl+S)',
-  pdf: '📄 PDF', pdfTitle: '미리보기를 PDF로 내보내기 (Ctrl+P)',
-  backTitle: '뒤로 (Alt+←)', fwdTitle: '앞으로 (Alt+→)',
-  tocBtnTitle: '목차 표시/숨김', toc: '목차',
-  tabNew: '새 문서 (Ctrl+N)', tabClose: '닫기 (Ctrl+W)',
-  findPh: '찾기', replacePh: '바꾸기', findToggleTitle: '바꾸기 펼치기/접기',
-  prevTitle: '이전 (Shift+Enter)', nextTitle: '다음 (Enter)',
-  caseTitle: '대소문자 구분', findCloseTitle: '닫기 (Esc)',
-  replaceOne: '바꾸기', replaceOneTitle: '현재 항목만 바꾸기',
-  replaceAllBtn: '모두', replaceAllTitle: '모두 바꾸기',
-  noResults: '결과 없음', replaced: (n) => `${n}개 바꿈`,
-  ctxClose: '닫기', ctxCloseOthers: '다른 탭 모두 닫기',
-  ctxReveal: '탐색기에서 보기', ctxCopyPath: '경로 복사',
-  ctxClearRecent: '최근 문서 지우기', noRecent: '최근 문서 없음',
-  pathCopied: '경로 복사됨',
-  imgSaved: (s) => `이미지 저장됨: ${s}`,
-  saveFirst: '이미지를 넣으려면 문서를 먼저 저장하세요',
-  restored: '저장되지 않았던 내용을 복구했습니다',
-  restoreConfirm: (n) => `저장되지 않은 변경사항 백업 ${n}건이 있습니다. 복구할까요?`,
-  closeConfirm: (name) => `'${name}'의 변경사항이 저장되지 않았습니다. 닫을까요?`,
-  extConfirm: (name) => `'${name}'이(가) 외부에서 변경되었습니다.\n다시 불러올까요? (저장하지 않은 내 변경사항은 사라집니다)`,
-  extApplied: (name) => `외부 변경사항 반영됨: ${name}`,
-  fileMissing: (name) => `파일을 찾을 수 없습니다: ${name}`,
-};
-const L_EN = {
-  newDoc: 'Untitled',
-  dark: 'Dark', light: 'Light', themeTitle: 'Toggle dark/light theme',
-  open: '📂 Open', openTitle: 'Open (Ctrl+O)',
-  recentTitle: 'Recent files',
-  edit: '✏️ Edit', preview: '👁 Preview', toggleTitle: 'Edit/Preview (Ctrl+E)',
-  save: '💾 Save', saveTitle: 'Save (Ctrl+S)',
-  pdf: '📄 PDF', pdfTitle: 'Export preview as PDF (Ctrl+P)',
-  backTitle: 'Back (Alt+←)', fwdTitle: 'Forward (Alt+→)',
-  tocBtnTitle: 'Toggle table of contents', toc: 'Contents',
-  tabNew: 'New document (Ctrl+N)', tabClose: 'Close (Ctrl+W)',
-  findPh: 'Find', replacePh: 'Replace', findToggleTitle: 'Toggle replace',
-  prevTitle: 'Previous (Shift+Enter)', nextTitle: 'Next (Enter)',
-  caseTitle: 'Match case', findCloseTitle: 'Close (Esc)',
-  replaceOne: 'Replace', replaceOneTitle: 'Replace current match',
-  replaceAllBtn: 'All', replaceAllTitle: 'Replace all',
-  noResults: 'No results', replaced: (n) => `Replaced ${n}`,
-  ctxClose: 'Close', ctxCloseOthers: 'Close other tabs',
-  ctxReveal: 'Reveal in Explorer', ctxCopyPath: 'Copy path',
-  ctxClearRecent: 'Clear recent files', noRecent: 'No recent files',
-  pathCopied: 'Path copied',
-  imgSaved: (s) => `Image saved: ${s}`,
-  saveFirst: 'Save the document before pasting images',
-  restored: 'Recovered unsaved changes',
-  restoreConfirm: (n) => `Found ${n} backup(s) of unsaved changes. Restore?`,
-  closeConfirm: (name) => `'${name}' has unsaved changes. Close anyway?`,
-  extConfirm: (name) => `'${name}' was changed outside this app.\nReload? (Your unsaved edits will be lost)`,
-  extApplied: (name) => `Reloaded from disk: ${name}`,
-  fileMissing: (name) => `File not found: ${name}`,
-};
-let L = (navigator.language || '').toLowerCase().startsWith('ko') ? L_KO : L_EN;
+// ---- 로케일 ----
+// 문자열 테이블·언어 목록·태그 매칭은 i18n.js(I18N/LANG_NAMES/resolveLang)에 있다.
+// 시작은 브라우저 언어로 추정하고, C#이 ready 후 확정값(언어 설정 > MDE_LANG > OS 언어)을 보내면 재적용.
+let L = I18N[resolveLang(navigator.language)] || I18N.en;
+let langMode = 'auto';   // 'auto' 또는 언어 코드 — ⋯ 메뉴의 체크 표시용
 
 // 접근성: 시스템의 "동작 줄이기" 설정 시 부드러운 스크롤 대신 즉시 이동
 const SMOOTH = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -112,16 +51,13 @@ function setTitle(el, text) { el.title = text; el.setAttribute('aria-label', tex
 
 // 정적 UI 텍스트를 현재 로케일로 적용 (부팅 시 1회 + C#이 언어 확정값을 보내면 재적용)
 function applyLocale(lang) {
-  if (lang) L = lang === 'ko' ? L_KO : L_EN;
-  setTitle(els.themeBtn, L.themeTitle);
-  els.themeLbl.textContent = currentTheme() === 'dark' ? L.light : L.dark;
+  if (lang) L = I18N[lang] || I18N.en;
   els.openBtn.textContent = L.open;
   setTitle(els.openBtn, L.openTitle);
   setTitle(els.recentBtn, L.recentTitle);
   els.saveBtn.textContent = L.save;
   setTitle(els.saveBtn, L.saveTitle);
-  els.pdfBtn.textContent = L.pdf;
-  setTitle(els.pdfBtn, L.pdfTitle);
+  setTitle(els.moreBtn, L.moreTitle);
   setTitle(els.backBtn, L.backTitle);
   setTitle(els.fwdBtn, L.fwdTitle);
   setTitle(els.tocBtn, L.tocBtnTitle);
@@ -241,10 +177,8 @@ async function applyPrintTheme(light) {
 }
 
 // ---- 테마 (다크/라이트) ----
-function applyTheme(theme) {           // 'dark' | 'light'
+function applyTheme(theme) {           // 'dark' | 'light'  (전환은 ⋯ 메뉴에서)
   document.documentElement.setAttribute('data-theme', theme);
-  els.themeIc.textContent = theme === 'dark' ? '☀️' : '🌙';
-  els.themeLbl.textContent = theme === 'dark' ? L.light : L.dark;
   try { localStorage.setItem('theme', theme); } catch (_) {}
   // mermaid는 테마가 SVG에 박제되므로 재초기화 후 미리보기를 다시 그림
   if (typeof mermaid !== 'undefined') {
@@ -263,9 +197,6 @@ function initTheme() {
   const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   applyTheme(saved || (sysDark ? 'dark' : 'light'));
 }
-els.themeBtn.addEventListener('click', () => {
-  applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
-});
 initTheme();
 applyLocale();
 
@@ -1036,41 +967,94 @@ function dropRecent(path) {
   writeRecent(readRecent().filter((p) => p.toLowerCase() !== path.toLowerCase()));
 }
 
-// 최근 문서 메뉴 (열기 버튼 옆 🕘) — 탭 우클릭 메뉴와 같은 팝업 요소를 재사용
-function showRecentMenu() {
+// 공용 드롭다운 메뉴 빌더 — items: { label, act, disabled, tip } 또는 'sep'
+// 항목 클릭은 stopPropagation: act()가 다른 메뉴를 다시 열 수 있게 (언어 하위 메뉴)
+function showMenuAt(items, anchor, align) {
   els.ctxmenu.innerHTML = '';
-  const add = (label, act, disabled, tip) => {
-    const it = document.createElement('div');
-    it.className = 'ctx-item' + (disabled ? ' disabled' : '');
-    it.textContent = label;
-    if (tip) it.title = tip;
-    if (!disabled) it.addEventListener('click', () => { hideTabMenu(); act(); });
-    els.ctxmenu.appendChild(it);
-  };
-  const list = readRecent();
-  if (!list.length) add(L.noRecent, null, true);
-  for (const p of list) {
-    add(p.split(/[\\/]/).pop(), () => {
-      if (host) host.postMessage({ cmd: 'openPath', path: p });
-    }, false, p);
-  }
-  if (list.length) {
-    const s = document.createElement('div');
-    s.className = 'ctx-sep';
-    els.ctxmenu.appendChild(s);
-    add(L.ctxClearRecent, () => writeRecent([]));
+  for (const it of items) {
+    if (it === 'sep') {
+      const s = document.createElement('div');
+      s.className = 'ctx-sep';
+      els.ctxmenu.appendChild(s);
+      continue;
+    }
+    const el = document.createElement('div');
+    el.className = 'ctx-item' + (it.disabled ? ' disabled' : '');
+    el.textContent = it.label;
+    if (it.tip) el.title = it.tip;
+    if (!it.disabled) el.addEventListener('click', (e) => { e.stopPropagation(); hideTabMenu(); it.act(); });
+    els.ctxmenu.appendChild(el);
   }
   els.ctxmenu.hidden = false;
-  const br = els.recentBtn.getBoundingClientRect();
+  const br = anchor.getBoundingClientRect();
   const r = els.ctxmenu.getBoundingClientRect();
-  els.ctxmenu.style.left = Math.max(0, Math.min(br.left, window.innerWidth - r.width - 4)) + 'px';
+  const x = align === 'right' ? br.right - r.width : br.left;
+  els.ctxmenu.style.left = Math.max(0, Math.min(x, window.innerWidth - r.width - 4)) + 'px';
   els.ctxmenu.style.top = Math.max(0, Math.min(br.bottom + 4, window.innerHeight - r.height - 4)) + 'px';
 }
-els.recentBtn.addEventListener('click', (e) => {
-  e.stopPropagation();                       // document click(메뉴 닫기)보다 먼저 소비
-  if (!els.ctxmenu.hidden) { hideTabMenu(); return; }
-  showRecentMenu();
-});
+
+// 메뉴 버튼 공통: 열려 있으면 닫고, 아니면 연다
+function menuButton(btn, show) {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();                     // document click(메뉴 닫기)보다 먼저 소비
+    if (!els.ctxmenu.hidden) { hideTabMenu(); return; }
+    show();
+  });
+}
+
+// 최근 문서 메뉴 (열기 버튼 옆 🕘)
+function showRecentMenu() {
+  const list = readRecent();
+  const items = [];
+  if (!list.length) items.push({ label: L.noRecent, disabled: true });
+  for (const p of list) {
+    items.push({
+      label: p.split(/[\\/]/).pop(),
+      tip: p,
+      act: () => { if (host) host.postMessage({ cmd: 'openPath', path: p }); },
+    });
+  }
+  if (list.length) {
+    items.push('sep');
+    items.push({ label: L.ctxClearRecent, act: () => writeRecent([]) });
+  }
+  showMenuAt(items, els.recentBtn);
+}
+menuButton(els.recentBtn, showRecentMenu);
+
+// ---- ⋯ 메뉴 (PDF 내보내기 · 테마 · 언어 · 버전) ----
+function showMoreMenu() {
+  showMenuAt([
+    { label: L.menuPdf, act: exportPdf },
+    {
+      label: currentTheme() === 'dark' ? L.menuThemeLight : L.menuThemeDark,
+      act: () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'),
+    },
+    { label: `${L.menuLang}  ▸`, act: showLangMenu },
+    'sep',
+    {
+      label: `MarkDownEditor v${appVersion || '?'}`,
+      act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' }); },
+    },
+  ], els.moreBtn, 'right');
+}
+menuButton(els.moreBtn, showMoreMenu);
+
+// 언어 하위 메뉴 — 선택은 C#(lang.txt)이 저장하고, 확정값을 app 메시지로 돌려준다
+function showLangMenu() {
+  const mark = (on) => (on ? '✓ ' : '  ');   // 숫자 폭 공백으로 정렬
+  const items = [
+    { label: mark(langMode === 'auto') + L.langAuto, act: () => setLang('auto') },
+    'sep',
+  ];
+  for (const code of Object.keys(LANG_NAMES)) {
+    items.push({ label: mark(langMode === code) + LANG_NAMES[code], act: () => setLang(code) });
+  }
+  showMenuAt(items, els.moreBtn, 'right');
+}
+function setLang(mode) {
+  if (host) host.postMessage({ cmd: 'lang', value: mode });
+}
 
 // ---- 세션 복원 (마지막에 열려 있던 탭) ----
 // 부팅 시점 값을 먼저 읽어 둔다 — 첫 sendState의 saveSession이 키를 덮어쓰기 전에.
@@ -1353,7 +1337,6 @@ els.toggleBtn.addEventListener('click', toggleMode);
 els.saveBtn.addEventListener('click', save);
 els.backBtn.addEventListener('click', goBack);
 els.fwdBtn.addEventListener('click', goForward);
-els.pdfBtn.addEventListener('click', exportPdf);
 
 // ---- 파일 드래그&드롭으로 열기 ----
 // 웹 File 객체에는 로컬 경로가 없으므로 WebView2 전용 API로 C#에 실제 경로를 전달
@@ -1655,7 +1638,8 @@ if (host) {
     } else if (m.cmd === 'toast') {
       toast(m.text || '');
     } else if (m.cmd === 'app') {
-      // C#이 확정한 언어(OS 언어/MDE_LANG)와 버전 — 브라우저 추정과 다르면 재적용
+      // C#이 확정한 언어(설정 > MDE_LANG > OS)와 버전 — 브라우저 추정과 다르면 재적용
+      if (m.langMode) langMode = m.langMode;
       if (m.lang) applyLocale(m.lang);
       if (m.version) {
         appVersion = m.version;

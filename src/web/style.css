@@ -128,10 +128,8 @@ body {
 /* 최근 문서 버튼: 열기 옆의 아이콘 버튼 */
 #recentBtn { padding: 4px 8px; margin-left: -4px; }
 
-/* 테마 버튼: 아이콘 크기는 고정, 텍스트 크기만 조절 */
-#themeBtn { display: inline-flex; align-items: center; gap: 5px; }
-#themeBtn .ic  { font-size: 15px; line-height: 1; }  /* 고정 */
-#themeBtn .lbl { font-size: 12px; }                  /* 이 값만 조절 */
+/* ⋯ 메뉴 버튼 (PDF·테마·언어·정보) */
+#moreBtn { padding: 4px 10px; font-weight: 700; letter-spacing: 1px; }
 
 /* 탭 스트립 (열린 문서 목록) */
 #tabs {

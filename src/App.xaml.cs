@@ -22,6 +22,9 @@ public partial class App : Application
         // BOM 없는 한글(CP949/EUC-KR) 문서 폴백 디코딩용 레거시 코드페이지 등록
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+        // UI 언어 확정 (저장된 설정 > MDE_LANG > OS 언어) — 창 생성 전에
+        Loc.Init();
+
         // 더블클릭/연결 프로그램 실행 시 인자로 파일 경로가 넘어옴
         // (여러 파일을 한 번에 넘기는 실행 형태도 지원 → 모두 탭으로)
         var files = ResolveFileArgs(e.Args);

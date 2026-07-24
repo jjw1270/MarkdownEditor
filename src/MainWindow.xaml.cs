@@ -27,7 +27,7 @@ public partial class MainWindow : Window
         new(@"<img\b[^>]*?\bsrc\s*=\s*[""'](?<src>[^""']+)[""']", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static string? _dataDir;
-    private static string DataDir => _dataDir ??= ResolveDataDir();
+    internal static string DataDir => _dataDir ??= ResolveDataDir();   // Loc(lang.txt)도 사용
     private static string ThemeFile => Path.Combine(DataDir, "theme.txt");
 
     // PDF 내보내기: 웹이 mermaid를 라이트로 재렌더 완료했다는 신호
@@ -150,8 +150,8 @@ public partial class MainWindow : Window
         {
             case "ready":
                 _webReady = true;
-                // 확정 언어(OS/MDE_LANG)와 버전을 웹에 전달 — UI 문자열·정보 표시에 사용
-                SendToWeb(new { cmd = "app", version = AppVersion, lang = Loc.Lang });
+                // 확정 언어(설정 > MDE_LANG > OS)와 버전을 웹에 전달 — UI 문자열·정보 표시에 사용
+                SendToWeb(new { cmd = "app", version = AppVersion, lang = Loc.Lang, langMode = Loc.Mode });
                 LoadStartupFiles();
                 foreach (var p in _pendingFiles) LoadFile(p);   // 준비 전 도착분 반영
                 _pendingFiles.Clear();
@@ -162,6 +162,11 @@ public partial class MainWindow : Window
                 var themeName = msg.TryGetProperty("value", out var th) ? th.GetString() ?? "" : "";
                 SaveTheme(themeName);
                 ApplyTitleBarTheme(themeName);   // 제목표시줄도 함께 전환
+                break;
+            case "lang":
+                // 언어 메뉴 선택 → 저장 후 확정값 회신 (웹이 UI 문자열 재적용)
+                Loc.Set(msg.TryGetProperty("value", out var lv) ? lv.GetString() : null);
+                SendToWeb(new { cmd = "app", version = AppVersion, lang = Loc.Lang, langMode = Loc.Mode });
                 break;
             case "open":
                 OpenViaDialog();

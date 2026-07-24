@@ -3,6 +3,11 @@
 **A fast, portable Markdown viewer & editor for Windows.**
 Double-click a `.md` file and it just opens — no installation required.
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
+![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
+![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
+
 [한국어 README](README.md)
 
 ![Preview — light theme](docs/images/preview-light.png)
@@ -17,14 +22,16 @@ Double-click a `.md` file and it just opens — no installation required.
 - **Table of contents sidebar** — with scroll-spy highlighting of the current section.
 - **Edit ↔ Preview** — `Ctrl+E`, with scroll position synchronized between the two modes.
 - **Find / Replace** — `Ctrl+F` works in both preview (full-match highlighting) and edit mode; `Ctrl+H` replaces in edit mode.
-- **PDF export** — one click (or `Ctrl+P`), always in light theme.
+- **PDF export** — from the `⋯` menu or `Ctrl+P`, always in light theme.
 - **Paste images from clipboard** — saved to an `images/` folder next to the document, link inserted automatically.
 - **Auto reload on external change** — edits from other programs (IDE, editor) refresh the open tab; your unsaved edits are never silently overwritten.
 - **Auto backup & crash recovery** — unsaved changes are snapshotted every 30 s and offered for recovery on next start.
 - **Session restore** — when launched without a file, the previously open tabs are reopened. Recent files are available from the 🕘 button.
 - **Korean encoding detection** — BOM-less CP949/EUC-KR files open correctly alongside UTF-8.
-- **Dark / Light theme** — remembered across runs, including the Windows title bar.
-- **Localized UI** — Korean or English following the OS language (override with the `MDE_LANG=ko|en` environment variable).
+- **Dark / Light theme** — toggled from the `⋯` menu, remembered across runs, including the Windows title bar.
+- **Localized UI — 10 languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Follows the OS language by default; switch anytime from the `⋯` menu → Language.
+
+![⋯ menu](docs/images/menu.png)
 
 ## Getting started
 

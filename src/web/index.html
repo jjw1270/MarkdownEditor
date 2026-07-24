@@ -25,12 +25,12 @@
     </button>
     <strong id="appName">Markdown</strong>
     <div class="spacer"></div>
-    <button id="themeBtn" title="다크/라이트 전환"><span class="ic">🌙</span><span class="lbl">다크</span></button>
     <button id="openBtn" title="열기 (Ctrl+O)">📂 열기</button>
     <button id="recentBtn" title="최근 문서">🕘</button>
     <button id="toggleBtn" title="편집/미리보기 전환 (Ctrl+E)">✏️ 편집</button>
     <button id="saveBtn" title="저장 (Ctrl+S)">💾 저장</button>
-    <button id="pdfBtn" title="미리보기를 PDF로 내보내기">📄 PDF</button>
+    <!-- PDF 내보내기·테마 전환·언어 설정·버전 정보는 ⋯ 메뉴로 -->
+    <button id="moreBtn" title="메뉴">⋯</button>
   </header>
 
   <!-- 열린 문서 탭 (여러 파일을 한 창에서) -->
@@ -88,6 +88,7 @@
 
   <!-- mermaid.min.js(3.4MB)는 시작 속도를 위해 여기서 로드하지 않고,
        mermaid 블록을 처음 만날 때 app.js가 동적으로 로드한다 (ensureMermaid) -->
+  <script src="i18n.js"></script>
   <script src="marked.min.js"></script>
   <script src="highlight.min.js"></script>
   <script src="app.js"></script>
