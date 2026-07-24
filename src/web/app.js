@@ -1038,8 +1038,8 @@ function showMoreMenu() {
       label: currentTheme() === 'dark' ? L.menuThemeLight : L.menuThemeDark,
       act: () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'),
     },
-    // 화살표 대신 현재 언어를 함께 표시 — 클릭하면 언어 목록으로 전환
-    { label: `${L.menuLang} — ${LANG_NAMES[langCurrent] || 'English'}`, act: showLangMenu },
+    // 현재 언어를 코드(대문자)로 함께 표시 — 클릭하면 언어 목록으로 전환
+    { label: `${L.menuLang} — ${langCurrent.toUpperCase()}`, act: showLangMenu },
     'sep',
     {
       label: `MarkDownEditor v${appVersion || '?'}`,

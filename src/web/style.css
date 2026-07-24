@@ -89,8 +89,9 @@ body {
 }
 
 /* 상단 바 */
-/* 타이틀바(앱 아이콘·내비·창 버튼)와 탭 줄이 같은 배경으로 한 덩어리를 이룸 */
+/* 타이틀바(앱 아이콘·중앙 타이틀·창 버튼)와 탭 줄이 같은 배경으로 한 덩어리를 이룸 */
 #bar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 3px;
@@ -99,8 +100,21 @@ body {
   user-select: none;
   flex: 0 0 auto;
 }
-#appIcon { width: 17px; height: 17px; margin: 0 0 0 3px; -webkit-user-drag: none; }
-#appTitle { font-size: 12px; font-weight: 600; color: var(--muted); margin: 0 10px 0 7px; }
+/* 정중앙 고정 [아이콘+타이틀] — 클릭이 통과되어 그 위에서도 창 드래그가 됨 */
+#appTitle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -46%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  pointer-events: none;
+}
+#appIcon { width: 16px; height: 16px; -webkit-user-drag: none; }
 
 /* 탭 줄: 좌측 탭 + 우측 문서 액션 버튼.
    활성 탭이 경계선을 덮고 본문과 이어지도록 탭은 줄 바닥까지 내려간다 (메모장/브라우저식) */
@@ -137,7 +151,7 @@ body {
 #bar button:active, #tabrow > button:active { background: var(--btn-press); }
 /* 활성 상태(편집 모드 등): 은은한 배경 + 아이콘만 파란 틴트 */
 #tabrow > button.active { background: var(--btn-press); color: var(--accent); }
-#bar button:disabled { opacity: .35; cursor: default; background: transparent; }
+#bar button:disabled, #tabrow > button:disabled { opacity: .35; cursor: default; background: transparent; }
 
 /* 편집↔미리보기 토글: 현재 상태에 맞는 아이콘 하나만 표시 */
 #toggleBtn .ic-preview { display: none; }
