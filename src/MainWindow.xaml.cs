@@ -812,12 +812,20 @@ public partial class MainWindow : Window
         catch { /* 다른 프로그램이 아직 쓰는 중(잠금) → 보통 후속 이벤트에서 재시도됨 */ }
     }
 
+    private bool _closeConfirmShowing;   // 확인 창이 떠 있는 동안 오는 추가 닫기 요청 무시 (동일 팝업 중복 방지)
+
     private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!_anyDirty) return;
-        var r = MessageBox.Show(this, Loc.CloseConfirm, Loc.CapConfirm,
-            MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (r != MessageBoxResult.Yes) e.Cancel = true;
+        if (_closeConfirmShowing) { e.Cancel = true; return; }
+        _closeConfirmShowing = true;
+        try
+        {
+            var r = MessageBox.Show(this, Loc.CloseConfirm, Loc.CapConfirm,
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (r != MessageBoxResult.Yes) e.Cancel = true;
+        }
+        finally { _closeConfirmShowing = false; }
     }
 
     private void SendToWeb(object payload)

@@ -1818,7 +1818,13 @@ function applyExternalChange(m) {
   const newText = m.text || '';
   const curText = (t.id === activeId && t.editing) ? els.editor.value : t.text;
   if (curText === newText) { t.img = m.imgMap || null; return; }   // 내용 동일(우리 저장 등) → 무시
-  if (t.dirty && !window.confirm(L.extConfirm(t.name))) return;
+  if (t.dirty) {
+    // 같은 외부 내용에 대해 이미 "내 편집 유지"를 선택했다면 같은 확인을 반복하지 않음
+    // (파일 이벤트는 인덱서·백신 등으로 같은 내용에 여러 번 올 수 있다)
+    if (t.extDeclined === newText) return;
+    if (!window.confirm(L.extConfirm(t.name))) { t.extDeclined = newText; return; }
+  }
+  t.extDeclined = undefined;
 
   t.text = newText;
   t.img = m.imgMap || null;
