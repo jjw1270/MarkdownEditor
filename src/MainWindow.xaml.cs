@@ -152,6 +152,14 @@ public partial class MainWindow : Window
             core.Settings.IsGeneralAutofillEnabled = false;    // 편집기·찾기창에 브라우저 자동완성 차단
             core.Settings.IsPasswordAutosaveEnabled = false;
 
+            // 우클릭 메뉴의 "붙여넣기"(navigator.clipboard.readText)만 자동 허용 — 나머지 권한은 조용히 거부
+            core.PermissionRequested += (_, pe) =>
+            {
+                pe.State = pe.PermissionKind == CoreWebView2PermissionKind.ClipboardRead
+                    ? CoreWebView2PermissionState.Allow
+                    : CoreWebView2PermissionState.Deny;
+            };
+
             core.WebMessageReceived += OnWebMessage;
             // 앱 페이지 밖으로의 내비게이션 차단 (URL 드래그 등으로 앱 화면이 대체되는 것 방지)
             core.NavigationStarting += (_, a) =>

@@ -29,6 +29,8 @@ const I18N = {
     extApplied: (name) => `외부 변경사항 반영됨: ${name}`,
     fileMissing: (name) => `파일을 찾을 수 없습니다: ${name}`,    menuPdf: 'PDF로 내보내기 (Ctrl+P)', menuThemeDark: '다크 테마', menuThemeLight: '라이트 테마',
     menuLang: '언어', langAuto: '자동 (시스템 언어)',
+    ctxCut: '잘라내기', ctxCopy: '복사', ctxPaste: '붙여넣기', ctxSelectAll: '모두 선택', ctxOpenLink: '링크 열기', ctxCopyLink: '링크 주소 복사', ctxViewImage: '이미지 크게 보기', ctxFind: '찾기', ctxEditMode: '편집 모드로', pasteDenied: '클립보드를 읽을 수 없습니다',
+    fmtBold: '굵게', fmtItalic: '기울임', fmtStrike: '취소선', fmtH1: '제목 1', fmtH2: '제목 2', fmtH3: '제목 3', fmtBullet: '글머리 기호 목록', fmtNumber: '번호 목록', fmtTask: '체크박스 목록', fmtQuote: '인용', fmtCode: '코드', fmtLink: '링크', fmtTable: '표 삽입', fmtHr: '구분선 삽입', fmtLinkText: '텍스트', fmtLinkUrl: '주소', fmtCol: '항목',
     winMin: '최소화', winMax: '최대화', winRestore: '이전 크기로 복원', winClose: '닫기',
   },
   'en': {
@@ -58,6 +60,8 @@ const I18N = {
     extApplied: (name) => `Reloaded from disk: ${name}`,
     fileMissing: (name) => `File not found: ${name}`,    menuPdf: 'Export as PDF (Ctrl+P)', menuThemeDark: 'Dark theme', menuThemeLight: 'Light theme',
     menuLang: 'Language', langAuto: 'Auto (system language)',
+    ctxCut: 'Cut', ctxCopy: 'Copy', ctxPaste: 'Paste', ctxSelectAll: 'Select all', ctxOpenLink: 'Open link', ctxCopyLink: 'Copy link address', ctxViewImage: 'View image', ctxFind: 'Find', ctxEditMode: 'Switch to edit mode', pasteDenied: 'Cannot read clipboard',
+    fmtBold: 'Bold', fmtItalic: 'Italic', fmtStrike: 'Strikethrough', fmtH1: 'Heading 1', fmtH2: 'Heading 2', fmtH3: 'Heading 3', fmtBullet: 'Bulleted list', fmtNumber: 'Numbered list', fmtTask: 'Task list', fmtQuote: 'Quote', fmtCode: 'Code', fmtLink: 'Link', fmtTable: 'Insert table', fmtHr: 'Insert divider', fmtLinkText: 'text', fmtLinkUrl: 'address', fmtCol: 'Column',
     winMin: 'Minimize', winMax: 'Maximize', winRestore: 'Restore', winClose: 'Close',
   },
   'ja': {
@@ -87,6 +91,8 @@ const I18N = {
     extApplied: (name) => `外部の変更を反映しました: ${name}`,
     fileMissing: (name) => `ファイルが見つかりません: ${name}`,    menuPdf: 'PDFとしてエクスポート (Ctrl+P)', menuThemeDark: 'ダークテーマ', menuThemeLight: 'ライトテーマ',
     menuLang: '言語', langAuto: '自動（システム言語）',
+    ctxCut: '切り取り', ctxCopy: 'コピー', ctxPaste: '貼り付け', ctxSelectAll: 'すべて選択', ctxOpenLink: 'リンクを開く', ctxCopyLink: 'リンクのアドレスをコピー', ctxViewImage: '画像を拡大表示', ctxFind: '検索', ctxEditMode: '編集モードへ', pasteDenied: 'クリップボードを読み取れません',
+    fmtBold: '太字', fmtItalic: '斜体', fmtStrike: '取り消し線', fmtH1: '見出し 1', fmtH2: '見出し 2', fmtH3: '見出し 3', fmtBullet: '箇条書きリスト', fmtNumber: '番号付きリスト', fmtTask: 'チェックリスト', fmtQuote: '引用', fmtCode: 'コード', fmtLink: 'リンク', fmtTable: '表を挿入', fmtHr: '区切り線を挿入', fmtLinkText: 'テキスト', fmtLinkUrl: 'アドレス', fmtCol: '列',
     winMin: '最小化', winMax: '最大化', winRestore: '元に戻す', winClose: '閉じる',
   },
   'zh-CN': {
@@ -116,6 +122,8 @@ const I18N = {
     extApplied: (name) => `已从磁盘重新加载: ${name}`,
     fileMissing: (name) => `找不到文件: ${name}`,    menuPdf: '导出为 PDF (Ctrl+P)', menuThemeDark: '深色主题', menuThemeLight: '浅色主题',
     menuLang: '语言', langAuto: '自动（系统语言）',
+    ctxCut: '剪切', ctxCopy: '复制', ctxPaste: '粘贴', ctxSelectAll: '全选', ctxOpenLink: '打开链接', ctxCopyLink: '复制链接地址', ctxViewImage: '查看大图', ctxFind: '查找', ctxEditMode: '切换到编辑模式', pasteDenied: '无法读取剪贴板',
+    fmtBold: '加粗', fmtItalic: '斜体', fmtStrike: '删除线', fmtH1: '标题 1', fmtH2: '标题 2', fmtH3: '标题 3', fmtBullet: '无序列表', fmtNumber: '有序列表', fmtTask: '任务列表', fmtQuote: '引用', fmtCode: '代码', fmtLink: '链接', fmtTable: '插入表格', fmtHr: '插入分隔线', fmtLinkText: '文本', fmtLinkUrl: '网址', fmtCol: '列',
     winMin: '最小化', winMax: '最大化', winRestore: '还原', winClose: '关闭',
   },
   'zh-TW': {
@@ -145,6 +153,8 @@ const I18N = {
     extApplied: (name) => `已從磁碟重新載入: ${name}`,
     fileMissing: (name) => `找不到檔案: ${name}`,    menuPdf: '匯出為 PDF (Ctrl+P)', menuThemeDark: '深色主題', menuThemeLight: '淺色主題',
     menuLang: '語言', langAuto: '自動（系統語言）',
+    ctxCut: '剪下', ctxCopy: '複製', ctxPaste: '貼上', ctxSelectAll: '全選', ctxOpenLink: '開啟連結', ctxCopyLink: '複製連結位址', ctxViewImage: '檢視大圖', ctxFind: '尋找', ctxEditMode: '切換到編輯模式', pasteDenied: '無法讀取剪貼簿',
+    fmtBold: '粗體', fmtItalic: '斜體', fmtStrike: '刪除線', fmtH1: '標題 1', fmtH2: '標題 2', fmtH3: '標題 3', fmtBullet: '項目符號清單', fmtNumber: '編號清單', fmtTask: '工作清單', fmtQuote: '引用', fmtCode: '程式碼', fmtLink: '連結', fmtTable: '插入表格', fmtHr: '插入分隔線', fmtLinkText: '文字', fmtLinkUrl: '網址', fmtCol: '欄',
     winMin: '最小化', winMax: '最大化', winRestore: '還原', winClose: '關閉',
   },
   'es': {
@@ -174,6 +184,8 @@ const I18N = {
     extApplied: (name) => `Recargado desde el disco: ${name}`,
     fileMissing: (name) => `Archivo no encontrado: ${name}`,    menuPdf: 'Exportar como PDF (Ctrl+P)', menuThemeDark: 'Tema oscuro', menuThemeLight: 'Tema claro',
     menuLang: 'Idioma', langAuto: 'Automático (idioma del sistema)',
+    ctxCut: 'Cortar', ctxCopy: 'Copiar', ctxPaste: 'Pegar', ctxSelectAll: 'Seleccionar todo', ctxOpenLink: 'Abrir enlace', ctxCopyLink: 'Copiar dirección del enlace', ctxViewImage: 'Ver imagen', ctxFind: 'Buscar', ctxEditMode: 'Cambiar a modo edición', pasteDenied: 'No se puede leer el portapapeles',
+    fmtBold: 'Negrita', fmtItalic: 'Cursiva', fmtStrike: 'Tachado', fmtH1: 'Título 1', fmtH2: 'Título 2', fmtH3: 'Título 3', fmtBullet: 'Lista con viñetas', fmtNumber: 'Lista numerada', fmtTask: 'Lista de tareas', fmtQuote: 'Cita', fmtCode: 'Código', fmtLink: 'Enlace', fmtTable: 'Insertar tabla', fmtHr: 'Insertar separador', fmtLinkText: 'texto', fmtLinkUrl: 'dirección', fmtCol: 'Columna',
     winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Cerrar',
   },
   'fr': {
@@ -203,6 +215,8 @@ const I18N = {
     extApplied: (name) => `Rechargé depuis le disque : ${name}`,
     fileMissing: (name) => `Fichier introuvable : ${name}`,    menuPdf: 'Exporter en PDF (Ctrl+P)', menuThemeDark: 'Thème sombre', menuThemeLight: 'Thème clair',
     menuLang: 'Langue', langAuto: 'Automatique (langue du système)',
+    ctxCut: 'Couper', ctxCopy: 'Copier', ctxPaste: 'Coller', ctxSelectAll: 'Tout sélectionner', ctxOpenLink: 'Ouvrir le lien', ctxCopyLink: 'Copier le lien', ctxViewImage: 'Afficher l’image', ctxFind: 'Rechercher', ctxEditMode: 'Passer en mode édition', pasteDenied: 'Presse-papiers illisible',
+    fmtBold: 'Gras', fmtItalic: 'Italique', fmtStrike: 'Barré', fmtH1: 'Titre 1', fmtH2: 'Titre 2', fmtH3: 'Titre 3', fmtBullet: 'Liste à puces', fmtNumber: 'Liste numérotée', fmtTask: 'Liste de tâches', fmtQuote: 'Citation', fmtCode: 'Code', fmtLink: 'Lien', fmtTable: 'Insérer un tableau', fmtHr: 'Insérer un séparateur', fmtLinkText: 'texte', fmtLinkUrl: 'adresse', fmtCol: 'Colonne',
     winMin: 'Réduire', winMax: 'Agrandir', winRestore: 'Restaurer', winClose: 'Fermer',
   },
   'de': {
@@ -232,6 +246,8 @@ const I18N = {
     extApplied: (name) => `Von der Festplatte neu geladen: ${name}`,
     fileMissing: (name) => `Datei nicht gefunden: ${name}`,    menuPdf: 'Als PDF exportieren (Ctrl+P)', menuThemeDark: 'Dunkles Design', menuThemeLight: 'Helles Design',
     menuLang: 'Sprache', langAuto: 'Automatisch (Systemsprache)',
+    ctxCut: 'Ausschneiden', ctxCopy: 'Kopieren', ctxPaste: 'Einfügen', ctxSelectAll: 'Alles auswählen', ctxOpenLink: 'Link öffnen', ctxCopyLink: 'Linkadresse kopieren', ctxViewImage: 'Bild vergrößern', ctxFind: 'Suchen', ctxEditMode: 'In den Bearbeitungsmodus', pasteDenied: 'Zwischenablage nicht lesbar',
+    fmtBold: 'Fett', fmtItalic: 'Kursiv', fmtStrike: 'Durchgestrichen', fmtH1: 'Überschrift 1', fmtH2: 'Überschrift 2', fmtH3: 'Überschrift 3', fmtBullet: 'Aufzählung', fmtNumber: 'Nummerierte Liste', fmtTask: 'Aufgabenliste', fmtQuote: 'Zitat', fmtCode: 'Code', fmtLink: 'Link', fmtTable: 'Tabelle einfügen', fmtHr: 'Trennlinie einfügen', fmtLinkText: 'Text', fmtLinkUrl: 'Adresse', fmtCol: 'Spalte',
     winMin: 'Minimieren', winMax: 'Maximieren', winRestore: 'Wiederherstellen', winClose: 'Schließen',
   },
   'ru': {
@@ -261,6 +277,8 @@ const I18N = {
     extApplied: (name) => `Перезагружено с диска: ${name}`,
     fileMissing: (name) => `Файл не найден: ${name}`,    menuPdf: 'Экспорт в PDF (Ctrl+P)', menuThemeDark: 'Тёмная тема', menuThemeLight: 'Светлая тема',
     menuLang: 'Язык', langAuto: 'Автоматически (язык системы)',
+    ctxCut: 'Вырезать', ctxCopy: 'Копировать', ctxPaste: 'Вставить', ctxSelectAll: 'Выделить всё', ctxOpenLink: 'Открыть ссылку', ctxCopyLink: 'Копировать адрес ссылки', ctxViewImage: 'Открыть изображение', ctxFind: 'Найти', ctxEditMode: 'В режим редактирования', pasteDenied: 'Не удалось прочитать буфер обмена',
+    fmtBold: 'Жирный', fmtItalic: 'Курсив', fmtStrike: 'Зачёркнутый', fmtH1: 'Заголовок 1', fmtH2: 'Заголовок 2', fmtH3: 'Заголовок 3', fmtBullet: 'Маркированный список', fmtNumber: 'Нумерованный список', fmtTask: 'Список задач', fmtQuote: 'Цитата', fmtCode: 'Код', fmtLink: 'Ссылка', fmtTable: 'Вставить таблицу', fmtHr: 'Вставить разделитель', fmtLinkText: 'текст', fmtLinkUrl: 'адрес', fmtCol: 'Столбец',
     winMin: 'Свернуть', winMax: 'Развернуть', winRestore: 'Восстановить', winClose: 'Закрыть',
   },
   'pt-BR': {
@@ -290,6 +308,8 @@ const I18N = {
     extApplied: (name) => `Recarregado do disco: ${name}`,
     fileMissing: (name) => `Arquivo não encontrado: ${name}`,    menuPdf: 'Exportar como PDF (Ctrl+P)', menuThemeDark: 'Tema escuro', menuThemeLight: 'Tema claro',
     menuLang: 'Idioma', langAuto: 'Automático (idioma do sistema)',
+    ctxCut: 'Recortar', ctxCopy: 'Copiar', ctxPaste: 'Colar', ctxSelectAll: 'Selecionar tudo', ctxOpenLink: 'Abrir link', ctxCopyLink: 'Copiar endereço do link', ctxViewImage: 'Ver imagem', ctxFind: 'Localizar', ctxEditMode: 'Mudar para edição', pasteDenied: 'Não foi possível ler a área de transferência',
+    fmtBold: 'Negrito', fmtItalic: 'Itálico', fmtStrike: 'Tachado', fmtH1: 'Título 1', fmtH2: 'Título 2', fmtH3: 'Título 3', fmtBullet: 'Lista com marcadores', fmtNumber: 'Lista numerada', fmtTask: 'Lista de tarefas', fmtQuote: 'Citação', fmtCode: 'Código', fmtLink: 'Link', fmtTable: 'Inserir tabela', fmtHr: 'Inserir divisor', fmtLinkText: 'texto', fmtLinkUrl: 'endereço', fmtCol: 'Coluna',
     winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Fechar',
   },
 };

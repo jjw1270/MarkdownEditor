@@ -243,6 +243,41 @@ body {
 }
 .tab-new:hover { background: var(--btn-hover); color: var(--fg); }
 
+/* 서식 바 (편집 모드 전용) — 툴바와 같은 플랫 톤, 그룹은 얇은 구분선으로 */
+#fmtbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 8px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+  user-select: none;
+  overflow-x: auto;
+  scrollbar-width: none;      /* 창이 아주 좁을 때만 가로 스크롤 (바는 숨김) */
+}
+#fmtbar[hidden] { display: none; }
+#fmtbar button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+#fmtbar button:hover { background: var(--btn-hover); color: var(--fg); }
+#fmtbar button:active { background: var(--btn-press); }
+#fmtbar .fmt-sep { flex: 0 0 auto; width: 1px; height: 16px; background: var(--border); margin: 0 5px; }
+
 /* 본문 영역 (목차 레일 + 목차 사이드바 + 미리보기 가로 배치) */
 main { flex: 1; min-height: 0; position: relative; display: flex; }
 
@@ -572,7 +607,7 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
     --hl-fn: #8250df;
     --hl-attr: #953800;
   }
-  #bar, #tabs, #findbar, #tocRail, #toc, #editor, #toast, #lightbox { display: none !important; }
+  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox { display: none !important; }
   ::highlight(mdfind), ::highlight(mdfind-cur) { background-color: transparent; }   /* 찾기 표시는 인쇄 제외 */
   html, body { height: auto; }
   main { display: block; }

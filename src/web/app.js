@@ -29,6 +29,7 @@ const els = {
   tocTitleEl: document.getElementById('tocTitle'),
   backBtn: document.getElementById('backBtn'),
   fwdBtn: document.getElementById('fwdBtn'),
+  fmtbar: document.getElementById('fmtbar'),
   findbar: document.getElementById('findbar'),
   findToggle: document.getElementById('findToggle'),
   findInput: document.getElementById('findInput'),
@@ -73,6 +74,15 @@ function applyLocale(lang) {
   setTitle(els.backBtn, L.backTitle);
   setTitle(els.fwdBtn, L.fwdTitle);
   setTitle(els.tocBtn, L.tocBtnTitle);
+  // 서식 바 (아이콘/약자 버튼 — 라벨은 툴팁으로만)
+  const fmtTips = {
+    fmtBold: `${L.fmtBold} (Ctrl+B)`, fmtItalic: `${L.fmtItalic} (Ctrl+I)`, fmtStrike: L.fmtStrike,
+    fmtH1: L.fmtH1, fmtH2: L.fmtH2, fmtH3: L.fmtH3,
+    fmtBullet: L.fmtBullet, fmtNumber: L.fmtNumber, fmtTask: L.fmtTask,
+    fmtQuote: L.fmtQuote, fmtCode: L.fmtCode,
+    fmtLink: `${L.fmtLink} (Ctrl+K)`, fmtTable: L.fmtTable, fmtHr: L.fmtHr,
+  };
+  for (const id in fmtTips) setTitle(document.getElementById(id), fmtTips[id]);
   els.tocTitleEl.textContent = L.toc;
   els.findInput.placeholder = L.findPh;
   els.replaceInput.placeholder = L.replacePh;
@@ -395,6 +405,7 @@ function saveScroll() {
 function applyMode(edit) {
   els.editor.hidden = !edit;
   els.preview.hidden = edit;             // 목차 레일/패널 표시는 applyToc가 관리 (미리보기 전용)
+  els.fmtbar.hidden = !edit;             // 서식 바는 편집 모드 전용
   els.toggleBtn.classList.toggle('active', edit);   // active가 배경 틴트 + 아이콘(연필↔눈) 전환
   if (edit) {
     hideFind();                        // 미리보기 찾기 바는 편집으로 넘어가면 닫음
@@ -909,6 +920,134 @@ function wrapSelection(marker) {
   if (!els.findbar.hidden) recomputeMatches(true);
 }
 
+// ---- 서식 바 · 컨텍스트 메뉴 공용 서식 헬퍼 (모두 undo 보존) ----
+
+// 선택이 걸친 줄 전체 범위 [ls, le)
+function selectedLineRange() {
+  const v = els.editor.value, s = els.editor.selectionStart, e = els.editor.selectionEnd;
+  const ls = v.lastIndexOf('\n', s - 1) + 1;
+  let le = v.indexOf('\n', e);
+  if (le === -1) le = v.length;
+  return [ls, le];
+}
+
+// 선택된 줄들을 fn(lines)->lines 로 변환해 교체 (줄 프리픽스 토글류 공용)
+function transformLines(fn) {
+  const t = activeTab();
+  if (!t || !t.editing) return;
+  const ta = els.editor;
+  ta.focus();
+  const [ls, le] = selectedLineRange();
+  const before = ta.value.slice(ls, le);
+  const out = fn(before.split('\n')).join('\n');
+  if (out === before) return;
+  editText(ls, le, out);
+  ta.setSelectionRange(ls, ls + out.length);
+  setDirty(true);
+}
+
+// 줄 프리픽스 토글: 비어 있지 않은 모든 줄에 이미 있으면 제거, 아니면 추가.
+// make(n)의 n은 프리픽스를 붙인 줄의 순번 (번호 목록용)
+function toggleLinePrefix(strip, make) {
+  transformLines((lines) => {
+    const target = lines.filter((l) => l.trim() !== '');
+    const allOn = target.length > 0 && target.every((l) => strip.test(l));
+    let n = 0;
+    return lines.map((l) => {
+      if (l.trim() === '') return l;
+      const bare = l.replace(strip, '');
+      return allOn ? bare : make(n++) + bare;
+    });
+  });
+}
+
+// 제목 토글: 이미 그 레벨이면 해제, 다른 레벨이면 교체
+function toggleHeading(n) {
+  const prefix = '#'.repeat(n) + ' ';
+  transformLines((lines) => {
+    const target = lines.filter((l) => l.trim() !== '');
+    const allOn = target.length > 0 && target.every((l) => l.startsWith(prefix));
+    return lines.map((l) => {
+      if (l.trim() === '') return l;
+      const bare = l.replace(/^#{1,6} /, '');
+      return allOn ? bare : prefix + bare;
+    });
+  });
+}
+
+// 코드: 한 줄 선택은 인라인 `…`, 여러 줄이면 ``` 펜스 감싸기/해제
+function toggleCodeFmt() {
+  const ta = els.editor;
+  if (!ta.value.slice(ta.selectionStart, ta.selectionEnd).includes('\n')) {
+    wrapSelection('`');
+    return;
+  }
+  transformLines((lines) => {
+    if (lines.length >= 2 && lines[0].startsWith('```') && lines[lines.length - 1].startsWith('```'))
+      return lines.slice(1, -1);
+    return ['```', ...lines, '```'];
+  });
+}
+
+// 링크 삽입: 선택을 텍스트로 쓰고, 주소 자리를 선택해 둬 바로 타이핑으로 교체
+function insertLink() {
+  const t = activeTab();
+  if (!t || !t.editing) return;
+  const ta = els.editor;
+  ta.focus();
+  const s = ta.selectionStart, e = ta.selectionEnd;
+  const text = ta.value.slice(s, e) || L.fmtLinkText;
+  const url = L.fmtLinkUrl;
+  editText(s, e, `[${text}](${url})`);
+  const us = s + text.length + 3;                 // "[" + 텍스트 + "](" 다음
+  ta.setSelectionRange(us, us + url.length);
+  setDirty(true);
+}
+
+// 블록 삽입(표·구분선): 앞뒤가 빈 줄로 분리되도록 개행 보정 (예: --- 가 제목으로 해석되는 것 방지)
+function insertBlock(block) {
+  const t = activeTab();
+  if (!t || !t.editing) return;
+  const ta = els.editor;
+  ta.focus();
+  const v = ta.value, s = ta.selectionStart, e = ta.selectionEnd;
+  const head = v.slice(0, s), tail = v.slice(e);
+  const pre = head === '' || /\n\n$/.test(head) ? '' : (head.endsWith('\n') ? '\n' : '\n\n');
+  const post = tail === '' || /^\n\n/.test(tail) ? '' : (tail.startsWith('\n') ? '\n' : '\n\n');
+  editText(s, e, pre + block + post);
+  const caret = s + pre.length + block.length;
+  ta.setSelectionRange(caret, caret);
+  setDirty(true);
+}
+
+function insertTable() {
+  insertBlock(`| ${L.fmtCol} 1 | ${L.fmtCol} 2 |\n| --- | --- |\n|  |  |\n|  |  |`);
+}
+
+// ---- 서식 바 배선 ----
+// mousedown preventDefault: 버튼 클릭이 편집기 포커스/선택을 뺏지 않게
+for (const [id, act] of [
+  ['fmtBold', () => wrapSelection('**')],
+  ['fmtItalic', () => wrapSelection('*')],
+  ['fmtStrike', () => wrapSelection('~~')],
+  ['fmtH1', () => toggleHeading(1)],
+  ['fmtH2', () => toggleHeading(2)],
+  ['fmtH3', () => toggleHeading(3)],
+  ['fmtBullet', () => toggleLinePrefix(/^- (?!\[[ xX]\] )/, () => '- ')],
+  ['fmtNumber', () => toggleLinePrefix(/^\d+\. /, (n) => `${n + 1}. `)],
+  ['fmtTask', () => toggleLinePrefix(/^- \[[ xX]\] /, () => '- [ ] ')],
+  ['fmtQuote', () => toggleLinePrefix(/^> /, () => '> ')],
+  ['fmtCode', toggleCodeFmt],
+  ['fmtLink', insertLink],
+  ['fmtTable', insertTable],
+  ['fmtHr', () => insertBlock('---')],
+]) {
+  const btn = document.getElementById(id);
+  btn.addEventListener('mousedown', (e) => e.preventDefault());
+  // 편집기 포커스를 보장하고 실행 (wrapSelection류는 편집기 포커스 필요)
+  btn.addEventListener('click', () => { els.editor.focus(); act(); });
+}
+
 // ---- 탭 우클릭 메뉴 ----
 function hideTabMenu() { els.ctxmenu.hidden = true; }
 
@@ -955,7 +1094,8 @@ function showTabMenu(x, y, tabId) {
 document.addEventListener('click', hideTabMenu);
 window.addEventListener('blur', hideTabMenu);
 document.addEventListener('contextmenu', (e) => {
-  if (!e.target.closest('#tabs .tab')) hideTabMenu();      // 탭 밖 우클릭 → 메뉴 닫기
+  // 자체 메뉴가 있는 영역(탭·미리보기·편집기)이 아니면 열린 메뉴만 닫기
+  if (!e.target.closest('#tabs .tab, #preview, #editor')) hideTabMenu();
 });
 
 // ---- 최근 문서 (localStorage, MRU 최대 10) ----
@@ -982,7 +1122,8 @@ function dropRecent(path) {
 
 // 공용 드롭다운 메뉴 빌더 — items: { label, act, disabled, tip } 또는 'sep'
 // 항목 클릭은 stopPropagation: act()가 다른 메뉴를 다시 열 수 있게 (언어 하위 메뉴)
-function showMenuAt(items, anchor, align) {
+// 항목 mousedown은 preventDefault: 메뉴가 편집기 포커스/선택을 뺏지 않게 (서식·클립보드 액션용)
+function buildMenu(items) {
   els.ctxmenu.innerHTML = '';
   for (const it of items) {
     if (it === 'sep') {
@@ -997,15 +1138,29 @@ function showMenuAt(items, anchor, align) {
     if (it.disabled) el.setAttribute('aria-disabled', 'true');
     el.textContent = it.label;
     if (it.tip) el.title = it.tip;
+    el.addEventListener('mousedown', (e) => e.preventDefault());
     if (!it.disabled) el.addEventListener('click', (e) => { e.stopPropagation(); hideTabMenu(); it.act(); });
     els.ctxmenu.appendChild(el);
   }
+}
+
+function showMenuAt(items, anchor, align) {
+  buildMenu(items);
   els.ctxmenu.hidden = false;
   const br = anchor.getBoundingClientRect();
   const r = els.ctxmenu.getBoundingClientRect();
   const x = align === 'right' ? br.right - r.width : br.left;
   els.ctxmenu.style.left = Math.max(0, Math.min(x, window.innerWidth - r.width - 4)) + 'px';
   els.ctxmenu.style.top = Math.max(0, Math.min(br.bottom + 4, window.innerHeight - r.height - 4)) + 'px';
+}
+
+// 좌표(우클릭 지점) 기준으로 표시 — 미리보기/편집기 컨텍스트 메뉴용
+function showMenuAtPoint(items, x, y) {
+  buildMenu(items);
+  els.ctxmenu.hidden = false;
+  const r = els.ctxmenu.getBoundingClientRect();
+  els.ctxmenu.style.left = Math.max(0, Math.min(x, window.innerWidth - r.width - 4)) + 'px';
+  els.ctxmenu.style.top = Math.max(0, Math.min(y, window.innerHeight - r.height - 4)) + 'px';
 }
 
 // 메뉴 버튼 공통: 열려 있으면 닫고, 아니면 연다
@@ -1435,6 +1590,73 @@ function closeLightbox() {
 }
 els.lightbox.addEventListener('click', closeLightbox);
 
+// ---- 미리보기 · 편집기 우클릭 메뉴 ----
+function selectAllPreview() {
+  const r = document.createRange();
+  r.selectNodeContents(els.preview);
+  const g = getSelection();
+  g.removeAllRanges();
+  g.addRange(r);
+}
+
+// 클립보드 텍스트 붙여넣기 (undo 보존) — 읽기 권한은 C#(PermissionRequested)이 자동 허용
+async function pasteFromClipboard() {
+  const t = activeTab();
+  if (!t || !t.editing) return;
+  const ta = els.editor;
+  ta.focus();
+  try {
+    const txt = await navigator.clipboard.readText();
+    if (!txt) return;
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    editText(s, e, txt);
+    ta.setSelectionRange(s + txt.length, s + txt.length);
+    setDirty(true);
+  } catch (_) {
+    toast(L.pasteDenied);
+  }
+}
+
+els.preview.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  const a = e.target.closest('a[href]');
+  const img = e.target.closest('img');
+  const sel = String(getSelection());
+  const items = [];
+  if (a) {
+    items.push(
+      { label: L.ctxOpenLink, act: () => a.click() },        // 기존 링크 클릭 처리(탭/브라우저 분기) 재사용
+      { label: L.ctxCopyLink, act: () => copyText(safeDecode(a.getAttribute('href') || '')) },
+      'sep',
+    );
+  }
+  if (img) items.push({ label: L.ctxViewImage, act: () => openLightbox(img.src) }, 'sep');
+  items.push(
+    { label: L.ctxCopy, act: () => document.execCommand('copy'), disabled: !sel },
+    { label: L.ctxSelectAll, act: selectAllPreview },
+    'sep',
+    { label: L.ctxFind, act: () => openFind(false) },
+    { label: L.ctxEditMode, act: () => setMode(true) },
+  );
+  showMenuAtPoint(items, e.clientX, e.clientY);
+});
+
+els.editor.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  const ta = els.editor;
+  const hasSel = ta.selectionStart !== ta.selectionEnd;
+  showMenuAtPoint([
+    { label: L.ctxCut, act: () => { ta.focus(); document.execCommand('cut'); }, disabled: !hasSel },
+    { label: L.ctxCopy, act: () => { ta.focus(); document.execCommand('copy'); }, disabled: !hasSel },
+    { label: L.ctxPaste, act: pasteFromClipboard },
+    { label: L.ctxSelectAll, act: () => { ta.focus(); ta.select(); } },
+    'sep',
+    { label: L.fmtBold, act: () => { ta.focus(); wrapSelection('**'); } },
+    { label: L.fmtItalic, act: () => { ta.focus(); wrapSelection('*'); } },
+    { label: L.fmtLink, act: insertLink },
+  ], e.clientX, e.clientY);
+});
+
 // 미리보기의 링크·이미지 클릭 처리
 els.preview.addEventListener('click', (e) => {
   const a = e.target.closest('a');
@@ -1485,6 +1707,8 @@ document.addEventListener('keydown', (e) => {
   else if (k === 'p') { e.preventDefault(); exportPdf(); }           // 브라우저 인쇄 대신 PDF 내보내기
   else if (k === 'b') { e.preventDefault(); wrapSelection('**'); }   // 굵게
   else if (k === 'i') { e.preventDefault(); wrapSelection('*'); }    // 기울임
+  else if (k === 'k') { e.preventDefault(); if (document.activeElement === els.editor) insertLink(); }   // 링크
+
   else if (k === 'tab') { e.preventDefault(); cycleTab(e.shiftKey ? -1 : 1); }   // 탭 순환
   else if (k === 'pagedown') { e.preventDefault(); cycleTab(1); }
   else if (k === 'pageup') { e.preventDefault(); cycleTab(-1); }

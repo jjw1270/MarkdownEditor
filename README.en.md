@@ -23,6 +23,8 @@ Double-click a `.md` file and it just opens — no installation required.
 - **GitHub-style rendering** — tables, code highlighting (offline), and **mermaid diagrams** (offline, theme-aware).
 - **Table of contents sidebar** — with scroll-spy highlighting of the current section.
 - **Edit ↔ Preview** — `Ctrl+E`, with scroll position synchronized between the two modes.
+- **Formatting bar** — appears in edit mode: bold, headings, lists, checkboxes, quote, code, link, table, divider — one click each, **no Markdown knowledge required** (everything undoable with `Ctrl+Z`).
+- **Context menus** — right-click in the preview (copy, open link, copy link address, view image, find) or the editor (cut/copy/paste/select all + core formatting).
 - **Find / Replace** — `Ctrl+F` works in both preview (full-match highlighting) and edit mode; `Ctrl+H` replaces in edit mode.
 - **PDF export** — the `📄` button next to Save, or `Ctrl+P`, always in light theme.
 - **Paste images from clipboard** — saved to an `images/` folder next to the document, link inserted automatically.
@@ -60,6 +62,7 @@ Double-click a `.md` file and it just opens — no installation required.
 | `Ctrl+E` | Toggle edit / preview |
 | `Ctrl+F` / `Ctrl+H` | Find / Replace |
 | `Ctrl+B` / `Ctrl+I` | Bold / Italic (edit mode, toggles) |
+| `Ctrl+K` | Insert link (edit mode — the address part is pre-selected) |
 | `Tab` / `Shift+Tab` | Indent / Outdent (multi-line aware) |
 | `Ctrl+Tab` / `Ctrl+Shift+Tab` | Next / previous tab |
 | `Ctrl+W` | Close tab |
