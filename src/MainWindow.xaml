@@ -2,9 +2,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        Title="Markdown" Height="720" Width="960"
+        Title="Markdown" Height="720" Width="960" MinWidth="480" MinHeight="320"
         WindowStartupLocation="CenterScreen">
-    <Grid>
+    <!-- OS 제목표시줄 제거: 웹의 상단 바(탭+툴바)가 타이틀바 역할까지 한다 (Win11 메모장 방식).
+         드래그·리사이즈·창 버튼은 웹이 메시지로 요청하고 C#이 네이티브로 처리 -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6"
+                      GlassFrameThickness="-1" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="Root">
         <wv2:WebView2 x:Name="Web" />
 
         <!-- 로딩 스플래시: WebView2 부팅~첫 렌더 사이의 빈 화면을 가림 (ready 수신 시 사라짐) -->

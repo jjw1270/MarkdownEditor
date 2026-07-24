@@ -31,6 +31,7 @@ const I18N = {
     moreTitle: '메뉴',
     menuPdf: '📄 PDF로 내보내기', menuThemeDark: '🌙 다크 테마', menuThemeLight: '☀️ 라이트 테마',
     menuLang: '🌐 언어', langAuto: '자동 (시스템 언어)',
+    winMin: '최소화', winMax: '최대화', winRestore: '이전 크기로 복원', winClose: '닫기',
   },
   'en': {
     newDoc: 'Untitled',
@@ -61,6 +62,7 @@ const I18N = {
     moreTitle: 'Menu',
     menuPdf: '📄 Export as PDF', menuThemeDark: '🌙 Dark theme', menuThemeLight: '☀️ Light theme',
     menuLang: '🌐 Language', langAuto: 'Auto (system language)',
+    winMin: 'Minimize', winMax: 'Maximize', winRestore: 'Restore', winClose: 'Close',
   },
   'ja': {
     newDoc: '無題',
@@ -91,6 +93,7 @@ const I18N = {
     moreTitle: 'メニュー',
     menuPdf: '📄 PDFとしてエクスポート', menuThemeDark: '🌙 ダークテーマ', menuThemeLight: '☀️ ライトテーマ',
     menuLang: '🌐 言語', langAuto: '自動（システム言語）',
+    winMin: '最小化', winMax: '最大化', winRestore: '元に戻す', winClose: '閉じる',
   },
   'zh-CN': {
     newDoc: '无标题',
@@ -121,6 +124,7 @@ const I18N = {
     moreTitle: '菜单',
     menuPdf: '📄 导出为 PDF', menuThemeDark: '🌙 深色主题', menuThemeLight: '☀️ 浅色主题',
     menuLang: '🌐 语言', langAuto: '自动（系统语言）',
+    winMin: '最小化', winMax: '最大化', winRestore: '还原', winClose: '关闭',
   },
   'zh-TW': {
     newDoc: '未命名',
@@ -151,6 +155,7 @@ const I18N = {
     moreTitle: '選單',
     menuPdf: '📄 匯出為 PDF', menuThemeDark: '🌙 深色主題', menuThemeLight: '☀️ 淺色主題',
     menuLang: '🌐 語言', langAuto: '自動（系統語言）',
+    winMin: '最小化', winMax: '最大化', winRestore: '還原', winClose: '關閉',
   },
   'es': {
     newDoc: 'Sin título',
@@ -181,6 +186,7 @@ const I18N = {
     moreTitle: 'Menú',
     menuPdf: '📄 Exportar como PDF', menuThemeDark: '🌙 Tema oscuro', menuThemeLight: '☀️ Tema claro',
     menuLang: '🌐 Idioma', langAuto: 'Automático (idioma del sistema)',
+    winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Cerrar',
   },
   'fr': {
     newDoc: 'Sans titre',
@@ -211,6 +217,7 @@ const I18N = {
     moreTitle: 'Menu',
     menuPdf: '📄 Exporter en PDF', menuThemeDark: '🌙 Thème sombre', menuThemeLight: '☀️ Thème clair',
     menuLang: '🌐 Langue', langAuto: 'Automatique (langue du système)',
+    winMin: 'Réduire', winMax: 'Agrandir', winRestore: 'Restaurer', winClose: 'Fermer',
   },
   'de': {
     newDoc: 'Unbenannt',
@@ -241,6 +248,7 @@ const I18N = {
     moreTitle: 'Menü',
     menuPdf: '📄 Als PDF exportieren', menuThemeDark: '🌙 Dunkles Design', menuThemeLight: '☀️ Helles Design',
     menuLang: '🌐 Sprache', langAuto: 'Automatisch (Systemsprache)',
+    winMin: 'Minimieren', winMax: 'Maximieren', winRestore: 'Wiederherstellen', winClose: 'Schließen',
   },
   'ru': {
     newDoc: 'Без имени',
@@ -271,6 +279,7 @@ const I18N = {
     moreTitle: 'Меню',
     menuPdf: '📄 Экспорт в PDF', menuThemeDark: '🌙 Тёмная тема', menuThemeLight: '☀️ Светлая тема',
     menuLang: '🌐 Язык', langAuto: 'Автоматически (язык системы)',
+    winMin: 'Свернуть', winMax: 'Развернуть', winRestore: 'Восстановить', winClose: 'Закрыть',
   },
   'pt-BR': {
     newDoc: 'Sem título',
@@ -301,6 +310,7 @@ const I18N = {
     moreTitle: 'Menu',
     menuPdf: '📄 Exportar como PDF', menuThemeDark: '🌙 Tema escuro', menuThemeLight: '☀️ Tema claro',
     menuLang: '🌐 Idioma', langAuto: 'Automático (idioma do sistema)',
+    winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Fechar',
   },
 };
 

@@ -5,6 +5,11 @@ const els = {
   tabs: document.getElementById('tabs'),
   preview: document.getElementById('preview'),
   editor: document.getElementById('editor'),
+  bar: document.getElementById('bar'),
+  appTitle: document.getElementById('appTitle'),
+  minBtn: document.getElementById('minBtn'),
+  maxBtn: document.getElementById('maxBtn'),
+  closeBtn: document.getElementById('closeBtn'),
   toc: document.getElementById('toc'),
   tocHead: document.getElementById('tocHead'),
   tocList: document.getElementById('tocList'),
@@ -20,7 +25,6 @@ const els = {
   openBtn: document.getElementById('openBtn'),
   recentBtn: document.getElementById('recentBtn'),
   tocTitleEl: document.getElementById('tocTitle'),
-  appName: document.getElementById('appName'),
   backBtn: document.getElementById('backBtn'),
   fwdBtn: document.getElementById('fwdBtn'),
   findbar: document.getElementById('findbar'),
@@ -39,8 +43,10 @@ const els = {
 // ---- 로케일 ----
 // 문자열 테이블·언어 목록·태그 매칭은 i18n.js(I18N/LANG_NAMES/resolveLang)에 있다.
 // 시작은 브라우저 언어로 추정하고, C#이 ready 후 확정값(언어 설정 > MDE_LANG > OS 언어)을 보내면 재적용.
-let L = I18N[resolveLang(navigator.language)] || I18N.en;
-let langMode = 'auto';   // 'auto' 또는 언어 코드 — ⋯ 메뉴의 체크 표시용
+let langCurrent = resolveLang(navigator.language);   // 현재 적용된 언어 코드
+let L = I18N[langCurrent] || I18N.en;
+let langMode = 'auto';     // 'auto' 또는 언어 코드 — ⋯ 메뉴의 체크 표시용
+let winMaximized = false;  // 창 최대화 상태 (커스텀 타이틀바 — applyLocale의 복원/최대화 툴팁에도 사용)
 
 // 접근성: 시스템의 "동작 줄이기" 설정 시 부드러운 스크롤 대신 즉시 이동
 const SMOOTH = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -51,11 +57,13 @@ function setTitle(el, text) { el.title = text; el.setAttribute('aria-label', tex
 
 // 정적 UI 텍스트를 현재 로케일로 적용 (부팅 시 1회 + C#이 언어 확정값을 보내면 재적용)
 function applyLocale(lang) {
-  if (lang) L = I18N[lang] || I18N.en;
-  els.openBtn.textContent = L.open;
+  if (lang) {
+    langCurrent = I18N[lang] ? lang : 'en';
+    L = I18N[langCurrent];
+  }
+  // 툴바는 아이콘 전용 — 라벨은 툴팁(title)으로만
   setTitle(els.openBtn, L.openTitle);
   setTitle(els.recentBtn, L.recentTitle);
-  els.saveBtn.textContent = L.save;
   setTitle(els.saveBtn, L.saveTitle);
   setTitle(els.moreBtn, L.moreTitle);
   setTitle(els.backBtn, L.backTitle);
@@ -73,9 +81,10 @@ function applyLocale(lang) {
   setTitle(els.replaceOne, L.replaceOneTitle);
   els.replaceAll.textContent = L.replaceAllBtn;
   setTitle(els.replaceAll, L.replaceAllTitle);
-  const t = activeTab();
-  els.toggleBtn.textContent = t && t.editing ? L.preview : L.edit;
   setTitle(els.toggleBtn, L.toggleTitle);
+  setTitle(els.minBtn, L.winMin);
+  setTitle(els.maxBtn, winMaximized ? L.winRestore : L.winMax);
+  setTitle(els.closeBtn, L.winClose);
   if (tabs.length) renderTabs();   // 탭의 닫기/새 문서 툴팁 갱신
 }
 
@@ -381,8 +390,7 @@ function saveScroll() {
 function applyMode(edit) {
   els.editor.hidden = !edit;
   els.preview.hidden = edit;             // 목차 레일/패널 표시는 applyToc가 관리 (미리보기 전용)
-  els.toggleBtn.textContent = edit ? L.preview : L.edit;
-  els.toggleBtn.classList.toggle('active', edit);
+  els.toggleBtn.classList.toggle('active', edit);   // active가 배경 틴트 + 아이콘(연필↔눈) 전환
   if (edit) {
     hideFind();                        // 미리보기 찾기 바는 편집으로 넘어가면 닫음
     applyToc();                        // 편집 모드에서는 목차 숨김
@@ -1030,7 +1038,8 @@ function showMoreMenu() {
       label: currentTheme() === 'dark' ? L.menuThemeLight : L.menuThemeDark,
       act: () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'),
     },
-    { label: `${L.menuLang}  ▸`, act: showLangMenu },
+    // 화살표 대신 현재 언어를 함께 표시 — 클릭하면 언어 목록으로 전환
+    { label: `${L.menuLang} — ${LANG_NAMES[langCurrent] || 'English'}`, act: showLangMenu },
     'sep',
     {
       label: `MarkDownEditor v${appVersion || '?'}`,
@@ -1327,11 +1336,67 @@ els.replaceOne.addEventListener('click', replaceCurrent);
 els.replaceAll.addEventListener('click', replaceAll);
 els.findClose.addEventListener('click', closeFind);
 
-// 버튼
-let appVersion = '';
-els.appName.addEventListener('click', () => {
-  if (appVersion) toast(`MarkDownEditor v${appVersion}`);
+// ---- 커스텀 타이틀바: 상단 바가 OS 제목표시줄 역할 (드래그·더블클릭·창 버튼) ----
+
+// 타이틀바의 빈 영역(바 자체·스페이서·앱 아이콘·타이틀)에서만 창 드래그/더블클릭 동작
+function isBarBlank(e) {
+  return e.target === els.bar
+    || (e.target.classList?.contains('spacer') && e.target.parentElement === els.bar)
+    || e.target.id === 'appIcon'
+    || e.target.id === 'appTitle';
+}
+els.bar.addEventListener('mousedown', (e) => {
+  if (e.button === 0 && isBarBlank(e) && host) host.postMessage({ cmd: 'windrag' });
 });
+els.bar.addEventListener('dblclick', (e) => {
+  if (isBarBlank(e) && host) host.postMessage({ cmd: 'winmax' });
+});
+els.minBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winmin' }); });
+els.maxBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winmax' }); });
+els.closeBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winclose' }); });
+
+function applyWinState(maximized) {
+  winMaximized = maximized;
+  els.maxBtn.classList.toggle('maximized', maximized);
+  setTitle(els.maxBtn, maximized ? L.winRestore : L.winMax);
+}
+
+// 창 가장자리 리사이즈: 창 프레임이 없으므로 웹이 5px 가장자리를 감지해 네이티브로 넘김
+const RESIZE_EDGE = 5;
+const EDGE_CURSORS = {
+  n: 'ns-resize', s: 'ns-resize', e: 'ew-resize', w: 'ew-resize',
+  ne: 'nesw-resize', sw: 'nesw-resize', nw: 'nwse-resize', se: 'nwse-resize',
+};
+function edgeAt(x, y) {
+  if (winMaximized) return null;
+  const w = window.innerWidth, h = window.innerHeight;
+  const l = x < RESIZE_EDGE, r = x > w - RESIZE_EDGE, t = y < RESIZE_EDGE, b = y > h - RESIZE_EDGE;
+  if (t && l) return 'nw';
+  if (t && r) return 'ne';
+  if (b && l) return 'sw';
+  if (b && r) return 'se';
+  if (l) return 'w';
+  if (r) return 'e';
+  if (t) return 'n';
+  if (b) return 's';
+  return null;
+}
+document.addEventListener('mousemove', (e) => {
+  const edge = edgeAt(e.clientX, e.clientY);
+  document.body.style.cursor = edge ? EDGE_CURSORS[edge] : '';
+});
+document.addEventListener('mousedown', (e) => {
+  if (e.button !== 0) return;
+  const edge = edgeAt(e.clientX, e.clientY);
+  if (edge && host) {
+    e.preventDefault();
+    e.stopPropagation();
+    host.postMessage({ cmd: 'winresize', edge });
+  }
+}, true);   // 캡처 단계 — 가장자리에 걸친 다른 요소보다 먼저 처리
+
+// 버튼
+let appVersion = '';   // 버전은 ⋯ 메뉴에 표시 (C#의 app 메시지로 수신)
 els.openBtn.addEventListener('click', openFile);
 els.toggleBtn.addEventListener('click', toggleMode);
 els.saveBtn.addEventListener('click', save);
@@ -1643,8 +1708,10 @@ if (host) {
       if (m.lang) applyLocale(m.lang);
       if (m.version) {
         appVersion = m.version;
-        els.appName.title = `MarkDownEditor v${appVersion}`;
+        els.appTitle.title = `MarkDownEditor v${appVersion}`;
       }
+    } else if (m.cmd === 'winstate') {
+      applyWinState(!!m.maximized);
     } else if (m.cmd === 'pathMissing') {
       // 최근 문서/세션의 파일이 삭제·이동됨 → 목록에서 제거 (세션 복원 중이면 조용히)
       dropRecent(m.path || '');

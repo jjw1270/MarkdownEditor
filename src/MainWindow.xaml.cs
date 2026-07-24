@@ -51,12 +51,43 @@ public partial class MainWindow : Window
         SourceInitialized += (_, _) => ApplyTitleBarTheme(theme);
         Loaded += OnLoaded;
         Closing += OnClosing;
+        StateChanged += OnWindowStateChanged;
     }
 
     // ---- 타이틀바 다크/라이트 동기화 (Windows 10 20H1+ / 11) ----
     [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
     private const int DwmaUseImmersiveDarkMode = 20;
+
+    // ---- 커스텀 타이틀바: 웹 상단 바의 드래그/리사이즈를 네이티브 창 조작으로 변환 ----
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+    private const int WmNcLButtonDown = 0x00A1;
+
+    // HTCAPTION=2(이동), HTLEFT=10 … HTBOTTOMRIGHT=17(가장자리 리사이즈)
+    private void BeginNativeDrag(int hitTest)
+    {
+        var hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+        if (hwnd == IntPtr.Zero) return;
+        ReleaseCapture();
+        SendMessage(hwnd, WmNcLButtonDown, hitTest, IntPtr.Zero);
+    }
+
+    private static int HitTestFromEdge(string? edge) => edge switch
+    {
+        "w" => 10, "e" => 11, "n" => 12, "nw" => 13, "ne" => 14,
+        "s" => 15, "sw" => 16, "se" => 17,
+        _ => 0,
+    };
+
+    // 최대화 시 보이지 않는 리사이즈 테두리만큼 창이 화면 밖으로 나가는 것을 보정 + 웹에 상태 통지
+    private void OnWindowStateChanged(object? sender, EventArgs e)
+    {
+        Root.Margin = WindowState == WindowState.Maximized ? new Thickness(8) : new Thickness(0);
+        SendToWeb(new { cmd = "winstate", maximized = WindowState == WindowState.Maximized });
+    }
 
     // 앱 테마에 맞춰 Windows 제목표시줄도 어둡게/밝게 (시스템 설정과 무관하게 항상 일치)
     private void ApplyTitleBarTheme(string theme)
@@ -152,6 +183,7 @@ public partial class MainWindow : Window
                 _webReady = true;
                 // 확정 언어(설정 > MDE_LANG > OS)와 버전을 웹에 전달 — UI 문자열·정보 표시에 사용
                 SendToWeb(new { cmd = "app", version = AppVersion, lang = Loc.Lang, langMode = Loc.Mode });
+                SendToWeb(new { cmd = "winstate", maximized = WindowState == WindowState.Maximized });
                 LoadStartupFiles();
                 foreach (var p in _pendingFiles) LoadFile(p);   // 준비 전 도착분 반영
                 _pendingFiles.Clear();
@@ -216,6 +248,23 @@ public partial class MainWindow : Window
                 break;
             case "state":
                 UpdateState(msg);
+                break;
+            // ---- 커스텀 타이틀바 창 제어 ----
+            case "windrag":
+                BeginNativeDrag(2);                    // HTCAPTION — 창 이동 (최대화 상태면 OS가 복원 후 드래그)
+                break;
+            case "winresize":
+                var ht = HitTestFromEdge(msg.TryGetProperty("edge", out var eg) ? eg.GetString() : null);
+                if (ht != 0 && WindowState == WindowState.Normal) BeginNativeDrag(ht);
+                break;
+            case "winmin":
+                WindowState = WindowState.Minimized;
+                break;
+            case "winmax":
+                WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+                break;
+            case "winclose":
+                Close();
                 break;
         }
     }

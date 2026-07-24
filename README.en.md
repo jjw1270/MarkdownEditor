@@ -32,6 +32,7 @@ Double-click a `.md` file and it just opens — no installation required.
 - **Korean encoding detection** — BOM-less CP949/EUC-KR files open correctly alongside UTF-8.
 - **Dark / Light theme** — toggled from the `⋯` menu, remembered across runs, including the Windows title bar.
 - **Localized UI — 10 languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Follows the OS language by default; switch anytime from the `⋯` menu → Language.
+- **Notepad-style compact chrome** — tabs and tools live in a custom title bar (drag the blank area to move, double-click to maximize).
 
 ![⋯ menu](docs/images/menu.png)
 
