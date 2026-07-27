@@ -135,8 +135,10 @@ and in the existing format.
   약 8 MB가 남았고 `--purge`도 적용되지 않았다. 공식 소스 등록 후 `--id jjw1270.MarkDownEditor`로
   설치·제거가 연결되는지와 `--purge` 동작을 다시 확인한다. 현재 사용하는 PC에서 시험하면 이 폴더와
   portable 등록, 명령 별칭이 남을 수 있으므로 Windows Sandbox 또는 폐기 가능한 VM을 권장한다.
-- [ ] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
-      `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 → PR
+- [x] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
+      `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 →
+      [PR #408328](https://github.com/microsoft/winget-pkgs/pull/408328) 생성
+      (2026-07-27, 초안·CLA 및 자동 검사 대기)
 
 > 주의: 배포 zip이 **약 347 MB**(WebView2 고정 버전 런타임 번들 포함)라 리뷰어가 크기를
 > 지적할 수 있다. 그럴 경우 런타임을 뺀 경량 zip을 별도 에셋으로 추가해 그쪽을 winget에
