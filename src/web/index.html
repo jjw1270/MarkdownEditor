@@ -27,14 +27,9 @@
       </svg>
     </button>
     <!-- 정중앙 고정 (pointer-events 없음 → 위에서도 창 드래그 가능)
-         버전(클릭 → 정보·피드백 메뉴: 저장소·버그 신고·기능 제안)과 업데이트 배지(!)만 클릭 가능 — 새 버전 감지 시 배지가 강조됨 -->
-    <span id="appTitle"><img id="appIcon" src="appicon.png" alt="" draggable="false" />MarkDownEditor<span id="appVer"></span><button id="updBtn" title="업데이트 확인">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="8" cy="8" r="6.4" stroke="currentColor" stroke-width="1.6"/>
-        <path d="M8 4.7v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-        <circle cx="8" cy="11.2" r="1" fill="currentColor"/>
-      </svg>
-    </button></span>
+         버전만 클릭 가능 → 정보·피드백 메뉴 (업데이트 확인·저장소·버그 신고·기능 제안)
+         새 버전 감지 시 버전 오른쪽에 레드닷 표시 -->
+    <span id="appTitle"><img id="appIcon" src="appicon.png" alt="" draggable="false" />MarkDownEditor<span id="appVer" hidden><span id="appVerText"></span><span id="updDot" hidden></span></span></span>
     <!-- 남은 빈 공간 전체가 창 드래그 영역 -->
     <div class="spacer"></div>
 

@@ -116,39 +116,34 @@ body {
 }
 #appIcon { width: 16px; height: 16px; -webkit-user-drag: none; }
 
-/* 버전 표시 (타이틀 텍스트 오른쪽) — 클릭하면 정보·피드백 메뉴 (저장소·버그 신고·기능 제안) */
+/* 버전 표시 (타이틀 텍스트 오른쪽) — 타이틀은 클릭 통과지만 버전은 클릭 가능
+   클릭하면 정보·피드백 메뉴 (업데이트 확인·저장소·버그 신고·기능 제안) */
 #appTitle #appVer {
   pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   font-weight: 500;
   opacity: .8;
   cursor: pointer;
 }
 #appTitle #appVer:hover { opacity: 1; color: var(--fg); }
-#appVer:empty { display: none; }   /* C#의 app 메시지로 버전을 받기 전엔 숨김 */
+#appTitle #appVer[hidden] { display: none; }   /* C#의 app 메시지로 버전을 받기 전엔 숨김 */
 
-/* 업데이트 배지 (타이틀 바로 오른쪽 원형 ! 버튼) — 타이틀은 클릭 통과지만 배지는 클릭 가능 */
-#appTitle #updBtn {
-  pointer-events: auto;
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
+/* 새 버전 감지: 배너·팝업 없이 버전 오른쪽 레드닷(색+펄스)으로만 알림 */
+#updDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
+  background: var(--hl-kw);   /* 테마별 빨강 토큰 재사용 */
+  animation: updpulse 2s ease-out infinite;
 }
-#appTitle #updBtn:hover { background: var(--btn-hover); color: var(--fg); }
-/* 새 버전 감지: 배너·팝업 없이 배지 강조(색+펄스)로만 알림 */
-#appTitle #updBtn.avail,
-#appTitle #updBtn.avail:hover { background: var(--accent); color: #fff; animation: updpulse 2s ease-out infinite; }
+#updDot[hidden] { display: none; }
 @keyframes updpulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
-  70%  { box-shadow: 0 0 0 7px transparent; }
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--hl-kw) 55%, transparent); }
+  70%  { box-shadow: 0 0 0 5px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 

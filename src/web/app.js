@@ -8,6 +8,8 @@ const els = {
   bar: document.getElementById('bar'),
   appTitle: document.getElementById('appTitle'),
   appVer: document.getElementById('appVer'),
+  appVerText: document.getElementById('appVerText'),
+  updDot: document.getElementById('updDot'),
   minBtn: document.getElementById('minBtn'),
   maxBtn: document.getElementById('maxBtn'),
   closeBtn: document.getElementById('closeBtn'),
@@ -42,7 +44,6 @@ const els = {
   findClose: document.getElementById('findClose'),
   replaceOne: document.getElementById('replaceOne'),
   replaceAll: document.getElementById('replaceAll'),
-  updBtn: document.getElementById('updBtn'),
   updOverlay: document.getElementById('updOverlay'),
   updClose: document.getElementById('updClose'),
   updTitle: document.getElementById('updTitle'),
@@ -117,10 +118,10 @@ function applyLocale(lang) {
   setTitle(els.minBtn, L.winMin);
   setTitle(els.maxBtn, winMaximized ? L.winRestore : L.winMax);
   setTitle(els.closeBtn, L.winClose);
-  setTitle(els.appVer, L.verTip);   // 버전 표시(정보·피드백 메뉴) 툴팁
+  // 버전 표시(정보·피드백 메뉴) 툴팁 — 새 버전이 있으면 레드닷 의미도 함께 알린다
+  setTitle(els.appVer, els.updDot.hidden ? L.verTip : `${L.verTip} — ${L.updNewTip}`);
   document.documentElement.lang = langCurrent;   // 스크린리더·철자검사가 보는 문서 언어 동기화
-  // 업데이트 배지·팝업 고정 문자열 (상태 문구는 renderUpdate가 담당)
-  setTitle(els.updBtn, els.updBtn.classList.contains('avail') ? L.updNewTip : L.updTip);
+  // 업데이트 팝업 고정 문자열 (상태 문구는 renderUpdate가 담당)
   setTitle(els.updClose, L.findCloseTitle);
   els.updTitle.textContent = L.updTitle;
   els.updCurLabel.textContent = L.updCurrent;
@@ -1251,7 +1252,7 @@ function setLang(mode) {
   if (host) host.postMessage({ cmd: 'lang', value: mode });
 }
 
-// 타이틀 옆 버전 클릭 → 정보·피드백 메뉴 (저장소 / 버그 신고 / 기능 제안)
+// 타이틀 옆 버전 클릭 → 정보·피드백 메뉴 (업데이트 확인 / 저장소 / 버그 신고 / 기능 제안)
 // 이슈는 앱이 직접 전송하지 않고 GitHub 이슈 폼을 브라우저로 연다 — 버전 필드만 URL로 미리 채움
 const REPO_URL = 'https://github.com/jjw1270/MarkdownEditor';
 function openIssueForm(template) {
@@ -1260,7 +1261,11 @@ function openIssueForm(template) {
   if (host) host.postMessage({ cmd: 'openExternal', url });
 }
 function showVerMenu() {
+  const avail = upd.status === 'available';
   showMenuAt([
+    // 새 버전이 있으면 첫 항목이 그 사실과 버전을 그대로 알려 준다 (레드닷의 설명 역할)
+    { label: avail ? `${L.updNewTip}${upd.latest ? ` (v${upd.latest})` : ''}` : L.updTip, act: showUpdatePopup },
+    'sep',
     { label: L.verMenuRepo, tip: REPO_URL, act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: REPO_URL }); } },
     'sep',
     { label: L.verMenuBug, act: () => openIssueForm('bug_report.yml') },
@@ -1269,16 +1274,16 @@ function showVerMenu() {
 }
 menuButton(els.appVer, showVerMenu);
 
-// ---- 자동 업데이트 (타이틀 옆 ! 배지 + 팝업) ----
+// ---- 자동 업데이트 (버전 옆 레드닷 + 버전 메뉴 + 팝업) ----
 // 실제 확인·다운로드·적용은 C#(MainWindow.Update.cs)이 수행하고, 웹은 상태 표시만 담당.
 // status: idle | checking | latest | available | downloading | extracting | restarting | fallback | error
 const upd = { status: 'idle', latest: null, notes: '', pct: 0, reason: '' };
 
 function renderUpdate() {
   const avail = upd.status === 'available';
-  els.updBtn.classList.toggle('avail', avail);
-  setTitle(els.updBtn, avail ? L.updNewTip : L.updTip);
-  if (els.updOverlay.hidden) return;   // 팝업이 닫혀 있으면 배지만 갱신
+  els.updDot.hidden = !avail;
+  setTitle(els.appVer, avail ? `${L.verTip} — ${L.updNewTip}` : L.verTip);
+  if (els.updOverlay.hidden) return;   // 팝업이 닫혀 있으면 레드닷만 갱신
 
   els.updCur.textContent = 'v' + (appVersion || '?');
   els.updLatest.textContent = upd.latest ? 'v' + upd.latest : '—';
@@ -1357,7 +1362,6 @@ function requestUpdateCheck() {
   host.postMessage({ cmd: 'updateCheck' });
 }
 
-els.updBtn.addEventListener('click', showUpdatePopup);
 els.updClose.addEventListener('click', hideUpdatePopup);
 els.updOverlay.addEventListener('click', (e) => { if (e.target === els.updOverlay) hideUpdatePopup(); });
 els.updCheckBtn.addEventListener('click', requestUpdateCheck);
@@ -2093,7 +2097,8 @@ if (host) {
       if (m.version) {
         appVersion = m.version;
         els.appTitle.title = `MarkDownEditor v${appVersion}`;
-        els.appVer.textContent = 'v' + appVersion;   // 타이틀 오른쪽 버전 표시
+        els.appVerText.textContent = 'v' + appVersion;   // 타이틀 오른쪽 버전 표시
+        els.appVer.hidden = false;                       // 버전을 받기 전까진 숨겨 둔 상태
       }
     } else if (m.cmd === 'winstate') {
       applyWinState(!!m.maximized);

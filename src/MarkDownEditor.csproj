@@ -9,7 +9,7 @@
     <AssemblyName>MarkDownEditor</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon_New.ico</ApplicationIcon>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <Product>MarkDownEditor</Product>
     <Copyright>Copyright (c) 2026 jjw1270</Copyright>
     <RepositoryUrl>https://github.com/jjw1270/MarkdownEditor</RepositoryUrl>
@@ -19,9 +19,14 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
   </ItemGroup>
 
-  <!-- web/ 폴더 전체를 출력 폴더로 복사 (WebView2가 로컬 로드) -->
+  <!-- web/ 폴더 전체를 출력·게시 폴더로 복사 (WebView2가 exe 옆 web/을 가상 호스트로 로드)
+       ExcludeFromSingleFile: 없으면 단일 파일 게시가 큰 웹 자산(mermaid·highlight)을 exe 번들로
+       삼켜 publish\web\에서 누락됨 — 앱은 디스크의 web/만 읽으므로 항상 파일로 남겨야 한다.
+       None Remove: SDK 기본 글롭이 잡은 메타데이터 없는 중복 항목 제거 -->
   <ItemGroup>
-    <None Include="web\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="web\" />
+    <None Remove="web\**\*" />
+    <None Include="web\**\*" CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" LinkBase="web\" />
   </ItemGroup>
 
 </Project>
