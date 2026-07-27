@@ -103,18 +103,28 @@ and in the existing format.
 
 - [x] 로컬 구조 검증: `winget validate --manifest packaging/winget/1.2.2`
       (2026-07-27, winget v1.29에서 성공)
-- [ ] **Windows Sandbox 또는 폐기 가능한 VM**에서 설치·실행·제거 테스트
+- [x] 로컬 매니페스트로 설치·실행·제거 테스트
+      (2026-07-27, winget v1.29에서 1.2.2 파일·별칭·WebView2 실행과 제거 등록 해제 확인)
 
   ```powershell
   # 관리자 PowerShell — 로컬 매니페스트 설치 기능은 기본적으로 꺼져 있다.
   winget settings --enable LocalManifestFiles
   winget install --manifest packaging/winget/1.2.2 --accept-package-agreements
-  # MarkDownEditor 실행 후 web/·Runtime/ 의존 기능 확인
-  winget uninstall --id jjw1270.MarkDownEditor --exact
+  markdowneditor
+  # 로컬 매니페스트는 아직 공식 소스 ID와 연결되지 않으므로 이름으로 제거한다.
+  winget uninstall --name MarkDownEditor --exact
   winget settings --disable LocalManifestFiles
   ```
 
-  현재 사용하는 PC에서 바로 시험하면 portable 등록과 명령 별칭이 남을 수 있으므로 격리 환경을 권장한다.
+  이 PC에서는 WinGet 보관 파일 검사에서 `0x8A150060`을 반환했다. 같은 ZIP의 SHA-256 일치와
+  Microsoft Defender 사용자 지정 검사 무탐지를 확인한 뒤, 로컬 테스트에 한해 재정의 옵션으로 설치했다.
+  재정의 기능은 기본적으로 꺼져 있으므로 필요한 경우에만 관리자 PowerShell에서
+  `winget settings --enable LocalArchiveMalwareScanOverride`를 실행하고, 테스트 직후 다시 끈다.
+
+  앱은 포터블 설정·캐시를 실행 파일 옆 `WebView2Data/`에 보존한다. 로컬 소스 설치에서는 제거 후
+  약 8 MB가 남았고 `--purge`도 적용되지 않았다. 공식 소스 등록 후 `--id jjw1270.MarkDownEditor`로
+  설치·제거가 연결되는지와 `--purge` 동작을 다시 확인한다. 현재 사용하는 PC에서 시험하면 이 폴더와
+  portable 등록, 명령 별칭이 남을 수 있으므로 Windows Sandbox 또는 폐기 가능한 VM을 권장한다.
 - [ ] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
       `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 → PR
 
