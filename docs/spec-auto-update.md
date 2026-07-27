@@ -1,4 +1,6 @@
-# TODO: 자동 업데이트 기능
+# 스펙: 자동 업데이트
+
+> 원래 `TODO.md`로 작성된 설계·구현 기록 — 기능 완료 후 docs/로 이동.
 
 > **상태: 구현·릴리즈·E2E 검증 완료 (2026-07-27).** 아래 설계대로 구현됨 — C# `src/MainWindow.Update.cs`
 > (+ `MainWindow.xaml.cs` 연결 4곳), 웹 `app.js`/`index.html`/`style.css`/`i18n.js`(10개 언어).
