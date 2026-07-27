@@ -27,6 +27,8 @@ public partial class MainWindow : Window
         new(@"<img\b[^>]*?\bsrc\s*=\s*[""'](?<src>[^""']+)[""']", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static string? _dataDir;
+    internal static bool IsInstalledEdition =>
+        File.Exists(Path.Combine(AppContext.BaseDirectory, "installed.marker"));
     internal static string DataDir => _dataDir ??= ResolveDataDir();   // Loc(lang.txt)도 사용
     private static string ThemeFile => Path.Combine(DataDir, "theme.txt");
 
@@ -125,7 +127,9 @@ public partial class MainWindow : Window
             // 완전 독립형: exe 옆 Runtime\ 폴더에 번들된 고정 버전 WebView2가 있으면 그것을 사용
             // (없으면 null → 시스템에 설치된 Evergreen 런타임 사용)
             var runtimeDir = Path.Combine(AppContext.BaseDirectory, "Runtime");
-            var browserFolder = File.Exists(Path.Combine(runtimeDir, "msedgewebview2.exe")) ? runtimeDir : null;
+            var browserFolder = !IsInstalledEdition && File.Exists(Path.Combine(runtimeDir, "msedgewebview2.exe"))
+                ? runtimeDir
+                : null;
 
             // 포터블: WebView2 데이터 폴더도 exe 옆에 둔다 (시스템에 흔적 없음)
             var env = await CoreWebView2Environment.CreateAsync(browserFolder, DataDir, null);
@@ -680,6 +684,15 @@ public partial class MainWindow : Window
 
     private static string ResolveDataDir()
     {
+        // 설치판은 프로그램 파일과 사용자 데이터를 분리해 업데이트·제거 때 설정과 복구 데이터가 보존되게 한다.
+        if (IsInstalledEdition)
+        {
+            var installed = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MarkDownEditor");
+            Directory.CreateDirectory(installed);
+            return installed;
+        }
+
         // exe 옆의 WebView2Data 폴더를 우선 사용, 쓰기 불가 시 임시폴더로 폴백
         var beside = Path.Combine(AppContext.BaseDirectory, "WebView2Data");
         try

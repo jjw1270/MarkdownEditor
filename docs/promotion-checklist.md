@@ -14,7 +14,7 @@
 - [x] **Description**
 
   ```
-  Lightweight portable Markdown viewer & editor for Windows. Tabs, mermaid diagrams, dark mode, PDF export. No install, no telemetry.
+  Fast, private Markdown viewer & editor for Windows. Lightweight installer or fully portable package. Tabs, Mermaid, PDF export. No telemetry.
   ```
 
 - [x] **Website**: `https://jjw1270.github.io/MarkdownEditor/`
@@ -66,7 +66,7 @@
 대개 아래 한 줄을 알파벳 순서에 맞는 위치에 넣는다:
 
 ```markdown
-- [MarkDownEditor](https://github.com/jjw1270/MarkdownEditor) - Portable Markdown viewer and editor. Opens `.md` files on double-click, tabbed single window, mermaid diagrams, dark mode, PDF export. No installer. ![Open-Source Software][OSS Icon] ![Freeware][Freeware Icon]
+- [MarkDownEditor](https://github.com/jjw1270/MarkdownEditor) - Private Markdown viewer and editor for Windows. Opens `.md` files on double-click, with tabs, Mermaid diagrams, dark mode, PDF export, a lightweight installer, and a portable package. ![Open-Source Software][OSS Icon] ![Freeware][Freeware Icon]
 ```
 
 > 배지 아이콘 표기는 리스트마다 다르니 해당 리포의 기존 항목을 복사해서 맞출 것.
@@ -74,11 +74,11 @@
 PR 설명 문구:
 
 ```
-Adds MarkDownEditor, an MIT-licensed portable Markdown viewer/editor for Windows 10/11.
+Adds MarkDownEditor, an MIT-licensed Markdown viewer/editor for Windows 10/11.
 
-It is a single self-contained folder (no installer, no registry writes) that renders
-`.md` files GitHub-style with tabs, offline syntax highlighting, mermaid diagrams,
-a TOC sidebar, PDF export, and a 10-language UI.
+It offers a lightweight per-user installer and a fully self-contained portable folder.
+Both render `.md` files GitHub-style with tabs, offline syntax highlighting, Mermaid
+diagrams, a TOC sidebar, PDF export, and a 10-language UI.
 
 - Repo: https://github.com/jjw1270/MarkdownEditor
 - License: MIT
@@ -109,18 +109,18 @@ GitHub 리포 검색은 star 수를 강하게 반영한다. 1 → 50만 되어�
 공용 소개 문구(영어):
 
 ```
-Show HN: MarkDownEditor – a portable Markdown viewer for Windows that opens on double-click
+Show HN: MarkDownEditor – a private Markdown viewer for Windows that opens on double-click
 
 I wanted to double-click a .md file in Explorer and just see it rendered, without
-installing anything or opening VS Code. So I built a single portable folder: unzip,
-set it as the default .md handler, done.
+opening VS Code. So I built a small per-user installer and a fully portable package;
+set it as the default .md handler and you are done.
 
 Everything opens as tabs in one window. Rendering is GitHub-style with offline
 syntax highlighting and mermaid diagrams. It also edits — Ctrl+E toggles a formatting
 bar so you don't need to know Markdown syntax — and exports to PDF.
 
-No installer, no registry writes, no telemetry. Network access is limited to anonymous
-update checks and release downloads that you explicitly start. MIT licensed, .NET 9 + WebView2.
+No telemetry. Network access is limited to anonymous update checks and release downloads
+that you explicitly start. MIT licensed, .NET 10 + WebView2.
 
 https://github.com/jjw1270/MarkdownEditor
 ```
@@ -137,9 +137,9 @@ https://github.com/jjw1270/MarkdownEditor
 하이라이팅 + mermaid 다이어그램을 지원합니다. Ctrl+E로 편집 모드에 들어가면 서식 바가 떠서
 마크다운 문법을 몰라도 쓸 수 있고, PDF로도 내보냅니다.
 
-설치 없음 / 레지스트리 안 건드림 / 텔레메트리 없음. 네트워크는 익명 업데이트 확인과
+가벼운 사용자별 설치판 또는 완전 포터블판 / 텔레메트리 없음. 네트워크는 익명 업데이트 확인과
 사용자가 직접 실행한 릴리즈 다운로드에만 사용합니다.
-MIT 라이선스, .NET 9 + WebView2로 만들었습니다.
+MIT 라이선스, .NET 10 + WebView2로 만들었습니다.
 
 https://github.com/jjw1270/MarkdownEditor
 ```

@@ -1,20 +1,20 @@
 # MarkDownEditor
 
 **가볍고 빠른 Windows용 마크다운 뷰어 & 에디터.**
-`.md` 파일을 더블클릭하면 바로 열리는, 설치가 필요 없는 포터블 앱입니다.
+`.md` 파일을 더블클릭하면 바로 열리는 앱입니다. 가벼운 일반 설치판과 완전 포터블판을 모두 제공합니다.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
 **한국어** · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Windows용 내려받기](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, 약 331 MB · 압축 풀고 바로 실행 · [바뀐 점 보기](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### ⬇️ [Windows 설치판](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [포터블 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[바뀐 점 보기](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
-![미리보기 — 라이트 테마](docs/images/preview-light.png)
+![미리보기 — 한국어 UI](docs/images/ko/preview.png)
 
 ---
 
@@ -22,8 +22,8 @@
 
 윈도우에서 `.md` 파일을 열려면 대개 설치형 프로그램을 깔거나, 브라우저 확장을 붙이거나, VS Code 같은 코드 에디터를 띄워야 합니다. 이 앱은 그 셋 다 필요 없습니다. **마크다운 뷰어가 먼저**이고, `.md` 기본 프로그램으로 지정해두면 README·명세서·메모 폴더를 탐색기에서 더블클릭하는 것만으로 렌더링된 문서를 볼 수 있습니다. 편집은 `Ctrl+E` 한 번 거리에 있습니다.
 
-- **설치 없음** — 압축만 풀면 끝. USB에 담아 다녀도 됩니다.
-- **흔적 없음** — 설정·캐시가 레지스트리나 `%AppData%`가 아니라 실행 파일 옆에만 남습니다.
+- **두 가지 배포 방식** — 일상 사용에는 가벼운 사용자별 설치판을, USB·완전 오프라인 사용에는 Runtime까지 포함한 포터블판을 선택할 수 있습니다.
+- **포터블 우선 저장** — 설정·캐시는 실행 파일 옆에 저장합니다. 해당 폴더가 읽기 전용이면 레지스트리나 `%AppData%` 대신 `%TEMP%\MarkDownEditor`를 사용합니다.
 - **오프라인 문서 처리** — 렌더링·하이라이팅·다이어그램은 전부 로컬입니다. 새 버전 확인을 위해 GitHub Releases를 익명으로 조회하고, 사용자가 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다.
 - **무료 · 오픈소스** — MIT 라이선스.
 
@@ -60,82 +60,35 @@
 - **우클릭 메뉴** — 미리보기(복사·링크 열기·주소 복사·이미지 확대·찾기), 편집기(잘라내기·복사·붙여넣기·모두 선택)를 우클릭으로.
 - **찾기 / 바꾸기** — `Ctrl+F` 찾기는 **미리보기·편집 모두** 지원(미리보기는 전체 매치 하이라이트), `Ctrl+H` 바꾸기는 편집 모드에서. 대소문자 구분과 **모두 바꾸기**를 지원합니다.
 - **이미지 클릭 확대** — 미리보기의 이미지를 클릭하면 화면 가득 크게 보여줍니다(클릭·`Esc`로 닫기).
-- **자동 업데이트** — 새 버전이 나오면 타이틀 옆 버전 표시 오른쪽에 **빨간 점**이 떠서 알려줍니다. 버전을 눌러 메뉴 맨 위의 **"새 버전 사용 가능"** → **"업데이트하기"** 한 번이면 앱 안에서 내려받아(진행률 표시) 재시작하며 적용됩니다. 설정·세션은 그대로 유지됩니다.
-- **완전 포터블** — 압축만 풀면 끝. WebView2 런타임을 **번들**로 포함해 별도 설치가 필요 없고, 설정·캐시도 실행 파일 옆 폴더에만 남아 **시스템에 흔적을 남기지 않습니다.**
+- **자동 업데이트** — 새 버전이 나오면 타이틀 옆에 **빨간 점**이 표시됩니다. 포터블판은 검증한 ZIP을 원자적으로 교체하고, 설치판은 검증한 다음 설치 프로그램을 실행해 Windows 제거 정보까지 올바르게 갱신합니다.
+- **설치판 또는 포터블판** — 설치판은 자동 보안 업데이트되는 시스템 WebView2와 `%LOCALAPPDATA%\MarkDownEditor` 데이터 폴더를 사용합니다. 포터블판은 Fixed Runtime을 포함하고 설정·캐시를 실행 파일 옆에 둡니다.
 
 ---
 
 ## 📸 화면
 
-### 미리보기 (라이트 / 다크)
-
-GitHub 스타일로 제목·표·코드·인용문을 렌더링합니다. 테마는 타이틀바 `🌙`/`☀` 버튼으로 전환합니다.
-
-| 라이트 | 다크 |
+| 문서 미리보기 | 언어·버전 메뉴 |
 |:---:|:---:|
-| ![라이트 테마](docs/images/preview-light.png) | ![다크 테마](docs/images/preview-dark.png) |
-
-### 언어 설정 — 🌐 메뉴
-
-타이틀바 우측에 테마(`🌙`/`☀`)·언어(`🌐`) 버튼이 있습니다. `🌐` 메뉴에서 **UI 언어(10개 언어)**를 고를 수 있습니다. 버전은 타이틀 텍스트 오른쪽에 표시되며, 클릭하면 업데이트 확인·저장소·버그 신고·기능 제안 메뉴가 열립니다(새 버전이 있으면 버전 오른쪽에 빨간 점). 창은 메모장처럼 **탭·도구가 타이틀바에 통합된 컴팩트 UI**입니다.
-
-![언어 메뉴](docs/images/menu.png)
-
-### 편집 모드
-
-툴바의 `✏️` 버튼(또는 `Ctrl+E`)을 누르면 원본 마크다운을 직접 고칠 수 있습니다. 같은 자리의 `👁` 버튼으로 되돌리면 즉시 렌더링됩니다.
-
-편집 모드에서는 **서식 바**가 나타납니다 — 굵게/기울임/취소선, 제목(H1~H3), 목록(글머리·번호·체크박스), 인용/코드, 링크/표/구분선을 버튼으로 바로 넣을 수 있어 마크다운 문법을 몰라도 문서를 꾸밀 수 있습니다. 우클릭 메뉴에서는 잘라내기·복사·붙여넣기·모두 선택을 쓸 수 있습니다.
-
-![우클릭 메뉴와 서식 바](docs/images/context-menu.png)
-
-![편집 모드](docs/images/edit-mode.png)
-
-### 탭 + 다이어그램
-
-여러 문서가 상단 탭으로 모입니다. `mermaid` 코드 블록은 다이어그램으로 렌더링됩니다.
-
-![탭과 mermaid 다이어그램](docs/images/mermaid-diagram.png)
-
-### 로컬 이미지
-
-문서와 같은 폴더(또는 상대·절대 경로)의 이미지도 자동으로 찾아 표시합니다. `![설명](그림.png)` 형태면 됩니다.
-
-![로컬 이미지 렌더링](docs/images/local-image.png)
-
-### 연결된 문서로 이동
-
-문서 안의 `.md` 링크를 클릭하면(왼쪽) 곧바로 **새 탭**에서 열립니다(오른쪽). 경로는 현재 문서가 있는 폴더를 기준으로 자동으로 찾습니다.
-
-| 링크 클릭 전 | 클릭 후 (새 탭) |
-|:---:|:---:|
-| ![링크 클릭 전](docs/images/link-before.png) | ![링크 클릭 후](docs/images/link-after.png) |
-
-이동한 뒤에는 툴바 왼쪽의 `←`(뒤로) · `→`(앞으로) 버튼, `Alt+←` / `Alt+→`, 또는 마우스 4·5번 버튼으로 방문한 문서 사이를 오갈 수 있습니다. 이동할 곳이 없으면 버튼이 자동으로 비활성화됩니다. 각 문서의 **스크롤 위치도 함께 기억**되어, 돌아오면 보던 자리에서 이어 볼 수 있습니다.
-
-![뒤로/앞으로 버튼 — 링크로 이동하면 뒤로 버튼이 활성화됨](docs/images/nav-buttons.png)
+| ![한국어 문서 미리보기](docs/images/ko/preview.png) | ![한국어 언어 메뉴](docs/images/ko/menu.png) |
 
 ---
 
 ## 🚀 설치하기
 
-설치 프로그램 없음, 관리자 권한 없음, 사전 설치할 것 없음. 내려받아 압축 풀고 실행하면 끝입니다.
+두 패키지 모두 Windows 10 1809 이상 / Windows 11 x64용이며 관리자 권한이 필요 없습니다.
 
-### 1단계 — 내려받기
+| 패키지 | 권장 용도 | 대략적인 용량 | Runtime·데이터 |
+|---|---|---:|---|
+| **[Windows 설치판](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 일반적인 일상 사용 | 45 MB | 현재 사용자용으로 설치하고 자동 보안 업데이트되는 Evergreen WebView2를 사용합니다. 시작 메뉴와 연결 프로그램 후보를 등록하며 데이터는 `%LOCALAPPDATA%\MarkDownEditor`에 보관합니다. WebView2가 없을 때만 인터넷이 필요하며 필수 Runtime 설치에 실패하면 설치 오류를 표시합니다. |
+| **[포터블 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB·오프라인·무설치 사용 | 325 MB | Fixed WebView2 Runtime을 포함하며, 쓸 수 있는 위치에서는 데이터가 실행 파일 옆 `WebView2Data/`에 남습니다. |
 
-**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — 이 링크는 **항상 최신 버전**을 가리킵니다.
-
-| | |
-|---|---|
-| **용량** | 약 331 MB — WebView2 런타임이 통째로 들어 있어서 따로 설치할 게 없습니다 |
-| **요구 사항** | Windows 10 / 11 (64-bit). 그 외에는 없습니다. |
-| **더 보기** | [전체 릴리즈 목록](https://github.com/jjw1270/MarkdownEditor/releases) · [이번 버전에서 바뀐 점](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [전체 변경 이력](CHANGELOG.md) |
+[전체 릴리즈](https://github.com/jjw1270/MarkdownEditor/releases) · [최신 릴리즈 노트](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [전체 변경 이력](CHANGELOG.md)
 
 <details>
 <summary><b>터미널이 편하다면</b> — PowerShell 한 블록으로 내려받기 · 압축 해제 · 실행</summary>
 
 ```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
 $zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
 
 Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
@@ -149,7 +102,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 </details>
 
-### 2단계 — 압축 풀고 실행
+### 포터블판 실행
 
 쓰기 가능한 곳이면 어디든 좋습니다. `C:\Tools\MarkDownEditor`, 바탕화면, USB 메모리 — 상관없습니다. 압축을 푼 뒤 **`MarkDownEditor.exe`** 를 실행하세요.
 
@@ -158,24 +111,25 @@ Start-Process "$dest\MarkDownEditor.exe"
 > **처음 실행할 때 뜨는 파란 SmartScreen 창은 정상입니다.** 코드 서명이 없는 실행 파일이라 Windows가 *"Windows의 PC 보호"* 경고를 띄웁니다. **추가 정보 → 실행**을 누르세요. 한 번만 뜹니다.
 > 서명 없는 파일을 실행하기 꺼려진다면 직접 빌드해도 됩니다 — 아래 *개발자용* 절차로 명령 두 줄이면 됩니다.
 
-### 3단계 — `.md` 기본 프로그램으로 지정 *(사실상 이게 핵심)*
+### `.md` 기본 프로그램으로 지정 *(사실상 이게 핵심)*
 
 한 번만 지정해두면, 탐색기에서 마크다운 파일을 더블클릭하는 순간 렌더링된 문서가 바로 뜹니다.
 
 1. 탐색기에서 아무 `.md` 파일을 **우클릭**
 2. **연결 프로그램 → 다른 앱 선택**
-3. 목록에서 `MarkDownEditor.exe` 선택 — 목록에 없으면 아래로 스크롤해 **내 PC에서 앱 선택**
+3. 목록에서 **MarkDownEditor** 선택 — 설치판은 자동으로 후보에 등록되며, 포터블판은 **내 PC에서 앱 선택**으로 `MarkDownEditor.exe` 지정
 4. **항상 이 앱을 사용하여 .md 파일 열기** 체크 → **확인**
 
 `.markdown`, `.txt` 도 같은 방법으로 연결할 수 있습니다.
 
 ### 업데이트
 
-이 페이지에 다시 올 필요는 없습니다. 앱이 실행될 때마다 GitHub 릴리즈를 확인해서, 새 버전이 있으면 타이틀바 버전 표시 오른쪽에 **빨간 점**이 뜹니다. 버전을 클릭 → **업데이트하기** 를 누르면 진행률을 보여주며 내려받아 스스로 교체하고 재시작합니다. 설정·열려 있던 탭·세션은 그대로 유지됩니다.
+앱은 시작할 때 GitHub 릴리즈를 익명으로 확인하고 새 버전이 있으면 타이틀 옆에 **빨간 점**을 표시합니다. 버전 → **업데이트하기**를 누르면 URL·크기·SHA-256·패키지 구조·버전을 확인한 뒤 적용합니다. 포터블판은 ZIP 페이로드를 원자적으로 교체하고, 설치판은 다음 사용자별 설치 프로그램을 실행합니다. 설정·열린 탭·세션은 보존됩니다.
 
 ### 삭제
 
-폴더를 지우면 끝입니다. 레지스트리에도, `%AppData%` 에도, **앱 및 기능** 목록에도 아무것도 남기지 않았습니다. (파일 연결을 지정했다면 다음에 `.md` 파일을 열 때 Windows가 새 기본 앱을 물어볼 뿐입니다.)
+- **설치판:** **설정 → 앱 → 설치된 앱 → MarkDownEditor → 제거**를 사용합니다. 프로그램·바로가기·앱이 등록한 연결 프로그램 항목은 제거되고, 안전한 재설치를 위해 `%LOCALAPPDATA%\MarkDownEditor` 사용자 데이터는 보존됩니다. 원하지 않으면 이 폴더도 직접 삭제하세요.
+- **포터블판:** 앱 폴더를 삭제합니다. 읽기 전용 위치에서 실행한 적이 있다면 폴백 데이터가 있는 `%TEMP%\MarkDownEditor`도 삭제하세요.
 
 ---
 
@@ -246,16 +200,14 @@ flowchart TD
 - 이 에디터로 작성한 다이어그램은 GitLab/GitHub 웹에서도 그대로 렌더링됩니다(반대도 마찬가지).
 - 문법 오류가 있는 블록은 해당 블록 자리에만 오류가 표시되고 나머지 문서는 정상 렌더링됩니다.
 
-렌더 결과는 위 [탭 + 다이어그램](#탭--다이어그램) 스크린샷을 참고하세요.
-
 ---
 
 ## 🔒 데이터 & 프라이버시
 
 - 문서·설정을 클라우드로 보내지 않습니다. 모든 동작은 로컬에서만 이뤄집니다.
-- 유일한 네트워크 접근은 **자동 업데이트**입니다 — 시작 시(및 수동 확인 시) GitHub API에서 최신 릴리즈 버전만 익명으로 조회하고, 사용자가 직접 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다. 문서·개인 정보는 아무것도 전송하지 않습니다.
-- WebView2 캐시와 테마·언어 설정은 **실행 파일 옆 `WebView2Data/`, `theme.txt`, `lang.txt`** 에만 저장됩니다. (해당 위치에 쓸 수 없으면 임시 폴더로 자동 폴백)
-- 미리보기 안의 인라인 스크립트 실행은 **콘텐츠 보안 정책(CSP)** 으로 차단되어, 문서를 여는 것만으로 코드가 실행되지 않습니다.
+- 앱 사용 중 네트워크 접근은 **자동 업데이트**로 제한됩니다. GitHub API에서 최신 버전을 익명으로 확인하고 사용자가 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다. 최초 설치 때 Windows에 WebView2가 없으면 설치 프로그램이 Microsoft에서 Runtime을 받을 수 있습니다. 문서·개인 정보는 아무것도 전송하지 않습니다.
+- 설치판의 WebView2 캐시, 테마·언어 설정, 세션 복구 내용과 최근 문서 경로는 `%LOCALAPPDATA%\MarkDownEditor`에 저장됩니다. 포터블판은 실행 파일 옆 **`WebView2Data/`** 를 사용하며, 해당 위치가 읽기 전용이면 `%TEMP%\MarkDownEditor`로 폴백합니다.
+- 엄격한 **콘텐츠 보안 정책(CSP)** 이 인라인 스크립트·플러그인·기준 URL 변경과 원격 이미지 자동 요청을 차단합니다. 로컬 이미지는 네이티브 호스트가 찾아 로컬 데이터로 렌더링합니다.
 - 배포 빌드에서는 브라우저 기본 우클릭 메뉴·개발자 도구가 비활성화되어 있습니다. (앱 자체 우클릭 메뉴는 정상 동작)
 
 ---
@@ -271,7 +223,7 @@ src/
 ├─ MainWindow.Update.cs   # 자동 업데이트 (GitHub 릴리즈 확인 · 다운로드 · 재시작 교체)
 ├─ Loc.cs                 # 네이티브 쪽 UI 문자열 (10개 언어, lang.txt 설정)
 ├─ app.manifest           # DPI 인식(per-monitor v2), 긴 경로 지원
-├─ MarkDownEditor.csproj  # net9.0-windows, WebView2 패키지, web/ 복사 규칙
+├─ MarkDownEditor.csproj  # net10.0-windows, WebView2 패키지, web/ 복사 규칙
 └─ web/                   # UI (WebView2가 로컬 가상 호스트로 로드)
    ├─ index.html          # 레이아웃(툴바 · 탭 · 목차 · 미리보기/편집기)
    ├─ style.css           # 테마 변수 · GitHub 풍 스타일 · 목차/인쇄(PDF) CSS
@@ -282,24 +234,14 @@ src/
    └─ mermaid.min.js      # mermaid 다이어그램 (오프라인 번들)
 ```
 
-### 빌드
-
 ```powershell
-cd src
-dotnet build -c Release
+.\tests\RepositoryContracts.ps1
+.\scripts\build-release.ps1 -RuntimeSource C:\path\to\WebView2FixedRuntime
 ```
 
-### 포터블 단일 실행 파일로 배포
+저장소는 .NET SDK 10.0.302와 Inno Setup 7.0.2를 고정합니다. 릴리즈 스크립트가 동일한 게시물에서 설치판·포터블판을 만들고, WebView2 bootstrapper 해시를 검증한 뒤 `SHA256SUMS.txt`와 기계 판독 가능한 manifest를 생성합니다. 배포·데이터·신뢰 경계는 [DESIGN.md](DESIGN.md)를 참고하세요.
 
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-산출물은 `src/bin/Release/net9.0-windows/win-x64/publish/` 의 `MarkDownEditor.exe` + `web/` 입니다
-(`web/`은 exe 옆 폴더로 그대로 로드되므로 단일 파일 번들에 넣지 않습니다).
-완전 독립 실행을 위해 여기에 번들 WebView2를 담은 `Runtime/` 폴더만 더해 압축하면 배포본이 됩니다.
+현재 버전의 전체 E2E 릴리즈 근거는 [QA_REPORT_2026-07-28.md](QA_REPORT_2026-07-28.md)에 기록했습니다.
 
 ### 아키텍처 한눈에
 
@@ -329,4 +271,4 @@ MIT — [LICENSE](LICENSE) 참고. 번들된 서드파티 구성요소는 [THIRD
 
 ---
 
-<sub>Made with .NET 9 (WPF) · WebView2 · marked.js</sub>
+<sub>Made with .NET 10 (WPF) · WebView2 · marked.js</sub>

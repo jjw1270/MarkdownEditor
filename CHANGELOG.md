@@ -1,64 +1,46 @@
 # Changelog
 
+## 1.3.0 — 2026-07-28
+
+- **Two supported distributions** — added a lightweight, per-user Windows installer alongside the fully self-contained portable ZIP. The installer uses Evergreen WebView2, adds Start menu and Open With registrations without changing the user's default app, and preserves user data on uninstall.
+- **Installer boundary hardening** — installed copies ignore and remove stale portable Fixed Runtimes, require a successful Evergreen prerequisite installation, create real Open With registry values, and retain a failed update installer for diagnosis or retry.
+- **Distribution-aware updates** — portable copies continue to replace a staged ZIP atomically; installed copies download and run the next installer so Windows' version and uninstall metadata remain accurate.
+- **Update integrity validation** — updates now verify the official HTTPS release URL, reported and downloaded size, GitHub SHA-256 digest, allowed archive structure, required files, and executable or installer version before applying anything.
+- **Remote-image privacy** — the Content Security Policy blocks automatic requests for remote images in opened Markdown documents. Local images continue to render through the native host.
+- **Title-bar double-click fix** — native dragging starts only after pointer movement crosses a threshold, so double-click reliably toggles maximize/restore without breaking normal dragging.
+- **Supported runtime refresh** — moved from .NET 9 to .NET 10 LTS and pinned SDK 10.0.302. Release builds pin Inno Setup 7.0.2 and the WebView2 bootstrapper hash.
+- **Global documentation refresh** — updated all ten README files, localized screenshots, installation/removal/privacy guidance, the public website, release process documentation, and minimum-permission SHA-pinned GitHub Actions.
+
 ## 1.2.2 — 2026-07-27
 
-- **업데이트 알림 UI 정리** — 타이틀 옆 `!` 배지 버튼을 없애고, 업데이트 진입점을 **버전 클릭 메뉴의 첫 항목**으로 합쳤습니다
-  (평소 "업데이트 확인", 새 버전이 있으면 "새 버전 사용 가능 (vX.Y.Z)"). 새 버전 알림은 버전 표시 오른쪽의
-  **빨간 점**으로만 표시되며(툴팁도 함께 안내), 기존 10개 언어 문자열을 그대로 사용합니다.
-- **업데이트 팝업 정리** — 새 버전이 없을 때도 빈 "릴리즈 노트" 상자와 빈 진행률 바가 남아 있던 문제 수정
-  (`display` 지정이 `hidden` 속성을 덮고 있었음)
-- **배포 패키징 수정** — 단일 파일 게시가 `mermaid.min.js`·`highlight.min.js`를 exe 번들로 삼켜
-  `publish/web/`에서 누락되던 문제 수정(앱은 exe 옆 `web/`만 읽으므로 배포본 조립 시 수동 복사가 필요했음).
-  덤으로 실행 파일이 약 3.7MB 작아졌습니다.
+- Consolidated update actions into the version menu and replaced the separate alert button with a red status dot.
+- Fixed empty release-notes and progress areas appearing when no update was available.
+- Fixed single-file publishing so bundled web assets remain available beside the executable, reducing the executable size by about 3.7 MB.
 
 ## 1.2.1 — 2026-07-27
 
-- 업데이트 팝업의 릴리즈 노트를 **마크다운으로 렌더링** (서식 문자가 원문 그대로 보이던 문제 수정)
-- 전체 QA 결과 반영:
-  - **미리보기 탭에서 다른 탭으로 전환하면** 외부 프로그램 수정 자동 반영분·붙여넣은 이미지 링크가 이전 내용으로 조용히 되돌아가던 문제 수정 (그 상태로 저장하면 디스크의 새 내용을 덮어쓸 수 있었음)
-  - 저장을 임시 파일 쓰기 후 교체 방식으로 변경 — 저장 도중 강제 종료·전원 차단에도 원본이 잘린 채 남지 않음
-  - 저장 요청~완료 사이에 입력한 내용이 "저장됨"으로 잘못 표시되던 틈 제거
-  - 탭을 닫은 뒤 뒤로 가기 버튼이 한 번 헛도는 경우 수정
-  - 새 릴리즈에 배포 zip이 없으면 "최신 버전"으로 잘못 안내하지 않고 다운로드 페이지로 안내
-  - 대용량 문서에서 미리보기 찾기(한 글자 검색 등)가 실패할 수 있던 한계 제거, mermaid 문서에서 찾기 매치 수 정확화
-  - 웹 메시지 방어 처리·파일 감시 스레드 경합·파이프 수신 블록 등 안정성 보강, 이미지 붙여넣기 중 UI 멈춤 제거
-  - 접근성: 문서 언어 속성 동기화, 알림 토스트 role 부여, 탭 우클릭 메뉴를 공용 메뉴와 통일
-- 문서: 스크린샷을 현재 UI로 갱신, 프라이버시 서술 정밀화(업데이트 다운로드 명시, `lang.txt` 표기), 번역 오류 수정
+- Rendered update release notes as Markdown.
+- Fixed preview-tab switches reverting externally reloaded content or pasted-image links.
+- Made saves atomic and removed a race that could mark newer edits as saved.
+- Fixed stale back-navigation entries and incorrect missing-release-asset status.
+- Improved large-document find, Mermaid match counts, message validation, watcher concurrency, pipe timeouts, image-paste responsiveness, and accessibility.
+- Refreshed screenshots and clarified privacy and local-data documentation.
 
 ## 1.2.0 — 2026-07-27
 
-- **피드백(이슈) 기능** — 타이틀 옆 버전 표시를 클릭하면 정보·피드백 메뉴가 열림: GitHub 저장소 / 버그 신고 / 기능 제안.
-  버그 신고·기능 제안은 GitHub 이슈 폼을 브라우저로 열며(앱이 직접 전송하지 않음), 버그 신고 폼에는 현재 앱 버전이 미리 채워짐.
-- GitHub 저장소에 이슈 템플릿 추가 (`🐞 버그 신고`, `💡 기능 제안` — 한/영 병기, 어떤 언어로 작성해도 OK)
+- Added the version information and feedback menu with repository, bug-report, and feature-request links.
+- Added bilingual GitHub issue forms; reports may be written in any language.
 
 ## 1.1.1 — 2026-07-27
 
-- 버전 표시를 🌐 언어 메뉴에서 타이틀 텍스트 오른쪽으로 이동 (클릭하면 GitHub 저장소 — 기존 동작 유지)
+- Moved the version label from the language menu to the title bar.
 
 ## 1.1.0 — 2026-07-27
 
-- **자동 업데이트** — 앱 시작 시 GitHub 릴리즈를 조용히 확인하고, 새 버전이 있으면 타이틀 옆 `!` 배지가 강조됨(펄스).
-  배지 클릭 → 팝업에서 현재/최신 버전·릴리즈 노트 확인, "지금 확인"으로 수동 재확인,
-  "업데이트하기"로 인앱 다운로드(진행률 표시) 후 평소 종료 절차(미저장 확인 포함)를 거쳐 재시작하며 자동 교체.
-  설정·세션(`WebView2Data`)은 보존되며, 쓰기 권한 없는 설치 위치에서는 다운로드 페이지를 여는 폴백으로 동작.
+- Added automatic GitHub release checks, update notifications, release notes, progress display, confirmed-close application, restart, and a release-page fallback for read-only locations.
 
 ## 1.0.0 — 2026-07-24
 
-첫 버전. (GitHub 릴리즈 게시는 v1.1.0부터 — 1.0.0은 태그·릴리즈 없이 개발됨)
+Initial development version (public GitHub releases began with v1.1.0).
 
-- 포터블 마크다운 뷰어/에디터 (WPF + WebView2, 설치 불필요)
-- 탭 · 단일 인스턴스 · 문서 링크 이동 · 뒤로/앞으로 내비게이션
-- GitHub 풍 렌더링 · 코드 하이라이팅 · mermaid 다이어그램 (오프라인)
-- 다크/라이트 테마 (제목표시줄 동기화) · 목차 사이드바 (scroll-spy)
-- 편집 ↔ 미리보기 스크롤 동기화 · 찾기/바꾸기 (미리보기 하이라이트)
-- PDF 내보내기 · 클립보드 이미지 붙여넣기 · 로컬 이미지 인라인
-- 외부 변경 자동 반영 · 자동 백업/복구 · 세션 복원 · 최근 문서
-- 한글 인코딩(CP949) 자동 감지
-- **UI 10개 언어** (한국어·English·日本語·简体中文·繁體中文·Español·Français·Deutsch·Русский·Português) — 기본은 OS 언어, 타이틀바 `🌐` 메뉴에서 변경 (`MDE_LANG` 오버라이드 지원)
-- 타이틀바 우측 앱 설정 버튼 — 테마 전환(`🌙`/`☀`) · 언어 메뉴(`🌐`, 현재 언어·버전 정보 표시), PDF 내보내기(`📄`)는 저장 옆
-- **서식 바** (편집 모드) — 굵게·기울임·취소선 / 제목 H1~H3 / 글머리·번호·체크박스 목록 / 인용·코드 / 링크(`Ctrl+K`)·표·구분선 — 전부 `Ctrl+Z` 되돌리기 지원
-- **우클릭 메뉴** — 미리보기(복사·링크 열기·주소 복사·이미지 확대·찾기·편집 모드로), 편집기(잘라내기·복사·붙여넣기·모두 선택)
-- **커스텀 타이틀바** — OS 제목표시줄을 없애고 메모장식 2줄 헤더(타이틀바 + 탭 줄)로 통합.
-  아이콘·타이틀·내비게이션은 좌측, 창 버튼은 우측, 문서 액션은 탭 줄 우측.
-  플랫 모노크롬 아이콘 버튼, 본문과 이어지는 탭 모양, 드래그/더블클릭/가장자리 리사이즈 지원
-- 줌 배율 기억 · 접근성(`prefers-reduced-motion`) 대응
+- Portable WPF + WebView2 Markdown viewer/editor with tabs, single-instance routing, document navigation, GitHub-style rendering, syntax highlighting, offline Mermaid diagrams, themes, table of contents, synchronized edit/preview scrolling, find/replace, PDF export, pasted and local images, external-change reload, backup/recovery, session restore, recent documents, CP949 detection, ten UI languages, formatting tools, context menus, custom window chrome, remembered zoom, and reduced-motion accessibility.

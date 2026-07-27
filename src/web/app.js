@@ -1656,12 +1656,36 @@ function isBarBlank(e) {
     || e.target.id === 'appIcon'
     || e.target.id === 'appTitle';
 }
+const TITLEBAR_DRAG_THRESHOLD_SQ = 16;
+let titlebarDragStart = null;
 els.bar.addEventListener('mousedown', (e) => {
-  if (e.button === 0 && isBarBlank(e) && host) host.postMessage({ cmd: 'windrag' });
+  if (e.button === 0 && isBarBlank(e) && host) {
+    // 첫 클릭에서 네이티브 드래그를 시작하면 OS 이동 루프가 두 번째 클릭을 삼켜 dblclick이 발생하지 않는다.
+    titlebarDragStart = { x: e.screenX, y: e.screenY };
+  }
+});
+document.addEventListener('mousemove', (e) => {
+  if (!titlebarDragStart) return;
+  if ((e.buttons & 1) === 0) {
+    titlebarDragStart = null;
+    return;
+  }
+  const dx = e.screenX - titlebarDragStart.x;
+  const dy = e.screenY - titlebarDragStart.y;
+  if (dx * dx + dy * dy < TITLEBAR_DRAG_THRESHOLD_SQ) return;
+  titlebarDragStart = null;
+  e.preventDefault();
+  host.postMessage({ cmd: 'windrag' });
 });
 els.bar.addEventListener('dblclick', (e) => {
-  if (isBarBlank(e) && host) host.postMessage({ cmd: 'winmax' });
+  titlebarDragStart = null;
+  if (isBarBlank(e) && host) {
+    e.preventDefault();
+    host.postMessage({ cmd: 'winmax' });
+  }
 });
+window.addEventListener('mouseup', () => { titlebarDragStart = null; });
+window.addEventListener('blur', () => { titlebarDragStart = null; });
 els.minBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winmin' }); });
 els.maxBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winmax' }); });
 els.closeBtn.addEventListener('click', () => { if (host) host.postMessage({ cmd: 'winclose' }); });

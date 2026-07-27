@@ -5,20 +5,20 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
 [한국어](README.ko.md) · [English](README.md) · **日本語** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Windows 版をダウンロード](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, 約 331 MB · 解凍してすぐ実行 · [変更点を見る](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### ⬇️ [Windows インストーラー](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ポータブル ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[変更点を見る](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
-![プレビュー — ライトテーマ](docs/images/preview-light.png)
+![プレビュー — 日本語 UI](docs/images/ja/preview.png)
 
 ## 主な特長
 
-- **ポータブル** — 解凍して実行するだけ。WebView2 ランタイムを同梱し、設定・キャッシュは exe の隣に保存されるため、システムに痕跡を残しません。
+- **基本はポータブル** — 解凍して実行するだけ。WebView2 ランタイムを同梱し、設定・キャッシュは exe の隣に保存されます。そのフォルダーが読み取り専用の場合は `%TEMP%\MarkDownEditor` を使用します。
 - **自動アップデート** — 起動時に GitHub リリースを静かに確認します。新しいバージョンがあるとタイトル横のバージョン表示の右に赤い点が付き、バージョンをクリックして開くメニューの「新しいバージョンがあります」から、アプリ内で進行状況を見ながらアップデートできます。設定とセッションは保持されます。（自動アップデート — 匿名のバージョン確認と、実行時のみのリリースのダウンロード — がアプリ唯一のネットワークアクセスで、ドキュメントや個人情報は一切送信されません。）
 - **ウィンドウは 1 つ、ドキュメントはタブで** — すべてのファイルが 1 つのウィンドウのタブとして開きます（ミューテックス + 名前付きパイプによる単一インスタンス）。タブはドラッグ & ドロップで並べ替え、`Ctrl+Tab` で切り替え。
 - **すべてのリンクが動作** — `.md` リンクは新しいタブ、Web リンクはブラウザー、フォルダーはエクスプローラー、その他のドキュメントは既定のアプリで開きます。`doc.md#セクション` 形式のドキュメント間アンカーにも対応。
@@ -39,19 +39,24 @@
 - **UI は 10 言語対応** — 한국어、English、日本語、简体中文、繁體中文、Español、Français、Deutsch、Русский、Português。既定では OS の言語に従い、タイトルバーの `🌐` ボタンでいつでも変更できます。
 - **メモ帳風のコンパクトな外観** — タブとツールはカスタムタイトルバーに統合（空白部分をドラッグで移動、ダブルクリックで最大化）。
 
-![言語メニュー](docs/images/menu.png)
+![言語メニュー](docs/images/ja/menu.png)
 
 ## 🚀 インストール
 
-インストーラーなし、管理者権限なし、事前準備なし。ダウンロードして解凍し、実行するだけです。
+Windows 10 バージョン 1809 以降 / Windows 11 x64 向けに 2 種類のパッケージを用意しています。どちらも管理者権限は不要です。
 
-### ステップ 1 — ダウンロード
+| パッケージ | おすすめ用途 | サイズ | Runtime とデータ |
+|---|---|---:|---|
+| **[Windows インストーラー](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 通常の日常利用 | 約 45 MB | ユーザー単位でインストールし、自動保守される Evergreen WebView2、スタートメニュー、「プログラムから開く」を利用します。データは `%LOCALAPPDATA%\MarkDownEditor`。WebView2 がない場合だけ接続が必要で、必須 Runtime を導入できなければセットアップはエラーを表示します。 |
+| **[ポータブル ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB・オフライン・無インストール | 約 325 MB | WebView2 Fixed Runtime を同梱し、書き込み可能ならデータはアプリの隣に保存します。 |
+
+### ポータブル版
 
 **⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — このリンクは**常に最新版**を指します。
 
 | | |
 |---|---|
-| **サイズ** | 約 331 MB — WebView2 ランタイムを丸ごと同梱しているため、他に何もインストールする必要がありません |
+| **サイズ** | 約 325 MB — オフライン利用向けに完全な WebView2 ランタイムを同梱 |
 | **動作環境** | Windows 10 / 11（64 ビット）。それ以外は不要です。 |
 | **その他** | [リリース一覧](https://github.com/jjw1270/MarkdownEditor/releases) · [今回の変更点](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [変更履歴すべて](CHANGELOG.md) |
 
@@ -59,7 +64,7 @@
 <summary><b>ターミナル派の方へ</b> — PowerShell 1 ブロックでダウンロード・解凍・起動</summary>
 
 ```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
 $zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
 
 Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
@@ -95,11 +100,12 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 ### アップデート
 
-このページに戻ってくる必要はありません。起動のたびに GitHub リリースを確認し、新しいバージョンがあればタイトルバーのバージョン表示の右に**赤い点**が付きます。バージョンをクリック → **アップデート** を押せば、進捗バー付きでダウンロードして自分自身を置き換え、再起動します。設定・開いていたタブ・セッションはそのまま保持されます。
+起動時に GitHub Releases を匿名で確認します。**アップデート**を押すと URL・サイズ・SHA-256・パッケージ構造・バージョンを検証します。ポータブル版は ZIP を原子的に置換し、インストール版は検証済みの次のインストーラーを実行します。設定とセッションは保持されます。
 
 ### アンインストール
 
-フォルダーを削除するだけです。レジストリにも `%AppData%` にも「アプリと機能」にも、何も残していません。（ファイルの関連付けを設定していた場合、次に `.md` を開くとき Windows が既定のアプリを聞いてくるだけです。）
+- **インストール版：** **設定 → アプリ → インストールされているアプリ**から削除します。プログラム、ショートカット、独自の「プログラムから開く」登録は削除され、`%LOCALAPPDATA%\MarkDownEditor` は安全な再インストール用に保持されます。
+- **ポータブル版：** アプリのフォルダーを削除します。読み取り専用の場所から実行した場合は `%TEMP%\MarkDownEditor` も削除してください。
 
 ## キーボードショートカット
 
@@ -118,6 +124,13 @@ Start-Process "$dest\MarkDownEditor.exe"
 | `Ctrl+W` | タブを閉じる |
 | `Alt+←` / `Alt+→` | 戻る / 進む |
 
+## プライバシー
+
+- 文書はローカルで処理され、アップロードされません。テレメトリや識別子もありません。
+- アプリ使用中のネットワークは GitHub Releases の匿名確認と、ユーザーが開始した更新だけに使います。初回インストール時に WebView2 がなければ、Setup が Microsoft から取得することがあります。
+- インストール版のデータは `%LOCALAPPDATA%\MarkDownEditor`、ポータブル版は `WebView2Data/`（読み取り専用時は `%TEMP%\MarkDownEditor`）に保存します。
+- 厳格な Content Security Policy がスクリプト、プラグイン、基準 URL の変更、リモート画像の自動要求を遮断します。ローカル画像はローカルのまま埋め込みます。
+
 ## ソースからビルド
 
 ```powershell
@@ -126,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-出力：`src/bin/Release/net9.0-windows/win-x64/publish/MarkDownEditor.exe`
+出力：`src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`
 exe の隣に `web/` フォルダー（および任意で WebView2 Fixed Version Runtime を `Runtime/` として）を置いてください。
 
 ### アーキテクチャ概要

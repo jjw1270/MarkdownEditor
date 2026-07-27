@@ -1,6 +1,8 @@
 # 빌드 산출물
 src/bin/
 src/obj/
+tests/**/bin/
+tests/**/obj/
 .vs/
 
 # 로컬 실행 데이터 (포터블 캐시·설정)
@@ -11,6 +13,7 @@ zoom.txt
 # 배포 폴더·압축본 (릴리스는 GitHub Releases로 배포)
 MarkDownEditor-standalone/
 *.zip
+artifacts/
 
 # 임시 QA 산출물
 qa/

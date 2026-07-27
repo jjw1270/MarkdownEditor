@@ -1,0 +1,77 @@
+{
+    "appVersion":  "1.3.0",
+    "capturedAtUtc":  "2026-07-27T16:07:20Z",
+    "window":  "1440x900",
+    "locales":  [
+                    {
+                        "code":  "en",
+                        "preview":  "en/preview.png",
+                        "menu":  "en/menu.png",
+                        "previewSha256":  "2810ae94c553f5f0ca01a271a5aa5c7ca801781096aaf3d8b8a271def7e66350",
+                        "menuSha256":  "4b9357415623b4bc8c10313c649d1c60c9c0029589d827208685908821f5b43d"
+                    },
+                    {
+                        "code":  "ko",
+                        "preview":  "ko/preview.png",
+                        "menu":  "ko/menu.png",
+                        "previewSha256":  "dcad17fa75e5deed2afecf4757906c12fd7e27dc8fc668e5aaf04936fc5f69e3",
+                        "menuSha256":  "6b0711037e04a9cba6d0199f908bc5afd1ad02abf0a1784920bdb078d604be74"
+                    },
+                    {
+                        "code":  "ja",
+                        "preview":  "ja/preview.png",
+                        "menu":  "ja/menu.png",
+                        "previewSha256":  "ac08e50836581bb63a64f0085b5184689a5cc4ab9ecc902f45db522ad9ff0d9e",
+                        "menuSha256":  "ec8f72ab1661bbbb2363dc8580f40cfa1342129deca4c072130c1701cdf39c0c"
+                    },
+                    {
+                        "code":  "zh-CN",
+                        "preview":  "zh-CN/preview.png",
+                        "menu":  "zh-CN/menu.png",
+                        "previewSha256":  "fd8b1bc446f14ec776ab94272b44a66a941c23d8e77499bd7a931d8ffe3f5864",
+                        "menuSha256":  "bbb1741974da27faada6bc8b4ef54f00ac5e39c55f7f25619513ee5ab39aadbb"
+                    },
+                    {
+                        "code":  "zh-TW",
+                        "preview":  "zh-TW/preview.png",
+                        "menu":  "zh-TW/menu.png",
+                        "previewSha256":  "ed3bf70950dec176a8a5e3232be318acf70ebcd3014e4346bc0d70230c5629fb",
+                        "menuSha256":  "75495e83a07917331ffc537119c5d62da6b156ba9e3af28d8993ef55f22dcc4b"
+                    },
+                    {
+                        "code":  "es",
+                        "preview":  "es/preview.png",
+                        "menu":  "es/menu.png",
+                        "previewSha256":  "ab0597c34dd4d382bd912e2e0a8e8ed45be3cc322c98c7cf9e0b6afa9213722b",
+                        "menuSha256":  "ad6ed66f28091bd547314d7061030617d8d7f20212fafc0cdca8d9ed451f3904"
+                    },
+                    {
+                        "code":  "fr",
+                        "preview":  "fr/preview.png",
+                        "menu":  "fr/menu.png",
+                        "previewSha256":  "3fe3453bfb7b70e1279012ebe9f13feb2eec15fdf7bf74c4e224fb439072977f",
+                        "menuSha256":  "906913d2fa633f2ca31269a1a9be6410437064de2d7a296a321da85d70f96e43"
+                    },
+                    {
+                        "code":  "de",
+                        "preview":  "de/preview.png",
+                        "menu":  "de/menu.png",
+                        "previewSha256":  "9b4d271cf5bb886f5077b3eb972ba014853dc9a997c57b3e6451b5ca3390f8b2",
+                        "menuSha256":  "23df4cd357693fecbc3efb538f3c3592adc682fa5efe898e57e73be1573f262c"
+                    },
+                    {
+                        "code":  "ru",
+                        "preview":  "ru/preview.png",
+                        "menu":  "ru/menu.png",
+                        "previewSha256":  "bd19b123cdf923a764d6ef32386640e83f73c62edd26effb1557ed8eb8ce6fb3",
+                        "menuSha256":  "3d6f8d873e9d6b297dd45e7664ae4df0aaf98b62bac9d74670dc5d026045e824"
+                    },
+                    {
+                        "code":  "pt-BR",
+                        "preview":  "pt-BR/preview.png",
+                        "menu":  "pt-BR/menu.png",
+                        "previewSha256":  "7fcd287b0e3ee29198b5862e2c01866d6168112f8f1e70f769e59b9e516134ee",
+                        "menuSha256":  "be7a9fadead00b7e9fe8d4af111f7f730448def8f223d2173c2f0db39359fc84"
+                    }
+                ]
+}

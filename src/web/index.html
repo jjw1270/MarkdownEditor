@@ -2,10 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <!-- 렌더된 마크다운 내부의 인라인 스크립트 실행 차단 (보안)
-       로컬 이미지는 data URI로 인라인되고, 원격 이미지는 https만 허용 (http는 mixed-content로 어차피 차단) -->
+  <!-- 렌더된 마크다운 내부의 인라인 스크립트와 원격 이미지 요청 차단 (보안·프라이버시)
+       로컬 이미지는 C# 호스트가 data URI로 인라인하므로 self/data만 허용한다. -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;" />
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; object-src 'none'; base-uri 'none';" />
   <link rel="stylesheet" href="style.css" />
   <title>Markdown</title>
 </head>

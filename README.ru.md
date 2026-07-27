@@ -5,20 +5,20 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Русский** · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Скачать для Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, ~331 МБ · распаковать и запустить · [что нового](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### ⬇️ [Установщик Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [Портативный ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[что нового](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
-![Предпросмотр — светлая тема](docs/images/preview-light.png)
+![Предпросмотр — русский интерфейс](docs/images/ru/preview.png)
 
 ## Возможности
 
-- **Портативность** — распакуйте и запустите. Среда WebView2 идёт в комплекте; настройки и кэш хранятся рядом с exe и не оставляют следов в системе.
+- **Портативность по умолчанию** — распакуйте и запустите. Среда WebView2 идёт в комплекте; настройки и кэш хранятся рядом с exe. Если папка доступна только для чтения, используется `%TEMP%\MarkDownEditor`.
 - **Автообновление** — при запуске приложение незаметно проверяет GitHub Releases; когда выходит новая версия, справа от номера версии в заголовке появляется красная точка. Нажмите на версию → **Доступна новая версия**: обновление выполняется прямо в приложении с индикатором прогресса — настройки и сеанс сохраняются. (Автообновление — анонимная проверка версии и загрузка релиза только по вашей команде — это единственное сетевое обращение приложения; документы и личные данные никогда не отправляются.)
 - **Одно окно, много вкладок** — каждый файл открывается вкладкой в одном окне (единственный экземпляр через мьютекс + именованный канал). Вкладки переставляются перетаскиванием и переключаются `Ctrl+Tab`.
 - **Работают все ссылки** — ссылки на `.md` открываются в новой вкладке, веб-ссылки — в браузере, папки — в проводнике, прочие документы — в приложениях по умолчанию. Поддерживаются якоря между документами (`doc.md#раздел`).
@@ -39,19 +39,24 @@
 - **Интерфейс на 10 языках** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. По умолчанию — язык системы; переключение в любой момент кнопкой `🌐`.
 - **Компактный интерфейс в стиле «Блокнота»** — вкладки и инструменты встроены в собственный заголовок окна (перетаскивайте пустую область для перемещения, двойной щелчок — развернуть).
 
-![Меню языков](docs/images/menu.png)
+![Меню языков](docs/images/ru/menu.png)
 
 ## 🚀 Установка
 
-Никакого установщика, прав администратора и зависимостей. Скачать, распаковать, запустить.
+Доступны два пакета для Windows 10 версии 1809 и новее или Windows 11 (x64). Права администратора не нужны.
 
-### Шаг 1 — Скачать
+| Пакет | Для чего | Размер | Среда и данные |
+|---|---|---:|---|
+| **[Установщик Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | Обычное ежедневное использование | около 45 МБ | Установка для текущего пользователя, автоматически обслуживаемый Evergreen WebView2, меню «Пуск» и «Открыть с помощью». Данные в `%LOCALAPPDATA%\MarkDownEditor`. Интернет нужен только при отсутствии WebView2; если компонент не устанавливается, Setup сообщает об ошибке. |
+| **[Портативный ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB, офлайн и без установки | около 325 МБ | Включает WebView2 Fixed Runtime; данные хранятся рядом с приложением, если папка доступна для записи. |
+
+### Портативный вариант
 
 **⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — эта ссылка **всегда ведёт на последнюю версию**.
 
 | | |
 |---|---|
-| **Размер** | ~331 МБ — в комплект входит полная среда WebView2, поэтому больше ничего устанавливать не нужно |
+| **Размер** | около 325 МБ — полная среда WebView2 включена для автономной работы |
 | **Требования** | Windows 10 или 11, 64-разрядная. Больше ничего. |
 | **Ещё** | [Все выпуски](https://github.com/jjw1270/MarkdownEditor/releases) · [Что нового в этой версии](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Полная история изменений](CHANGELOG.md) |
 
@@ -59,7 +64,7 @@
 <summary><b>Привыкли к терминалу?</b> Скачать, распаковать и запустить одним блоком PowerShell</summary>
 
 ```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
 $zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
 
 Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
@@ -95,11 +100,12 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 ### Обновление
 
-Возвращаться сюда не придётся. При запуске приложение проверяет релизы на GitHub и, если вышла более новая версия, показывает **красную точку** справа от номера версии в заголовке окна. Кликните по версии → **Обновить**: файл скачается с индикатором прогресса, приложение заменит само себя и перезапустится, сохранив настройки, открытые вкладки и сессию.
+При запуске приложение анонимно проверяет GitHub Releases. После нажатия **Обновить** проверяются URL, размер, SHA-256, структура пакета и версия. Портативная редакция атомарно заменяет ZIP, установленная запускает следующий проверенный установщик. Настройки и сессия сохраняются.
 
 ### Удаление
 
-Удалите папку — вот и вся процедура. Ничего не записано ни в реестр, ни в `%AppData%`, ни в список «Приложения и возможности». (Если вы назначали сопоставление файлов, Windows просто спросит новое приложение по умолчанию при следующем открытии `.md`.)
+- **Установленная редакция:** удалите через **Параметры → Приложения → Установленные приложения**. Программа, ярлыки и собственные записи «Открыть с помощью» удаляются; `%LOCALAPPDATA%\MarkDownEditor` сохраняется для безопасной переустановки.
+- **Портативная редакция:** удалите папку приложения; после запуска из папки только для чтения удалите также `%TEMP%\MarkDownEditor`.
 
 ## Горячие клавиши
 
@@ -118,6 +124,13 @@ Start-Process "$dest\MarkDownEditor.exe"
 | `Ctrl+W` | Закрыть вкладку |
 | `Alt+←` / `Alt+→` | Назад / Вперёд |
 
+## Конфиденциальность
+
+- Документы обрабатываются локально и не загружаются в сеть. Телеметрии и идентификаторов нет.
+- Во время работы сеть используется только для проверки GitHub Releases и загрузки обновления, начатой пользователем. При первой установке Setup может скачать WebView2 с серверов Microsoft, если компонента нет в Windows.
+- Установленная редакция хранит данные в `%LOCALAPPDATA%\MarkDownEditor`; портативная — в `WebView2Data/` или `%TEMP%\MarkDownEditor`, если папка доступна только для чтения.
+- Строгая Content Security Policy блокирует скрипты, плагины, смену базового URL и автоматические запросы удалённых изображений. Локальные изображения остаются локальными.
+
 ## Сборка из исходников
 
 ```powershell
@@ -126,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-Результат: `src/bin/Release/net9.0-windows/win-x64/publish/MarkDownEditor.exe`.
+Результат: `src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`.
 Положите папку `web/` (и при желании WebView2 Fixed Version Runtime как `Runtime/`) рядом с exe.
 
 ### Архитектура в одном абзаце

@@ -1,0 +1,85 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: 10.0.302
+
+      - name: Verify tag and repository contracts
+        shell: pwsh
+        run: |
+          ./tests/RepositoryContracts.ps1
+          [xml]$project = Get-Content src/MarkDownEditor.csproj
+          $version = [string]$project.Project.PropertyGroup.Version
+          if ($env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $env:GITHUB_REF_NAME does not match project v$version"
+          }
+
+      - name: Install pinned Inno Setup
+        shell: pwsh
+        run: |
+          $installer = Join-Path $env:RUNNER_TEMP "innosetup-7.0.2-x64.exe"
+          Invoke-WebRequest "https://github.com/jrsoftware/issrc/releases/download/is-7_0_2/innosetup-7.0.2-x64.exe" -OutFile $installer
+          $expected = "5AD54CA3DEF786F8F4212552E54CC6D8D61329E2D24A1CFEE0571D42C2684FF1"
+          if ((Get-FileHash $installer -Algorithm SHA256).Hash -ne $expected) { throw "Inno Setup hash mismatch" }
+          $process = Start-Process $installer -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Inno Setup installation failed: $($process.ExitCode)" }
+
+      - name: Prepare pinned WebView2 Fixed Runtime
+        shell: pwsh
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP "runtime-seed.zip"
+          $seed = Join-Path $env:RUNNER_TEMP "runtime-seed"
+          Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/download/v1.2.2/MarkDownEditor-standalone.zip" -OutFile $zip
+          $expected = "5C8B1BB81B1C7A96E44CFAC7584D032FB4AB856EB6CA3C5FD236EFD6717942F2"
+          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne $expected) { throw "Runtime seed hash mismatch" }
+          Expand-Archive $zip -DestinationPath $seed
+          "MDE_RUNTIME_SOURCE=$seed\Runtime" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build release packages
+        shell: pwsh
+        run: ./scripts/build-release.ps1 -RuntimeSource $env:MDE_RUNTIME_SOURCE
+
+      - name: Verify release packages
+        shell: pwsh
+        run: |
+          $verify = Join-Path $env:RUNNER_TEMP "portable-verify"
+          Expand-Archive artifacts/MarkDownEditor-standalone.zip -DestinationPath $verify
+          foreach ($required in @("MarkDownEditor.exe", "web\index.html", "Runtime\msedgewebview2.exe")) {
+            if (-not (Test-Path (Join-Path $verify $required))) { throw "Portable asset missing $required" }
+          }
+          if (Test-Path (Join-Path $verify "installed.marker")) { throw "Portable asset contains installer marker" }
+          if (-not (Test-Path artifacts/MarkDownEditor-Setup-x64.exe)) { throw "Installer asset missing" }
+          Get-Content artifacts/SHA256SUMS.txt
+
+      - name: Validate update trust boundaries
+        run: >
+          dotnet run --project tests/UpdateValidation/UpdateValidation.csproj -c Release --
+          artifacts/MarkDownEditor-standalone.zip artifacts/MarkDownEditor-standalone
+          artifacts/MarkDownEditor-Setup-x64.exe
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create $env:GITHUB_REF_NAME `
+            "artifacts/MarkDownEditor-Setup-x64.exe#Windows installer (x64)" `
+            "artifacts/MarkDownEditor-standalone.zip#Portable package with Fixed WebView2 Runtime" `
+            "artifacts/SHA256SUMS.txt#SHA-256 checksums" `
+            "artifacts/release-manifest.json#Build manifest" `
+            --verify-tag --latest --title "$env:GITHUB_REF_NAME — Markdown editor for Windows" `
+            --notes-file RELEASE_NOTES.md

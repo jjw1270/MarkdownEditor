@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -16,11 +17,14 @@ namespace MarkDownEditor;
 public partial class MainWindow
 {
     private const string UpdateApiDefault = "https://api.github.com/repos/jjw1270/MarkdownEditor/releases/latest";
-    private const string UpdateAssetName = "MarkDownEditor-standalone.zip";
+    private const string PortableUpdateAssetName = "MarkDownEditor-standalone.zip";
+    private const string InstallerUpdateAssetName = "MarkDownEditor-Setup-x64.exe";
     private const string UpdateReleasesPage = "https://github.com/jjw1270/MarkdownEditor/releases/latest";
+    private const long MaxUpdateZipBytes = 1L << 30;
     private static readonly string[] UpdateItems = { "web", "Runtime", "MarkDownEditor.exe" };   // 교체 대상 (exe 마지막)
 
-    private sealed record UpdateInfo(Version Latest, string Notes, string ZipUrl, long ZipSize);
+    private sealed record UpdateInfo(
+        Version Latest, string Notes, string AssetUrl, long AssetSize, string AssetSha256, bool IsInstaller);
 
     private UpdateInfo? _updateAvail;     // 마지막 확인에서 발견한 새 버전 (없으면 null)
     private bool _updateBusy;             // 확인/다운로드 재진입 방지
@@ -55,6 +59,9 @@ public partial class MainWindow
     private static Version CurrentVersion =>
         typeof(MainWindow).Assembly.GetName().Version is { } v ? new Version(v.Major, v.Minor, v.Build) : new(0, 0, 0);
 
+    private static string UpdateAssetName =>
+        IsInstalledEdition ? InstallerUpdateAssetName : PortableUpdateAssetName;
+
     // ready 직후 1회: 지난 업데이트의 잔재 정리 → 조용한 자동 확인
     private async Task StartupUpdateFlowAsync()
     {
@@ -83,25 +90,26 @@ public partial class MainWindow
             using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync(cts.Token));
             var root = doc.RootElement;
             var tag = root.TryGetProperty("tag_name", out var t) ? t.GetString() ?? "" : "";
-            if (!Version.TryParse(tag.TrimStart('v', 'V'), out var latest))
-                throw new FormatException($"unexpected tag: {tag}");            // 태그 규칙(vX.Y.Z) 위반
-            latest = new Version(latest.Major, Math.Max(latest.Minor, 0), Math.Max(latest.Build, 0));
+            var latest = ParseReleaseVersion(tag);
 
-            string zipUrl = ""; long zipSize = 0;
+            string assetUrl = ""; long assetSize = 0; string assetSha256 = "";
             if (root.TryGetProperty("assets", out var assets) && assets.ValueKind == JsonValueKind.Array)
                 foreach (var a in assets.EnumerateArray())
                     if (a.TryGetProperty("name", out var n) &&
                         string.Equals(n.GetString(), UpdateAssetName, StringComparison.OrdinalIgnoreCase))
                     {
-                        zipUrl = a.TryGetProperty("browser_download_url", out var u) ? u.GetString() ?? "" : "";
-                        zipSize = a.TryGetProperty("size", out var sz) ? sz.GetInt64() : 0;
+                        assetUrl = a.TryGetProperty("browser_download_url", out var u) ? u.GetString() ?? "" : "";
+                        assetSize = a.TryGetProperty("size", out var sz) ? sz.GetInt64() : 0;
+                        assetSha256 = ReadSha256Digest(a);
                         break;
                     }
 
             var notes = root.TryGetProperty("body", out var b) ? b.GetString() ?? "" : "";
-            if (latest > CurrentVersion && zipUrl.Length > 0)
+            if (latest > CurrentVersion && IsAllowedUpdateUrl(assetUrl) &&
+                assetSize is > 0 and <= MaxUpdateZipBytes && assetSha256.Length > 0)
             {
-                _updateAvail = new UpdateInfo(latest, notes, zipUrl, zipSize);
+                _updateAvail = new UpdateInfo(
+                    latest, notes, assetUrl, assetSize, assetSha256, IsInstalledEdition);
                 SendUpdateStatus("available");
 #if DEBUG
                 // E2E 자동 테스트: 감지 즉시 UI 클릭 없이 적용 (무인 검증용, 디버그 빌드 한정)
@@ -145,18 +153,18 @@ public partial class MainWindow
         {
             var appDir = AppContext.BaseDirectory.TrimEnd('\\', '/');
 
-            // 쓰기 권한 없는 위치(Program Files 등) → 자체 교체 불가, 릴리즈 페이지로 폴백
-            if (!IsDirWritable(appDir))
+            // 포터블판은 직접 파일을 교체하므로 앱 폴더 쓰기 권한이 필요하다.
+            // 설치판은 검증된 Setup이 같은 사용자 설치 위치를 갱신한다.
+            if (!info.IsInstaller && !IsDirWritable(appDir))
             {
                 ShellOpen(UpdateReleasesPage);
                 SendUpdateStatus("fallback");
                 return;
             }
 
-            // 여유 공간: 임시 폴더엔 zip, 앱 폴더엔 압축 해제분(zip의 약 3배로 추정)
-            if (info.ZipSize > 0 &&
-                (FreeBytes(Path.GetTempPath()) < info.ZipSize + (100L << 20) ||
-                 FreeBytes(appDir) < info.ZipSize * 3))
+            // 여유 공간: 설치판은 임시 Setup, 포터블판은 임시 ZIP과 앱 폴더 압축 해제분이 필요하다.
+            if (FreeBytes(Path.GetTempPath()) < info.AssetSize + (100L << 20) ||
+                (!info.IsInstaller && FreeBytes(appDir) < info.AssetSize * 3))
             {
                 SendUpdateStatus("error", reason: "space");
                 return;
@@ -164,23 +172,39 @@ public partial class MainWindow
 
             // 1) 다운로드 (진행률 통지)
             SendUpdateProgress("download", 0);
-            var tempZip = Path.Combine(Path.GetTempPath(), "MarkDownEditor-update.zip");
+            var tempAsset = Path.Combine(
+                Path.GetTempPath(), info.IsInstaller ? "MarkDownEditor-update.exe" : "MarkDownEditor-update.zip");
             using (var cts = new CancellationTokenSource(TimeSpan.FromMinutes(30)))
             {
-                using var res = await UpdateHttp.GetAsync(info.ZipUrl, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+                using var res = await UpdateHttp.GetAsync(info.AssetUrl, HttpCompletionOption.ResponseHeadersRead, cts.Token);
                 res.EnsureSuccessStatusCode();
-                var total = res.Content.Headers.ContentLength ?? info.ZipSize;
+                var total = res.Content.Headers.ContentLength ?? info.AssetSize;
+                if (total != info.AssetSize)
+                    throw new InvalidDataException($"update content length mismatch: expected {info.AssetSize}, got {total}");
                 await using var src = await res.Content.ReadAsStreamAsync(cts.Token);
-                await using var dst = File.Create(tempZip);
+                await using var dst = File.Create(tempAsset);
                 var buf = new byte[1 << 16];
                 long done = 0; var lastPct = -1; int n;
                 while ((n = await src.ReadAsync(buf, cts.Token)) > 0)
                 {
                     await dst.WriteAsync(buf.AsMemory(0, n), cts.Token);
                     done += n;
+                    if (done > info.AssetSize)
+                        throw new InvalidDataException("update download exceeded expected size");
                     var pct = total > 0 ? (int)(done * 100 / total) : -1;
                     if (pct != lastPct) { lastPct = pct; SendUpdateProgress("download", pct); }
                 }
+            }
+
+            await VerifyDownloadedUpdateAsync(tempAsset, info.AssetSize, info.AssetSha256);
+
+            if (info.IsInstaller)
+            {
+                ValidateExecutableVersion(tempAsset, info.Latest);
+                _updateHelper = WriteInstallerHelperScript(appDir, tempAsset);
+                _payloadVersion = info.Latest;
+                RequestApplyClose();
+                return;
             }
 
             // 2) 앱 폴더 안 스테이징에 압축 해제 (같은 볼륨 → 도우미가 rename만으로 원자적 교체)
@@ -188,14 +212,14 @@ public partial class MainWindow
             var payload = Path.Combine(appDir, ".update", "payload");
             await Task.Run(() =>
             {
+                ValidateUpdateArchive(tempAsset);
                 var staging = Path.Combine(appDir, ".update");
                 if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
                 Directory.CreateDirectory(payload);
-                ZipFile.ExtractToDirectory(tempZip, payload);
-                File.Delete(tempZip);
+                ZipFile.ExtractToDirectory(tempAsset, payload);
+                ValidateExtractedPayload(payload, info.Latest);
+                File.Delete(tempAsset);
             });
-            if (!File.Exists(Path.Combine(payload, "MarkDownEditor.exe")))
-                throw new InvalidDataException("payload has no MarkDownEditor.exe");   // 잘못된 자산 구조
 
             // 3) 도우미 스크립트 생성 (%TEMP%)
             _updateHelper = WriteHelperScript(appDir, payload);
@@ -208,10 +232,109 @@ public partial class MainWindow
         {
             SendUpdateStatus("error", reason: "apply");
             // 실패한 다운로드의 부분 zip이 %TEMP%에 남지 않게 정리
-            try { File.Delete(Path.Combine(Path.GetTempPath(), "MarkDownEditor-update.zip")); } catch { }
+            foreach (var name in new[] { "MarkDownEditor-update.zip", "MarkDownEditor-update.exe" })
+                try { File.Delete(Path.Combine(Path.GetTempPath(), name)); } catch { }
             try { await Task.Run(CleanupUpdateLeftovers); } catch { }
         }
         finally { _updateBusy = false; }
+    }
+
+    private static string ReadSha256Digest(JsonElement asset)
+    {
+        var digest = asset.TryGetProperty("digest", out var d) ? d.GetString() ?? "" : "";
+        if (!digest.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase)) return "";
+        var candidate = digest[7..];
+        return candidate.Length == 64 && candidate.All(Uri.IsHexDigit) ? candidate.ToLowerInvariant() : "";
+    }
+
+    private static Version ParseReleaseVersion(string tag)
+    {
+        if (tag.Length < 2 || tag[0] is not ('v' or 'V'))
+            throw new FormatException($"unexpected tag: {tag}");
+        var parts = tag[1..].Split('.');
+        if (parts.Length != 3 || parts.Any(p => p.Length == 0 || p.Any(c => !char.IsAsciiDigit(c)) ||
+                                                      !int.TryParse(p, out _)))
+            throw new FormatException($"unexpected tag: {tag}");
+        return new Version(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
+    }
+
+    private static bool IsAllowedUpdateUrl(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return false;
+#if DEBUG
+        if (!string.Equals(UpdateApiUrl, UpdateApiDefault, StringComparison.Ordinal))
+            return uri.Scheme is "http" or "https";
+#endif
+        return uri.Scheme == Uri.UriSchemeHttps &&
+               uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase) &&
+               uri.AbsolutePath.StartsWith("/jjw1270/MarkdownEditor/releases/download/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static async Task VerifyDownloadedUpdateAsync(string zipPath, long expectedSize, string expectedSha256)
+    {
+        if (expectedSize is <= 0 or > MaxUpdateZipBytes)
+            throw new InvalidDataException($"unexpected update size: {expectedSize}");
+        var actualSize = new FileInfo(zipPath).Length;
+        if (actualSize != expectedSize)
+            throw new InvalidDataException($"update size mismatch: expected {expectedSize}, got {actualSize}");
+
+        await using var stream = File.OpenRead(zipPath);
+        var actual = await SHA256.HashDataAsync(stream);
+        var expected = Convert.FromHexString(expectedSha256);
+        if (!CryptographicOperations.FixedTimeEquals(actual, expected))
+            throw new InvalidDataException("update sha256 mismatch");
+    }
+
+    private static void ValidateUpdateArchive(string zipPath)
+    {
+        const long maxExpandedBytes = 2L << 30;
+        using var archive = ZipFile.OpenRead(zipPath);
+        if (archive.Entries.Count is 0 or > 10_000)
+            throw new InvalidDataException("unexpected update entry count");
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var required = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "MarkDownEditor.exe", "web/index.html", "Runtime/msedgewebview2.exe",
+        };
+        long expandedBytes = 0;
+
+        foreach (var entry in archive.Entries)
+        {
+            var name = entry.FullName.Replace('\\', '/');
+            var segments = name.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var allowed = name.Equals("MarkDownEditor.exe", StringComparison.OrdinalIgnoreCase) ||
+                          name.StartsWith("web/", StringComparison.OrdinalIgnoreCase) ||
+                          name.StartsWith("Runtime/", StringComparison.OrdinalIgnoreCase);
+            if (name.Length == 0 || name.StartsWith('/') || segments.Any(s => s == "..") || !allowed)
+                throw new InvalidDataException($"unexpected update entry: {name}");
+            if (!seen.Add(name))
+                throw new InvalidDataException($"duplicate update entry: {name}");
+
+            expandedBytes = checked(expandedBytes + entry.Length);
+            if (expandedBytes > maxExpandedBytes)
+                throw new InvalidDataException("update payload is too large");
+            required.Remove(name);
+        }
+
+        if (required.Count > 0)
+            throw new InvalidDataException("update payload is incomplete");
+    }
+
+    private static void ValidateExtractedPayload(string payload, Version expectedVersion)
+    {
+        var exe = Path.Combine(payload, "MarkDownEditor.exe");
+        ValidateExecutableVersion(exe, expectedVersion);
+    }
+
+    private static void ValidateExecutableVersion(string exe, Version expectedVersion)
+    {
+        var versionText = FileVersionInfo.GetVersionInfo(exe).FileVersion;
+        if (!Version.TryParse(versionText, out var version) || version.Build < 0 || version.Revision is not (-1 or 0))
+            throw new InvalidDataException("update executable has no valid version");
+        version = new Version(version.Major, Math.Max(version.Minor, 0), Math.Max(version.Build, 0));
+        if (version != expectedVersion)
+            throw new InvalidDataException($"update version mismatch: expected {expectedVersion}, got {version}");
     }
 
     private void RequestApplyClose()
@@ -303,6 +426,30 @@ Remove-Item $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
         return path;
     }
 
+    // 설치판: 앱이 완전히 닫힌 뒤 같은 AppId의 Setup을 조용히 실행해 제거 정보와 버전도 함께 갱신한다.
+    private static string WriteInstallerHelperScript(string appDir, string setupPath)
+    {
+        static string Q(string s) => "'" + s.Replace("'", "''") + "'";
+        var script = $@"# MarkDownEditor 설치판 업데이트 도우미
+$ErrorActionPreference = 'Stop'
+$app = {Q(appDir)}
+$setup = {Q(setupPath)}
+try {{ Wait-Process -Id {Environment.ProcessId} -Timeout 120 -ErrorAction SilentlyContinue }} catch {{}}
+Start-Sleep -Milliseconds 500
+$installed = $false
+try {{
+  $installer = Start-Process -FilePath $setup -ArgumentList '/CURRENTUSER /SILENT /NORESTART /CLOSEAPPLICATIONS /SUPPRESSMSGBOXES' -Wait -PassThru
+  $installed = $installer.ExitCode -eq 0
+}} catch {{}}
+if ($installed) {{ Remove-Item $setup -Force -ErrorAction SilentlyContinue }}
+try {{ Start-Process -FilePath (Join-Path $app 'MarkDownEditor.exe') -WorkingDirectory $app }} catch {{}}
+Remove-Item $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
+";
+        var path = Path.Combine(Path.GetTempPath(), "MarkDownEditor-installer-update.ps1");
+        File.WriteAllText(path, script, new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+        return path;
+    }
+
     // 시작 시 1회: 이전 업데이트의 잔재 처리.
     // X.old만 남음(교체 도중 강제 종료) → 원복, X와 X.old가 모두 있음 → 백업만 정리, 스테이징 폴더 → 삭제.
     private static void CleanupUpdateLeftovers()
@@ -333,7 +480,11 @@ Remove-Item $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
         }
         catch { }
         // 이전 실행이 남긴 %TEMP% 잔재(실패한 부분 zip·사용 끝난 도우미 스크립트) 정리
-        foreach (var n in new[] { "MarkDownEditor-update.zip", "MarkDownEditor-update.ps1" })
+        foreach (var n in new[]
+                 {
+                     "MarkDownEditor-update.zip", "MarkDownEditor-update.exe",
+                     "MarkDownEditor-update.ps1", "MarkDownEditor-installer-update.ps1",
+                 })
             try { File.Delete(Path.Combine(Path.GetTempPath(), n)); } catch { }
     }
 

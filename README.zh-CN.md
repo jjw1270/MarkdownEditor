@@ -5,20 +5,20 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-9.0-512bd4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [下载 Windows 版](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip，约 331 MB · 解压即用 · [查看更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### ⬇️ [Windows 安装程序](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [便携 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[查看更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
-![预览 — 浅色主题](docs/images/preview-light.png)
+![预览 — 简体中文界面](docs/images/zh-CN/preview.png)
 
 ## 亮点
 
-- **便携** — 解压即用。内置 WebView2 运行时，设置与缓存都保存在 exe 旁边，不在系统中留下任何痕迹。
+- **默认便携** — 解压即用。内置 WebView2 运行时，设置与缓存保存在 exe 旁边；如果该文件夹为只读，则改用 `%TEMP%\MarkDownEditor`。
 - **自动更新** — 启动时静默检查 GitHub Releases；有新版本时，标题栏版本号右侧会出现红点；点击版本号 → **有新版本可用**，即可在应用内带进度条完成更新，设置与会话全部保留。（自动更新——匿名版本检查，以及仅在执行更新时下载发布文件——是本应用唯一的网络访问，绝不发送任何文档或个人数据。）
 - **一个窗口，多个标签页** — 所有文件都在同一窗口中以标签页打开（互斥体 + 命名管道实现单实例）。标签页可拖拽排序，`Ctrl+Tab` 循环切换。
 - **所有链接都可用** — `.md` 链接在新标签页打开，网页链接用浏览器，文件夹用资源管理器，其他文档用默认应用。支持跨文档锚点（`doc.md#章节`）。
@@ -39,19 +39,24 @@
 - **界面 10 种语言** — 한국어、English、日本語、简体中文、繁體中文、Español、Français、Deutsch、Русский、Português。默认跟随系统语言，可随时在标题栏 `🌐` 按钮中切换。
 - **记事本式紧凑界面** — 标签页与工具集成在自定义标题栏中（拖动空白区域移动窗口，双击最大化）。
 
-![语言菜单](docs/images/menu.png)
+![语言菜单](docs/images/zh-CN/menu.png)
 
 ## 🚀 安装
 
-没有安装程序，不需要管理员权限，也不需要任何前置组件。下载、解压、运行，就这三步。
+提供适用于 Windows 10 1809 或更高版本 / Windows 11 x64 的两种包，均不需要管理员权限。
 
-### 第 1 步 — 下载
+| 软件包 | 适合场景 | 大小 | Runtime 与数据 |
+|---|---|---:|---|
+| **[Windows 安装程序](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 日常使用 | 约 45 MB | 按用户安装，使用自动维护的 Evergreen WebView2，并注册开始菜单和“打开方式”。数据位于 `%LOCALAPPDATA%\MarkDownEditor`。仅在缺少 WebView2 时需要联网；若前置组件安装失败，安装程序会明确报错。 |
+| **[便携 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | U 盘、离线、免安装 | 约 325 MB | 包含 WebView2 Fixed Runtime；位置可写时，数据保存在应用旁边。 |
+
+### 便携版
 
 **⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — 此链接**始终指向最新版本**。
 
 | | |
 |---|---|
-| **体积** | 约 331 MB — 内置了完整的 WebView2 运行时，因此不需要再安装任何东西 |
+| **体积** | 约 325 MB — 内置完整 WebView2，适合离线使用 |
 | **系统要求** | Windows 10 / 11（64 位）。除此之外别无要求。 |
 | **更多** | [全部版本](https://github.com/jjw1270/MarkdownEditor/releases) · [本次更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [完整更新日志](CHANGELOG.md) |
 
@@ -59,7 +64,7 @@
 <summary><b>习惯用命令行？</b> 一段 PowerShell 完成下载、解压和启动</summary>
 
 ```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
 $zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
 
 Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
@@ -95,11 +100,12 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 ### 更新
 
-你不需要再回到这个页面。应用每次启动都会检查 GitHub releases，发现新版本时会在标题栏版本号右侧显示一个**红点**。点击版本号 → **更新**，它就会带进度条下载、自我替换并重启，你的设置、已打开的标签页和会话都会保留。
+应用启动时会匿名检查 GitHub Releases。点击**更新**后会验证 URL、大小、SHA-256、包结构和版本。便携版会原子替换 ZIP，安装版会运行下一版已验证的安装程序；设置与会话均会保留。
 
 ### 卸载
 
-删除文件夹即可，没有别的步骤 — 注册表、`%AppData%`、"应用和功能"列表里都不会留下任何东西。（如果设置过文件关联，下次打开 `.md` 时 Windows 会让你重新选择默认应用而已。）
+- **安装版：** 在**设置 → 应用 → 已安装的应用**中卸载。程序、快捷方式及自身的“打开方式”注册项会被移除；`%LOCALAPPDATA%\MarkDownEditor` 会保留，便于安全重装。
+- **便携版：** 删除应用文件夹；若曾从只读位置运行，也请删除 `%TEMP%\MarkDownEditor`。
 
 ## 键盘快捷键
 
@@ -118,6 +124,13 @@ Start-Process "$dest\MarkDownEditor.exe"
 | `Ctrl+W` | 关闭标签页 |
 | `Alt+←` / `Alt+→` | 后退 / 前进 |
 
+## 隐私
+
+- 文档仅在本地处理，从不上传；没有遥测或标识符。
+- 应用运行时，网络仅用于匿名检查 GitHub Releases 和下载你主动开始的更新。首次安装时，若 Windows 缺少 WebView2，安装程序可能从 Microsoft 下载该组件。
+- 安装版数据位于 `%LOCALAPPDATA%\MarkDownEditor`；便携版使用 `WebView2Data/`，只读位置则回退到 `%TEMP%\MarkDownEditor`。
+- 严格的内容安全策略会阻止脚本、插件、基准 URL 修改和远程图片自动请求；本地图片始终在本地嵌入。
+
 ## 从源码构建
 
 ```powershell
@@ -126,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-输出：`src/bin/Release/net9.0-windows/win-x64/publish/MarkDownEditor.exe`
+输出：`src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`
 将 `web/` 文件夹（以及可选的 WebView2 固定版本运行时 `Runtime/`）放在 exe 旁边即可。
 
 ### 架构一览
