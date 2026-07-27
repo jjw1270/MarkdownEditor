@@ -118,8 +118,18 @@ and in the existing format.
 
   이 PC에서는 WinGet 보관 파일 검사에서 `0x8A150060`을 반환했다. 같은 ZIP의 SHA-256 일치와
   Microsoft Defender 사용자 지정 검사 무탐지를 확인한 뒤, 로컬 테스트에 한해 재정의 옵션으로 설치했다.
-  재정의 기능은 기본적으로 꺼져 있으므로 필요한 경우에만 관리자 PowerShell에서
-  `winget settings --enable LocalArchiveMalwareScanOverride`를 실행하고, 테스트 직후 다시 끈다.
+  재정의 기능은 기본적으로 꺼져 있으므로 필요한 경우에만 다음처럼 사용하고 테스트 직후 다시 끈다.
+
+  ```powershell
+  # SHA-256 확인과 별도 보안 검사를 먼저 통과한 로컬 테스트 파일에만 사용한다.
+  winget settings --enable LocalArchiveMalwareScanOverride
+  winget install --manifest packaging/winget/1.2.2 --accept-package-agreements `
+    --ignore-local-archive-malware-scan
+  winget settings --disable LocalArchiveMalwareScanOverride
+  ```
+
+  upstream PR의 보안 검사에서 배포 파일이 실제로 차단되면 로컬 재정의와 무관하게 등록할 수 없으므로,
+  그 경우 원인을 확인하고 안전한 새 배포 파일로 매니페스트 URL·해시를 갱신한다.
 
   앱은 포터블 설정·캐시를 실행 파일 옆 `WebView2Data/`에 보존한다. 로컬 소스 설치에서는 제거 후
   약 8 MB가 남았고 `--purge`도 적용되지 않았다. 공식 소스 등록 후 `--id jjw1270.MarkDownEditor`로
