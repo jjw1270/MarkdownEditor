@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.6.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.12.0.schema.json
 PackageIdentifier: jjw1270.MarkDownEditor
 PackageVersion: 1.2.2
 PackageLocale: ko-KR
@@ -20,8 +20,8 @@ Description: |-
   클립보드 이미지 붙여넣기, PDF 내보내기, 외부 변경 자동 반영, 비정상 종료 복구, 세션 복원,
   다크/라이트 테마, UI 10개 언어를 지원합니다.
 
-  시스템에 설치되는 것은 없습니다. 설정과 캐시는 실행 파일 옆에만 저장되고,
-  유일한 네트워크 접근은 GitHub 릴리즈에 대한 익명 버전 확인입니다.
+  시스템에 설치되는 것은 없습니다. 설정과 캐시는 실행 파일 옆에만 저장됩니다.
+  네트워크는 익명 업데이트 확인과 사용자가 직접 실행한 릴리즈 다운로드에만 사용합니다.
 Tags:
   - 마크다운
   - 마크다운에디터
@@ -35,4 +35,4 @@ Tags:
   - 포터블
 ReleaseNotesUrl: https://github.com/jjw1270/MarkdownEditor/releases/tag/v1.2.2
 ManifestType: locale
-ManifestVersion: 1.6.0
+ManifestVersion: 1.12.0

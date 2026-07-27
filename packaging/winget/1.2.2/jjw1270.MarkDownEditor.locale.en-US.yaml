@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.12.0.schema.json
 PackageIdentifier: jjw1270.MarkDownEditor
 PackageVersion: 1.2.2
 PackageLocale: en-US
@@ -22,8 +22,8 @@ Description: |-
   clipboard image pasting, PDF export, auto-reload on external changes, crash recovery, session
   restore, dark and light themes, and a UI localized into 10 languages.
 
-  Nothing is installed system-wide: settings and cache stay next to the executable, and the only
-  network access is an anonymous version check against GitHub Releases.
+  Nothing is installed system-wide: settings and cache stay next to the executable. Network access
+  is limited to anonymous update checks and release downloads that the user explicitly starts.
 Moniker: markdowneditor
 Tags:
   - markdown
@@ -45,4 +45,4 @@ Documentations:
   - DocumentLabel: README
     DocumentUrl: https://github.com/jjw1270/MarkdownEditor#readme
 ManifestType: defaultLocale
-ManifestVersion: 1.6.0
+ManifestVersion: 1.12.0

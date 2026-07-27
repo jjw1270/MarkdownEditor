@@ -24,7 +24,7 @@ Most Markdown apps on Windows want an installer, a workspace, a vault, or a subs
 
 - **No installation** — unzip the folder anywhere, including a USB stick, and run the `.exe`.
 - **No traces** — settings and cache live next to the executable, not in the registry or `%AppData%`.
-- **No network** — everything renders offline. The only connection it ever makes is an anonymous version check against GitHub Releases.
+- **Offline document processing** — rendering and editing stay local. The app checks GitHub Releases anonymously for new versions, and downloads a release only when you explicitly start an update.
 - **Free and open source** — MIT licensed.
 
 If you have been looking for a lightweight **Typora alternative**, a **free Markdown preview app for Windows**, or simply a way to **open `.md` files without a browser extension or a full code editor**, this is built for exactly that.

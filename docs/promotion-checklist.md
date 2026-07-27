@@ -41,7 +41,11 @@
 
 리포 페이지와 별개로 **구글이 인덱싱하는 페이지가 하나 더** 생기고,
 `docs/index.html` 에는 canonical · Open Graph · JSON-LD(SoftwareApplication) 메타가 들어 있어
-검색·SNS 공유 시 카드가 제대로 뜬다. `robots.txt` 와 `sitemap.xml` 도 같이 들어 있다.
+검색·SNS 공유 시 카드가 제대로 뜬다. `sitemap.xml` 도 같이 들어 있다.
+
+> GitHub **프로젝트** Pages는 `/MarkdownEditor/` 하위에서 서비스되므로 이 저장소의
+> `docs/robots.txt`는 표준 위치인 `https://jjw1270.github.io/robots.txt`가 될 수 없다.
+> 그래서 효력이 없는 파일은 두지 않고, 아래처럼 Search Console과 Bing에 sitemap을 직접 제출한다.
 
 - [ ] **Google Search Console** (무료)에 `https://jjw1270.github.io/MarkdownEditor/` 등록 →
       sitemap 제출 → 색인 생성 요청. 크롤링을 몇 주 앞당길 수 있다.
@@ -97,8 +101,20 @@ and in the existing format.
 등록되면 `winget search markdown` 결과와 winget.run 같은 검색 사이트에 노출되고,
 `winget install jjw1270.MarkDownEditor` 로 설치되면 SmartScreen 마찰도 줄어든다.
 
-- [ ] 로컬 검증: `winget validate --manifest packaging/winget/1.2.2`
-- [ ] 설치 테스트: `winget install --manifest packaging/winget/1.2.2`
+- [x] 로컬 구조 검증: `winget validate --manifest packaging/winget/1.2.2`
+      (2026-07-27, winget v1.29에서 성공)
+- [ ] **Windows Sandbox 또는 폐기 가능한 VM**에서 설치·실행·제거 테스트
+
+  ```powershell
+  # 관리자 PowerShell — 로컬 매니페스트 설치 기능은 기본적으로 꺼져 있다.
+  winget settings --enable LocalManifestFiles
+  winget install --manifest packaging/winget/1.2.2 --accept-package-agreements
+  # MarkDownEditor 실행 후 web/·Runtime/ 의존 기능 확인
+  winget uninstall --id jjw1270.MarkDownEditor --exact
+  winget settings --disable LocalManifestFiles
+  ```
+
+  현재 사용하는 PC에서 바로 시험하면 portable 등록과 명령 별칭이 남을 수 있으므로 격리 환경을 권장한다.
 - [ ] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
       `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 → PR
 
@@ -131,8 +147,8 @@ Everything opens as tabs in one window. Rendering is GitHub-style with offline
 syntax highlighting and mermaid diagrams. It also edits — Ctrl+E toggles a formatting
 bar so you don't need to know Markdown syntax — and exports to PDF.
 
-No installer, no registry writes, no telemetry. The only network call is an anonymous
-version check. MIT licensed, .NET 9 + WebView2.
+No installer, no registry writes, no telemetry. Network access is limited to anonymous
+update checks and release downloads that you explicitly start. MIT licensed, .NET 9 + WebView2.
 
 https://github.com/jjw1270/MarkdownEditor
 ```
@@ -149,7 +165,8 @@ https://github.com/jjw1270/MarkdownEditor
 하이라이팅 + mermaid 다이어그램을 지원합니다. Ctrl+E로 편집 모드에 들어가면 서식 바가 떠서
 마크다운 문법을 몰라도 쓸 수 있고, PDF로도 내보냅니다.
 
-설치 없음 / 레지스트리 안 건드림 / 텔레메트리 없음. 네트워크는 익명 버전 확인이 전부입니다.
+설치 없음 / 레지스트리 안 건드림 / 텔레메트리 없음. 네트워크는 익명 업데이트 확인과
+사용자가 직접 실행한 릴리즈 다운로드에만 사용합니다.
 MIT 라이선스, .NET 9 + WebView2로 만들었습니다.
 
 https://github.com/jjw1270/MarkdownEditor
