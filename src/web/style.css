@@ -614,12 +614,14 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
 #updMsg { min-height: 18px; }
 #updMsg.err { color: var(--hl-kw); }   /* 실패 메시지 — 테마별 빨강 토큰 재사용 */
 #updBarWrap { display: flex; align-items: center; gap: 10px; }
+#updBarWrap[hidden] { display: none; }   /* display 지정이 hidden 속성을 덮으므로 명시 필요 */
 #updBar { flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
 #updBarFill { height: 100%; width: 0; border-radius: 3px; background: var(--accent); transition: width .2s ease; }
 #updBarFill.ind { animation: updind 1.2s ease-in-out infinite; }   /* 압축 해제 등 비율 미상 구간 */
 @keyframes updind { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 #updPct { min-width: 38px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
 #updNotesWrap { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+#updNotesWrap[hidden] { display: none; }   /* 노트 없을 때 빈 상자가 남지 않게 */
 #updNotesLabel { font-weight: 600; font-size: 12px; color: var(--muted); }
 #updNotes {
   min-height: 0;
