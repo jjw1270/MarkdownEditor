@@ -7,6 +7,7 @@ const els = {
   editor: document.getElementById('editor'),
   bar: document.getElementById('bar'),
   appTitle: document.getElementById('appTitle'),
+  appVer: document.getElementById('appVer'),
   minBtn: document.getElementById('minBtn'),
   maxBtn: document.getElementById('maxBtn'),
   closeBtn: document.getElementById('closeBtn'),
@@ -1239,17 +1240,17 @@ function showLangMenu() {
   for (const code of Object.keys(LANG_NAMES)) {
     items.push({ label: mark(langMode === code) + LANG_NAMES[code], act: () => setLang(code) });
   }
-  // 버전 정보 (구 ⋯ 메뉴에서 이동) — 클릭하면 GitHub 저장소로
-  items.push('sep', {
-    label: `MarkDownEditor v${appVersion || '?'}`,
-    act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' }); },
-  });
   showMenuAt(items, els.langBtn, 'right');
 }
 menuButton(els.langBtn, showLangMenu);
 function setLang(mode) {
   if (host) host.postMessage({ cmd: 'lang', value: mode });
 }
+
+// 타이틀 옆 버전 클릭 → GitHub 저장소 (구 🌐 메뉴의 버전 항목에서 이동)
+els.appVer.addEventListener('click', () => {
+  if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' });
+});
 
 // ---- 자동 업데이트 (타이틀 옆 ! 배지 + 팝업) ----
 // 실제 확인·다운로드·적용은 C#(MainWindow.Update.cs)이 수행하고, 웹은 상태 표시만 담당.
@@ -2039,6 +2040,7 @@ if (host) {
       if (m.version) {
         appVersion = m.version;
         els.appTitle.title = `MarkDownEditor v${appVersion}`;
+        els.appVer.textContent = 'v' + appVersion;   // 타이틀 오른쪽 버전 표시
       }
     } else if (m.cmd === 'winstate') {
       applyWinState(!!m.maximized);

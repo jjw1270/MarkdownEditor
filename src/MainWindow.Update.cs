@@ -103,6 +103,11 @@ public partial class MainWindow
             {
                 _updateAvail = new UpdateInfo(latest, notes, zipUrl, zipSize);
                 SendUpdateStatus("available");
+#if DEBUG
+                // E2E 자동 테스트: 감지 즉시 UI 클릭 없이 적용 (무인 검증용, 디버그 빌드 한정)
+                if (Environment.GetEnvironmentVariable("MDE_UPDATE_AUTOTEST") == "1")
+                    _ = ApplyUpdateAsync();
+#endif
             }
             else
             {

@@ -116,6 +116,17 @@ body {
 }
 #appIcon { width: 16px; height: 16px; -webkit-user-drag: none; }
 
+/* 버전 표시 (타이틀 텍스트 오른쪽) — 클릭하면 GitHub 저장소 (구 🌐 메뉴 항목에서 이동) */
+#appTitle #appVer {
+  pointer-events: auto;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: .8;
+  cursor: pointer;
+}
+#appTitle #appVer:hover { opacity: 1; color: var(--fg); }
+#appVer:empty { display: none; }   /* C#의 app 메시지로 버전을 받기 전엔 숨김 */
+
 /* 업데이트 배지 (타이틀 바로 오른쪽 원형 ! 버튼) — 타이틀은 클릭 통과지만 배지는 클릭 가능 */
 #appTitle #updBtn {
   pointer-events: auto;
