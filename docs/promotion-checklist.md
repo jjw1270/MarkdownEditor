@@ -45,11 +45,10 @@
 
 > GitHub **프로젝트** Pages는 `/MarkdownEditor/` 하위에서 서비스되므로 이 저장소의
 > `docs/robots.txt`는 표준 위치인 `https://jjw1270.github.io/robots.txt`가 될 수 없다.
-> 그래서 효력이 없는 파일은 두지 않고, 아래처럼 Search Console과 Bing에 sitemap을 직접 제출한다.
+> 그래서 효력이 없는 파일은 두지 않고, 아래처럼 Search Console에 sitemap을 직접 제출한다.
 
 - [x] **Google Search Console** (무료)에 `https://jjw1270.github.io/MarkdownEditor/` 등록 →
       sitemap 제출 → URL 색인 등록 상태 확인.
-- [ ] **Bing Webmaster Tools** 도 동일하게 (Search Console에서 가져오기 지원)
 
 ---
 
@@ -152,6 +151,7 @@ https://github.com/jjw1270/MarkdownEditor
 - [ ] 릴리즈 **제목에 키워드**를 넣는다: `v1.2.3 — Markdown viewer for Windows` 처럼.
       릴리즈 페이지도 개별적으로 색인된다.
 - [ ] 릴리즈 노트 첫 문단에 앱이 무엇인지 한 줄 요약을 넣는다 (릴리즈 페이지만 보고 들어온 사람 대상).
+
 ---
 
 ## 하지 말 것
