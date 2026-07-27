@@ -10,7 +10,9 @@
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-[한국어](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Русский** · [Português (Brasil)](README.pt-BR.md)
+[한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Русский** · [Português (Brasil)](README.pt-BR.md)
+
+### ⬇️ [Скачать для Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, ~331 МБ · распаковать и запустить · [что нового](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![Предпросмотр — светлая тема](docs/images/preview-light.png)
 
@@ -39,18 +41,73 @@
 
 ![Меню языков](docs/images/menu.png)
 
-## Начало работы
+## 🚀 Установка
 
-1. Скачайте `MarkDownEditor-standalone.zip` из Releases и **распакуйте куда угодно**.
-2. Запустите `MarkDownEditor.exe`. Установщика нет.
-3. (По желанию) Назначьте приложением по умолчанию для `.md`: правый клик по файлу `.md` → *Открыть с помощью* → *Выбрать другое приложение* → выберите `MarkDownEditor.exe` и отметьте *Всегда*.
+Никакого установщика, прав администратора и зависимостей. Скачать, распаковать, запустить.
 
-> **Про SmartScreen** — исполняемый файл не подписан, поэтому при первом запуске Windows может показать предупреждение «неизвестный издатель». Выберите *Подробнее → Выполнить в любом случае* либо соберите из исходников (ниже).
+### Шаг 1 — Скачать
 
-### Требования
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — эта ссылка **всегда ведёт на последнюю версию**.
 
-- Windows 10 / 11 (64-разрядная)
-- Установка WebView2 не нужна — среда фиксированной версии идёт в комплекте. (Сборки без неё автоматически используют системную среду Evergreen.)
+| | |
+|---|---|
+| **Размер** | ~331 МБ — в комплект входит полная среда WebView2, поэтому больше ничего устанавливать не нужно |
+| **Требования** | Windows 10 или 11, 64-разрядная. Больше ничего. |
+| **Ещё** | [Все выпуски](https://github.com/jjw1270/MarkdownEditor/releases) · [Что нового в этой версии](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Полная история изменений](CHANGELOG.md) |
+
+<details>
+<summary><b>Привыкли к терминалу?</b> Скачать, распаковать и запустить одним блоком PowerShell</summary>
+
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
+
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+Чтобы обновиться позже, просто выполните тот же блок ещё раз — или воспользуйтесь встроенным обновлением, описанным ниже.
+
+</details>
+
+### Шаг 2 — Распаковать и запустить
+
+Распакуйте папку в любое место, куда есть право записи: `C:\Tools\MarkDownEditor`, рабочий стол, USB-флешка — не важно. Затем запустите **`MarkDownEditor.exe`**.
+
+В папке рядом с `MarkDownEditor.exe` лежат `web/` (интерфейс), `Runtime/` (встроенный WebView2) и `WebView2Data/` (кэш). Пока они вместе, всю папку можно переносить, копировать и брать с собой куда угодно.
+
+> **Синее окно SmartScreen при первом запуске — это нормально.** Файл не подписан, поэтому Windows показывает «Система Windows защитила ваш компьютер». Нажмите **Подробнее → Выполнить в любом случае**. Появляется только один раз.
+> Если запускать неподписанный файл не хочется, собрать самому — это две команды, см. *Сборка из исходников* ниже.
+
+### Шаг 3 — Назначить приложением по умолчанию для `.md` *(ради этого всё и затевалось)*
+
+После этого двойной клик по любому Markdown-файлу в проводнике сразу открывает готовый отрисованный документ.
+
+1. Правый клик по любому файлу `.md` в проводнике
+2. **Открыть с помощью → Выбрать другое приложение**
+3. Выберите `MarkDownEditor.exe` — если его нет в списке, прокрутите вниз и нажмите **Выбрать приложение на этом компьютере**
+4. Отметьте **Всегда использовать это приложение для открытия файлов .md**, затем **ОК**
+
+Так же можно связать `.markdown` и `.txt`.
+
+### Обновление
+
+Возвращаться сюда не придётся. При запуске приложение проверяет релизы на GitHub и, если вышла более новая версия, показывает **красную точку** справа от номера версии в заголовке окна. Кликните по версии → **Обновить**: файл скачается с индикатором прогресса, приложение заменит само себя и перезапустится, сохранив настройки, открытые вкладки и сессию.
+
+### Удаление
+
+Удалите папку — вот и вся процедура. Ничего не записано ни в реестр, ни в `%AppData%`, ни в список «Приложения и возможности». (Если вы назначали сопоставление файлов, Windows просто спросит новое приложение по умолчанию при следующем открытии `.md`.)
+
+### Проверка загруженного файла *(по желанию)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+Ожидаемый SHA-256 каждого выпуска записан в манифесте winget: [`packaging/winget/<версия>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
 
 ## Горячие клавиши
 
@@ -82,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 
 ### Архитектура в одном абзаце
 
-Сторона C# (WPF) отвечает за файловый ввод-вывод, канал единственного экземпляра и оболочку окна; веб-сторона (чистый JS в единственном WebView2) владеет всеми буферами документов и состоянием вкладок. Общение — только через `postMessage`. Отрисовка: marked + highlight.js + mermaid, всё в комплекте для офлайн-работы. Полный обзор возможностей — в [README.md](README.md) (корейский) или [README.en.md](README.en.md) (английский).
+Сторона C# (WPF) отвечает за файловый ввод-вывод, канал единственного экземпляра и оболочку окна; веб-сторона (чистый JS в единственном WebView2) владеет всеми буферами документов и состоянием вкладок. Общение — только через `postMessage`. Отрисовка: marked + highlight.js + mermaid, всё в комплекте для офлайн-работы. Полный обзор возможностей — в [README.ko.md](README.ko.md) (корейский) или [README.md](README.md) (английский).
 
 ## Обратная связь
 

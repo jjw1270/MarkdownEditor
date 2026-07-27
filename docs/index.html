@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarkDownEditor — 설치 없는 무료 Windows 마크다운 뷰어 &amp; 에디터</title>
+<meta name="description" content="윈도우에서 .md 파일을 더블클릭하면 바로 열리는 무료 마크다운 뷰어 겸 에디터. 설치 불필요, 탭 지원, mermaid 다이어그램, 다크 모드, PDF 내보내기. 오픈소스(MIT).">
+<link rel="canonical" href="https://jjw1270.github.io/MarkdownEditor/">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MarkDownEditor">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://jjw1270.github.io/MarkdownEditor/">
+<meta property="og:title" content="MarkDownEditor — 설치 없는 무료 Windows 마크다운 뷰어 &amp; 에디터">
+<meta property="og:description" content="`.md` 파일을 더블클릭하면 바로 열립니다. 설치 없이 압축만 풀면 끝. 탭·mermaid·다크 모드·PDF 내보내기 지원, 오픈소스.">
+<meta property="og:image" content="https://jjw1270.github.io/MarkdownEditor/images/preview-light.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MarkDownEditor — 설치 없는 무료 Windows 마크다운 뷰어 &amp; 에디터">
+<meta name="twitter:description" content="`.md` 파일을 더블클릭하면 바로 열립니다. 설치 없이 압축만 풀면 끝.">
+<meta name="twitter:image" content="https://jjw1270.github.io/MarkdownEditor/images/preview-light.png">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MarkDownEditor",
+  "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "Markdown editor",
+  "operatingSystem": "Windows 10, Windows 11",
+  "description": "윈도우에서 .md 파일을 더블클릭하면 바로 열리는 무료 마크다운 뷰어 겸 에디터. 설치가 필요 없는 포터블 앱으로 탭, mermaid 다이어그램, 다크 모드, PDF 내보내기를 지원합니다.",
+  "url": "https://jjw1270.github.io/MarkdownEditor/",
+  "downloadUrl": "https://github.com/jjw1270/MarkdownEditor/releases/latest",
+  "softwareVersion": "1.2.2",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "inLanguage": ["ko", "en", "ja", "zh-CN", "zh-TW", "es", "fr", "de", "ru", "pt-BR"],
+  "author": { "@type": "Person", "name": "jjw1270", "url": "https://github.com/jjw1270" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+
+<style>
+:root{
+  --bg:#ffffff; --fg:#1f2328; --muted:#59636e; --line:#d1d9e0;
+  --card:#f6f8fa; --accent:#0969da; --accent-fg:#ffffff; --code:#eff2f5;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --line:#3d444d;
+    --card:#151b23; --accent:#4493f8; --accent-fg:#0d1117; --code:#151b23;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",
+       "Noto Sans KR",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+code{background:var(--code);padding:.15em .4em;border-radius:5px;font-size:.88em;
+     font-family:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace}
+
+header{padding:72px 0 40px;text-align:center;border-bottom:1px solid var(--line)}
+h1{font-size:2.6rem;margin:0 0 .3em;letter-spacing:-.02em}
+.tagline{font-size:1.2rem;margin:0 0 .4em}
+.sub{color:var(--muted);margin:0 0 28px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.btn{display:inline-block;padding:12px 26px;border-radius:8px;font-weight:600;border:1px solid var(--line)}
+.btn-primary{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.btn-primary:hover{filter:brightness(1.1);text-decoration:none}
+.btn-ghost:hover{background:var(--card);text-decoration:none}
+.badges img{height:20px;margin:0 3px;vertical-align:middle}
+.langs{color:var(--muted);font-size:.88rem;margin-top:18px}
+
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+h2{font-size:1.6rem;margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 28px}
+figure{margin:0 0 28px}
+figure img{width:100%;border:1px solid var(--line);border-radius:10px;display:block}
+figcaption{color:var(--muted);font-size:.86rem;text-align:center;margin-top:10px}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:680px){.shots{grid-template-columns:1fr}}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:0 0 6px;font-size:1rem}
+.card p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.6}
+
+ol.steps{padding-left:22px;margin:0}
+ol.steps li{margin-bottom:12px}
+.note{background:var(--card);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+      padding:14px 18px;color:var(--muted);font-size:.92rem;margin-top:24px}
+ul.plain{margin:0;padding-left:20px;color:var(--muted)}
+ul.plain li{margin-bottom:8px}
+footer{padding:40px 0 64px;text-align:center;color:var(--muted);font-size:.9rem}
+footer a{margin:0 8px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>MarkDownEditor</h1>
+    <p class="tagline"><strong>가볍고 빠른 Windows용 마크다운 뷰어 &amp; 에디터</strong></p>
+    <p class="sub"><code>.md</code> 파일을 더블클릭하면 바로 열립니다. 설치가 필요 없는 포터블 앱.</p>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip">⬇ Windows용 내려받기</a>
+      <a class="btn btn-ghost" href="https://github.com/jjw1270/MarkdownEditor">GitHub 저장소</a>
+    </div>
+    <p class="sub" style="margin-bottom:22px;font-size:.88rem">
+      .zip, 약 331 MB · Windows 10/11 (64-bit) · 압축 풀고 바로 실행 ·
+      <a href="https://github.com/jjw1270/MarkdownEditor/releases/latest">이번 버전에서 바뀐 점</a>
+    </p>
+
+    <p class="badges">
+      <img src="https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases" alt="최신 릴리즈 버전">
+      <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT 라이선스">
+      <img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6" alt="지원 플랫폼: Windows 10/11 64비트">
+      <img src="https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success" alt="총 다운로드 수">
+    </p>
+
+    <p class="langs">UI 10개 언어 지원 · 문서: <a href="https://github.com/jjw1270/MarkdownEditor/blob/main/README.ko.md">한국어</a> ·
+      <a href="https://github.com/jjw1270/MarkdownEditor/blob/main/README.md">English</a> ·
+      <a href="https://github.com/jjw1270/MarkdownEditor/blob/main/README.ja.md">日本語</a> ·
+      <a href="https://github.com/jjw1270/MarkdownEditor/blob/main/README.zh-CN.md">简体中文</a></p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <figure>
+      <img src="images/preview-light.png" alt="MarkDownEditor 라이트 테마 미리보기 — 탭, 목차 사이드바, GitHub 스타일 마크다운 렌더링">
+      <figcaption>GitHub 스타일로 렌더링되는 미리보기 화면</figcaption>
+    </figure>
+
+    <h2>왜 만들었나</h2>
+    <p class="lead">
+      윈도우에서 <code>.md</code> 파일 하나 보려면 대개 설치형 프로그램을 깔거나, 브라우저 확장을 붙이거나,
+      VS Code 같은 코드 에디터를 띄워야 합니다. 이 앱은 그 셋 다 필요 없습니다.
+      <strong>마크다운 뷰어가 먼저</strong>이고, <code>.md</code> 기본 프로그램으로 지정해두면
+      README·명세서·메모 폴더를 탐색기에서 더블클릭하는 것만으로 렌더링된 문서를 볼 수 있습니다.
+      편집이 필요하면 <code>Ctrl+E</code> 한 번이면 됩니다.
+    </p>
+    <ul class="plain">
+      <li><strong>설치 없음</strong> — 압축만 풀면 끝. USB에 담아 다른 PC에서 그대로 써도 됩니다.</li>
+      <li><strong>흔적 없음</strong> — 설정·캐시가 레지스트리나 <code>%AppData%</code>가 아니라 실행 파일 옆에만 남습니다.</li>
+      <li><strong>오프라인 동작</strong> — 렌더링·코드 하이라이팅·다이어그램 전부 로컬에서 처리됩니다.</li>
+      <li><strong>무료 · 오픈소스</strong> — MIT 라이선스.</li>
+    </ul>
+    <p class="lead" style="margin-top:20px">
+      <strong>무료 마크다운 뷰어</strong>, <strong>가벼운 Typora 대안</strong>,
+      <strong>md 파일 여는 프로그램</strong>을 찾고 있었다면 바로 그 용도로 만든 앱입니다.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>핵심 기능</h2>
+    <p class="lead">읽기에 최적화하고, 쓰기는 필요할 때 바로 꺼낼 수 있게 만들었습니다.</p>
+    <div class="grid">
+      <div class="card"><h3>📂 더블클릭 = 바로 열림</h3><p><code>.md</code> 기본 연결 프로그램으로 지정하면 탐색기에서 더블클릭하는 순간 열립니다. 드래그&amp;드롭도 지원합니다.</p></div>
+      <div class="card"><h3>🗂 창은 하나, 문서는 탭</h3><p>파일을 스무 개 열어도 창이 스무 개 뜨지 않습니다. 모두 한 창의 탭으로 모이고, 드래그로 순서를 바꿀 수 있습니다.</p></div>
+      <div class="card"><h3>🧜 mermaid 다이어그램</h3><p>GitHub·GitLab과 동일한 문법의 플로차트·시퀀스·간트를 오프라인으로 렌더링합니다. 테마에 맞춰 색도 바뀝니다.</p></div>
+      <div class="card"><h3>🌙 다크 / 라이트 테마</h3><p>Windows 제목표시줄까지 함께 전환되고, 한 번 고르면 다음 실행에도 기억합니다.</p></div>
+      <div class="card"><h3>📄 PDF 내보내기</h3><p>버튼 한 번(<code>Ctrl+P</code>)으로 미리보기 그대로 PDF 저장. 별도 프린터 설정이 필요 없습니다.</p></div>
+      <div class="card"><h3>✏️ 서식 바</h3><p>굵게·제목·목록·체크박스·표·링크를 버튼 한 번에. <strong>마크다운 문법을 몰라도</strong> 문서를 씁니다.</p></div>
+      <div class="card"><h3>🔗 모든 링크가 동작</h3><p><code>.md</code>는 새 탭, 웹 링크는 브라우저, 폴더는 탐색기로. 문서 간 앵커 이동과 뒤로/앞으로 탐색까지 지원합니다.</p></div>
+      <div class="card"><h3>💾 자동 백업 &amp; 복구</h3><p>저장 안 한 변경을 30초마다 스냅샷해 두었다가, 비정상 종료 후 재실행하면 복구를 제안합니다.</p></div>
+      <div class="card"><h3>🌐 UI 10개 언어</h3><p>한국어·English·日本語·简体中文·繁體中文·Español·Français·Deutsch·Русский·Português. 기본은 OS 언어를 따릅니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>화면</h2>
+    <p class="lead">실제 동작 화면입니다.</p>
+    <div class="shots">
+      <figure>
+        <img src="images/preview-dark.png" alt="MarkDownEditor 다크 테마 미리보기 화면">
+        <figcaption>다크 테마</figcaption>
+      </figure>
+      <figure>
+        <img src="images/mermaid-diagram.png" alt="여러 문서가 탭으로 열린 상태에서 mermaid 플로차트가 렌더링된 화면">
+        <figcaption>탭 + mermaid 다이어그램</figcaption>
+      </figure>
+      <figure>
+        <img src="images/edit-mode.png" alt="편집 모드에서 서식 바가 표시된 마크다운 에디터 화면">
+        <figcaption>편집 모드와 서식 바</figcaption>
+      </figure>
+      <figure>
+        <img src="images/menu.png" alt="타이틀바의 언어 선택 메뉴에서 10개 UI 언어를 고르는 화면">
+        <figcaption>언어 · 버전 메뉴</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>설치하기</h2>
+    <p class="lead">설치 프로그램 없음, 관리자 권한 없음. 3단계, 1분이면 끝납니다.</p>
+    <ol class="steps">
+      <li><a href="https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip"><strong><code>MarkDownEditor-standalone.zip</code> 내려받기</strong></a>
+          — 이 링크는 항상 최신 버전을 가리킵니다 (약 331 MB).</li>
+      <li>쓰기 가능한 아무 폴더에 <strong>압축 해제</strong> — <code>C:\Tools\MarkDownEditor</code>, 바탕화면,
+          USB 메모리 어디든 됩니다.</li>
+      <li><code>MarkDownEditor.exe</code> 실행.</li>
+      <li><strong>(핵심) <code>.md</code> 기본 프로그램으로 지정</strong> — 탐색기에서 아무 <code>.md</code> 파일 우클릭 →
+          <strong>연결 프로그램 → 다른 앱 선택</strong> → <code>MarkDownEditor.exe</code> 선택
+          (목록에 없으면 <em>내 PC에서 앱 선택</em>) → <strong>항상 이 앱을 사용하여 .md 파일 열기</strong> 체크.
+          이후로는 더블클릭만으로 열립니다.</li>
+    </ol>
+
+    <div class="note">
+      <strong>처음 실행할 때 뜨는 파란 SmartScreen 창은 정상입니다</strong> — 코드 서명이 없는 실행 파일이라
+      Windows가 “Windows의 PC 보호” 경고를 띄웁니다. <strong>추가 정보 → 실행</strong>을 누르세요. 한 번만 뜹니다.
+      서명 없는 파일이 꺼려진다면 <a href="https://github.com/jjw1270/MarkdownEditor#readme">소스에서 직접 빌드</a>해도
+      명령 두 줄이면 됩니다.
+    </div>
+
+    <div class="note">
+      <strong>업데이트</strong> — 이 페이지에 다시 올 필요 없습니다. 새 버전이 나오면 앱 타이틀바 버전 표시 옆에
+      빨간 점이 뜨고, 버전 클릭 → <strong>업데이트하기</strong> 한 번이면 앱 안에서 내려받아 재시작합니다.
+      설정·열려 있던 탭·세션은 그대로 유지됩니다.
+    </div>
+
+    <div class="note">
+      <strong>삭제</strong> — 폴더를 지우면 끝입니다. 레지스트리에도 <code>%AppData%</code>에도
+      “앱 및 기능” 목록에도 아무것도 남기지 않습니다.
+    </div>
+
+    <div class="note">
+      <strong>요구 사항</strong> — Windows 10 / 11 (64-bit). WebView2 런타임이 앱에 번들되어 있어
+      별도 설치가 필요 없습니다.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>데이터 &amp; 프라이버시</h2>
+    <p class="lead">문서는 이 PC를 벗어나지 않습니다.</p>
+    <ul class="plain">
+      <li>문서·설정을 클라우드로 보내지 않습니다. 렌더링·편집·내보내기 전부 로컬에서만 이뤄집니다.</li>
+      <li>유일한 네트워크 접근은 <strong>자동 업데이트</strong>입니다 — GitHub API에서 최신 버전 번호만 익명으로 조회하고,
+          사용자가 직접 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다.</li>
+      <li>테마·언어 설정과 WebView2 캐시는 실행 파일 옆에만 저장됩니다. 레지스트리를 건드리지 않습니다.</li>
+      <li>미리보기 안의 인라인 스크립트는 <strong>콘텐츠 보안 정책(CSP)</strong>으로 차단되어,
+          문서를 여는 것만으로 코드가 실행되지 않습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      <a href="https://github.com/jjw1270/MarkdownEditor">GitHub</a>·
+      <a href="https://github.com/jjw1270/MarkdownEditor/releases">릴리즈</a>·
+      <a href="https://github.com/jjw1270/MarkdownEditor/issues/new/choose">버그 신고 · 기능 제안</a>·
+      <a href="https://github.com/jjw1270/MarkdownEditor/blob/main/LICENSE">MIT 라이선스</a>
+    </p>
+    <p>Made with .NET 9 (WPF) · WebView2 · marked.js · highlight.js · mermaid</p>
+  </div>
+</footer>
+
+</body>
+</html>

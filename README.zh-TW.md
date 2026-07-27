@@ -10,7 +10,9 @@
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-[한국어](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+[한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+
+### ⬇️ [下載 Windows 版](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip，約 331 MB · 解壓縮即可執行 · [查看更新內容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![預覽 — 淺色主題](docs/images/preview-light.png)
 
@@ -39,18 +41,73 @@
 
 ![語言選單](docs/images/menu.png)
 
-## 快速開始
+## 🚀 安裝
 
-1. 從 Releases 下載 `MarkDownEditor-standalone.zip`，**解壓縮到任意位置**。
-2. 執行 `MarkDownEditor.exe`。沒有安裝程式。
-3. （選用）設為 `.md` 預設應用程式：右鍵 `.md` 檔案 → *開啟方式* → *選擇其他應用程式* → 選擇 `MarkDownEditor.exe` 並勾選 *一律使用*。
+沒有安裝程式，不需要系統管理員權限，也不需要任何前置元件。下載、解壓縮、執行，就這三步。
 
-> **SmartScreen 提示** — 程式未經程式碼簽署，首次執行時 Windows 可能顯示「未知的發行者」警告。選擇 *其他資訊 → 仍要執行*，或按下方步驟從原始碼自行建置。
+### 步驟 1 — 下載
 
-### 系統需求
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — 這個連結**永遠指向最新版本**。
 
-- Windows 10 / 11（64 位元）
-- 無需安裝 WebView2 — 已內建固定版本執行階段。（未內建的組建會自動使用系統安裝的 Evergreen 執行階段。）
+| | |
+|---|---|
+| **檔案大小** | 約 331 MB — 內建完整的 WebView2 執行階段，所以不必再安裝任何東西 |
+| **系統需求** | Windows 10 / 11（64 位元）。除此之外別無要求。 |
+| **更多** | [所有版本](https://github.com/jjw1270/MarkdownEditor/releases) · [本次更新內容](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [完整變更紀錄](CHANGELOG.md) |
+
+<details>
+<summary><b>習慣用終端機？</b> 一段 PowerShell 完成下載、解壓縮與啟動</summary>
+
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
+
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+之後要更新時再執行一次同樣的程式碼即可，也可以直接用下面說明的**應用程式內自動更新**。
+
+</details>
+
+### 步驟 2 — 解壓縮並執行
+
+解壓縮到任何有寫入權限的位置都可以：`C:\Tools\MarkDownEditor`、桌面、USB 隨身碟都行。接著執行 **`MarkDownEditor.exe`**。
+
+資料夾中除了 `MarkDownEditor.exe`，還有 `web/`（介面）、`Runtime/`（內建 WebView2）與 `WebView2Data/`（快取）。把它們放在一起，整個資料夾可以隨意搬移、複製，或放進隨身碟在別台電腦上直接使用。
+
+> **首次執行時跳出的藍色 SmartScreen 視窗是正常的。** 程式未經程式碼簽署，因此 Windows 會顯示「Windows 已保護您的電腦」。點選 **其他資訊 → 仍要執行** 即可，只會出現這一次。
+> 如果不想執行未簽署的程式，從原始碼自行建置只需兩道指令 — 見下方 *從原始碼建置*。
+
+### 步驟 3 — 設為 `.md` 的預設應用程式 *(這才是重點)*
+
+設定一次之後，在檔案總管中雙擊任何 Markdown 檔案，都會立刻開啟渲染好的文件。
+
+1. 在檔案總管中**右鍵**任一 `.md` 檔案
+2. **開啟方式 → 選擇其他應用程式**
+3. 從清單中選擇 `MarkDownEditor.exe` — 若找不到，往下捲動並使用 **在這部電腦上選擇應用程式**
+4. 勾選 **一律使用此應用程式開啟 .md 檔案**，然後按 **確定**
+
+`.markdown` 與 `.txt` 也可以用同樣的方式關聯。
+
+### 更新
+
+你不需要再回到這個頁面。應用程式每次啟動都會檢查 GitHub releases，發現新版本時會在標題列版本號右側顯示一個**紅點**。點擊版本號 → **更新**，它就會帶進度列下載、自我替換並重新啟動，你的設定、已開啟的分頁與工作階段都會保留。
+
+### 解除安裝
+
+刪除資料夾就結束了 — 登錄檔、`%AppData%`、「應用程式與功能」清單中都不會留下任何東西。（如果曾設定檔案關聯，下次開啟 `.md` 時 Windows 只會請你重新選擇預設應用程式。）
+
+### 驗證下載檔案 *(選用)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+每個版本的 SHA-256 都記錄在 winget 資訊清單 [`packaging/winget/<版本>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) 中。
 
 ## 鍵盤快速鍵
 
@@ -82,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 
 ### 架構一覽
 
-C#（WPF）端負責檔案 I/O、單一執行個體管道和視窗外框；Web 端（單一 WebView2 中的原生 JS）擁有全部文件緩衝區和分頁狀態。兩者僅透過 `postMessage` 通訊。渲染使用 marked + highlight.js + mermaid，全部離線內建。完整功能介紹請參閱 [README.md](README.md)（韓文）或 [README.en.md](README.en.md)（英文）。
+C#（WPF）端負責檔案 I/O、單一執行個體管道和視窗外框；Web 端（單一 WebView2 中的原生 JS）擁有全部文件緩衝區和分頁狀態。兩者僅透過 `postMessage` 通訊。渲染使用 marked + highlight.js + mermaid，全部離線內建。完整功能介紹請參閱 [README.ko.md](README.ko.md)（韓文）或 [README.md](README.md)（英文）。
 
 ## 意見回饋
 

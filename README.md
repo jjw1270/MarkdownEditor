@@ -1,7 +1,7 @@
 # MarkDownEditor
 
-**가볍고 빠른 Windows용 마크다운 뷰어 & 에디터.**
-`.md` 파일을 더블클릭하면 바로 열리는, 설치가 필요 없는 포터블 앱입니다.
+**A free, portable Markdown viewer and editor for Windows 10 / 11.**
+Double-click any `.md` file and it opens instantly — no installer, no setup, no account, no telemetry.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -10,231 +10,223 @@
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-**한국어** · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+[한국어](README.ko.md) · **English** · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-![미리보기 — 라이트 테마](docs/images/preview-light.png)
+### ⬇️ [Download for Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, ~331 MB · unzip and run · [what's new](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
----
-
-## ✨ 이런 앱입니다
-
-- **더블클릭 = 바로 열림** — Windows 기본 `.md` 연결 프로그램으로 지정해두면 탐색기에서 파일을 더블클릭하는 순간 열립니다.
-- **창은 언제나 하나, 문서는 탭으로** — 여러 파일을 한꺼번에 열어도 프로그램이 우수수 뜨지 않습니다. 모두 한 창의 **탭**으로 모입니다. 탭은 **드래그로 순서 변경**이 됩니다.
-- **드래그&드롭으로 열기** — 탐색기에서 `.md`/`.txt` 파일을 창에 끌어다 놓으면 바로 탭으로 열립니다.
-- **모든 링크가 동작** — `.md`는 새 탭, 웹 링크는 기본 브라우저, `.html`은 브라우저, 폴더는 탐색기, `pdf/docx/xlsx/hwp` 등 문서는 연결 프로그램으로 열립니다. `문서.md#섹션` 형태의 **문서 간 앵커 이동**도 지원합니다.
-- **뒤로 / 앞으로** — 방문한 문서 사이를 툴바 `←` `→` 버튼, `Alt+←` / `Alt+→`, 또는 **마우스 4·5번 버튼**으로 오갑니다.
-- **목차 사이드바** — 탭 바로 아래 왼쪽의 `☰` 버튼으로 헤딩 목록을 켜고 끕니다(상태 기억). 목차가 열리면 버튼이 **패널 상단으로 들어가** 그 자리에서 닫을 수 있습니다. 항목을 누르면 해당 위치로 스크롤되고, **읽는 위치를 따라 현재 섹션이 강조**됩니다.
-- **외부 변경 자동 반영** — 열린 문서를 다른 프로그램(IDE·메모장 등)이 저장하면 **자동으로 새로고침**됩니다. 저장 안 한 내 편집이 있으면 덮어쓸지 물어봅니다.
-- **편집 ↔ 미리보기 스크롤 동기화** — 모드를 전환하면 보던 위치에 해당하는 지점으로 자동 이동합니다.
-- **키보드로 바로 읽기** — 실행 직후 클릭 없이 `PageUp/Down` · 방향키 · `Home/End`로 미리보기를 스크롤할 수 있습니다.
-- **탭 우클릭 메뉴** — 닫기 · 다른 탭 모두 닫기 · 탐색기에서 보기 · 경로 복사.
-- **코드 하이라이팅** — ` ```cs `, ` ```bash ` 처럼 언어를 지정한 코드 블록에 문법 색상이 입혀집니다(오프라인 동작, 테마 연동).
-- **mermaid 다이어그램** — GitHub/GitLab과 동일한 ` ```mermaid ` 문법으로 플로차트·시퀀스 등 렌더링(오프라인 동작, 테마 연동).
-- **PDF 내보내기** — 저장 옆 `📄` 버튼 한 번으로 미리보기를 그대로 PDF 파일로 저장합니다.
-- **로컬 이미지 표시** — 문서가 상대·절대 경로로 참조한 이미지(`![](그림.png)`)를 자동으로 찾아 보여줍니다.
-- **클립보드 이미지 붙여넣기** — 편집 중 `Ctrl+V`로 스크린샷을 붙여넣으면 문서 옆 `images/` 폴더에 저장되고 링크가 자동 삽입됩니다.
-- **자동 백업 & 복구** — 저장 안 된 변경사항을 30초마다 스냅샷해 두었다가, 비정상 종료 후 재실행하면 복구를 제안합니다.
-- **세션 복원 & 최근 문서** — 파일 없이 실행하면 마지막에 열려 있던 탭들을 다시 열고, `🕘` 버튼으로 최근 문서를 바로 열 수 있습니다.
-- **UI 언어 10종** — 한국어·English·日本語·简体中文·繁體中文·Español·Français·Deutsch·Русский·Português. 기본은 OS 언어를 따르고, 타이틀바 `🌐` 버튼에서 바로 바꿀 수 있습니다.
-- **줌 기억** — `Ctrl+휠`로 조절한 배율을 다음 실행에도 유지합니다.
-- **위치 기억** — 탭을 전환해도 미리보기 스크롤과 **편집 커서 위치까지** 그대로 유지됩니다.
-- **한글 인코딩 자동 감지** — UTF-8은 물론 BOM 없는 CP949(EUC-KR) 문서도 깨짐 없이 열립니다.
-- **다크 / 라이트 테마** — 타이틀바 `🌙`/`☀` 버튼으로 전환, 한 번 고르면 다음 실행에도 기억합니다. Windows **제목표시줄도 함께** 전환됩니다.
-- **편집 ↔ 미리보기 즉시 전환** — `Ctrl+E` 한 번.
-- **서식 바** — 편집 모드에 나타나는 버튼 줄로 굵게·제목·목록·체크박스·인용·코드·링크·표·구분선을 클릭 한 번에. **마크다운 문법을 몰라도 됩니다** (모두 `Ctrl+Z`로 되돌리기 가능).
-- **우클릭 메뉴** — 미리보기(복사·링크 열기·주소 복사·이미지 확대·찾기), 편집기(잘라내기·복사·붙여넣기·모두 선택)를 우클릭으로.
-- **찾기 / 바꾸기** — `Ctrl+F` 찾기는 **미리보기·편집 모두** 지원(미리보기는 전체 매치 하이라이트), `Ctrl+H` 바꾸기는 편집 모드에서. 대소문자 구분과 **모두 바꾸기**를 지원합니다.
-- **이미지 클릭 확대** — 미리보기의 이미지를 클릭하면 화면 가득 크게 보여줍니다(클릭·`Esc`로 닫기).
-- **자동 업데이트** — 새 버전이 나오면 타이틀 옆 버전 표시 오른쪽에 **빨간 점**이 떠서 알려줍니다. 버전을 눌러 메뉴 맨 위의 **"새 버전 사용 가능"** → **"업데이트하기"** 한 번이면 앱 안에서 내려받아(진행률 표시) 재시작하며 적용됩니다. 설정·세션은 그대로 유지됩니다.
-- **완전 포터블** — 압축만 풀면 끝. WebView2 런타임을 **번들**로 포함해 별도 설치가 필요 없고, 설정·캐시도 실행 파일 옆 폴더에만 남아 **시스템에 흔적을 남기지 않습니다.**
+![Preview — light theme](docs/images/preview-light.png)
 
 ---
 
-## 📸 화면
+## Why this exists
 
-### 미리보기 (라이트 / 다크)
+Most Markdown apps on Windows want an installer, a workspace, a vault, or a subscription. This one wants none of them. It is a **Markdown file viewer first** — the app you set as the default handler for `.md`, so that double-clicking a README, a spec, or a folder of notes just shows you the rendered document. Editing is one keystroke away when you need it.
 
-GitHub 스타일로 제목·표·코드·인용문을 렌더링합니다. 테마는 타이틀바 `🌙`/`☀` 버튼으로 전환합니다.
+- **No installation** — unzip the folder anywhere, including a USB stick, and run the `.exe`.
+- **No traces** — settings and cache live next to the executable, not in the registry or `%AppData%`.
+- **No network** — everything renders offline. The only connection it ever makes is an anonymous version check against GitHub Releases.
+- **Free and open source** — MIT licensed.
 
-| 라이트 | 다크 |
+If you have been looking for a lightweight **Typora alternative**, a **free Markdown preview app for Windows**, or simply a way to **open `.md` files without a browser extension or a full code editor**, this is built for exactly that.
+
+---
+
+## ✨ Features
+
+**Reading**
+
+- **Double-click to open** — set it as the default `.md` handler and Explorer does the rest.
+- **One window, many tabs** — open twenty files and you get twenty tabs, not twenty windows (single instance via mutex + named pipe). Tabs reorder by drag & drop and cycle with `Ctrl+Tab`.
+- **Drag & drop** — drop `.md` / `.txt` files onto the window to open them as tabs.
+- **GitHub-style rendering** — headings, tables, task lists, blockquotes, and code, styled to match what you see on GitHub.
+- **Syntax highlighting** — fenced blocks with a language tag (` ```cs `, ` ```bash `) get colored. Bundled offline, theme-aware.
+- **Mermaid diagrams** — the same ` ```mermaid ` syntax GitHub and GitLab use: flowcharts, sequence, gantt, state. Bundled offline, theme-aware.
+- **Table-of-contents sidebar** — toggled with `☰`, with scroll-spy highlighting of the section you are reading.
+- **Every link works** — `.md` opens in a new tab, web links in your browser, folders in Explorer, and `pdf` / `docx` / `xlsx` / `hwp` in their default apps. Cross-document anchors (`doc.md#section`) are supported.
+- **Back / Forward** — toolbar `←` `→`, `Alt+←` / `Alt+→`, or mouse buttons 4 and 5. Scroll position is remembered per document.
+- **Local images** — relative and absolute image paths (`![](diagram.png)`) resolve automatically. Click any image to view it full-screen.
+- **Keyboard-first** — scroll with `PageUp` / `PageDown` / arrows / `Home` / `End` the moment the app launches, no click needed.
+- **Korean encoding detection** — BOM-less CP949 / EUC-KR files open correctly alongside UTF-8.
+
+**Writing**
+
+- **Edit ↔ Preview in one keystroke** — `Ctrl+E`, with scroll position synchronized between the two modes.
+- **Formatting bar** — bold, italic, strikethrough, headings, bullet / numbered / task lists, quote, code, link, table, divider. One click each, all undoable with `Ctrl+Z`. **You do not need to know Markdown syntax.**
+- **Find and replace** — `Ctrl+F` works in *both* preview (all matches highlighted) and edit mode; `Ctrl+H` replaces, with case sensitivity and Replace All.
+- **Paste screenshots** — `Ctrl+V` an image while editing and it is saved into an `images/` folder next to the document, with the link inserted for you.
+- **Export to PDF** — one button, or `Ctrl+P`, turns the rendered preview into a PDF.
+- **Auto-reload on external change** — if your IDE or another editor saves the open file, the tab refreshes automatically. Your unsaved edits are never silently overwritten.
+- **Auto-backup and crash recovery** — unsaved changes are snapshotted every 30 seconds and offered back to you after an unexpected shutdown.
+- **Session restore** — launch without a file and your previous tabs come back. Recent documents are one click away under `🕘`.
+
+**Comfort**
+
+- **Dark and light themes** — including the Windows title bar. Remembered across runs.
+- **10 UI languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português (Brasil). Follows your OS language by default; switch anytime from `🌐`.
+- **Compact chrome** — tabs and tools live in a custom title bar, Notepad-style.
+- **Remembers everything** — zoom level (`Ctrl+Wheel`), scroll position, and even the editor caret position, per tab.
+- **In-app updates** — a red dot appears next to the version when a new release is out. Click the version → **Update**, and it downloads and restarts itself, keeping your settings and session.
+
+---
+
+## 📸 Screenshots
+
+### Preview — light and dark
+
+| Light | Dark |
 |:---:|:---:|
-| ![라이트 테마](docs/images/preview-light.png) | ![다크 테마](docs/images/preview-dark.png) |
+| ![Light theme](docs/images/preview-light.png) | ![Dark theme](docs/images/preview-dark.png) |
 
-### 언어 설정 — 🌐 메뉴
+### Tabs and mermaid diagrams
 
-타이틀바 우측에 테마(`🌙`/`☀`)·언어(`🌐`) 버튼이 있습니다. `🌐` 메뉴에서 **UI 언어(10개 언어)**를 고를 수 있습니다. 버전은 타이틀 텍스트 오른쪽에 표시되며, 클릭하면 업데이트 확인·저장소·버그 신고·기능 제안 메뉴가 열립니다(새 버전이 있으면 버전 오른쪽에 빨간 점). 창은 메모장처럼 **탭·도구가 타이틀바에 통합된 컴팩트 UI**입니다.
+![Tabs and a mermaid diagram](docs/images/mermaid-diagram.png)
 
-![언어 메뉴](docs/images/menu.png)
+### Edit mode with the formatting bar
 
-### 편집 모드
+![Edit mode](docs/images/edit-mode.png)
 
-툴바의 `✏️` 버튼(또는 `Ctrl+E`)을 누르면 원본 마크다운을 직접 고칠 수 있습니다. 같은 자리의 `👁` 버튼으로 되돌리면 즉시 렌더링됩니다.
+![Context menu and formatting bar](docs/images/context-menu.png)
 
-편집 모드에서는 **서식 바**가 나타납니다 — 굵게/기울임/취소선, 제목(H1~H3), 목록(글머리·번호·체크박스), 인용/코드, 링크/표/구분선을 버튼으로 바로 넣을 수 있어 마크다운 문법을 몰라도 문서를 꾸밀 수 있습니다. 우클릭 메뉴에서는 잘라내기·복사·붙여넣기·모두 선택을 쓸 수 있습니다.
+### Language and version menu
 
-![우클릭 메뉴와 서식 바](docs/images/context-menu.png)
+![Language menu](docs/images/menu.png)
 
-![편집 모드](docs/images/edit-mode.png)
+### Following links between documents
 
-### 탭 + 다이어그램
+Click a `.md` link (left) and it opens in a new tab (right), resolved relative to the current document.
 
-여러 문서가 상단 탭으로 모입니다. `mermaid` 코드 블록은 다이어그램으로 렌더링됩니다.
-
-![탭과 mermaid 다이어그램](docs/images/mermaid-diagram.png)
-
-### 로컬 이미지
-
-문서와 같은 폴더(또는 상대·절대 경로)의 이미지도 자동으로 찾아 표시합니다. `![설명](그림.png)` 형태면 됩니다.
-
-![로컬 이미지 렌더링](docs/images/local-image.png)
-
-### 연결된 문서로 이동
-
-문서 안의 `.md` 링크를 클릭하면(왼쪽) 곧바로 **새 탭**에서 열립니다(오른쪽). 경로는 현재 문서가 있는 폴더를 기준으로 자동으로 찾습니다.
-
-| 링크 클릭 전 | 클릭 후 (새 탭) |
+| Before the click | After — new tab |
 |:---:|:---:|
-| ![링크 클릭 전](docs/images/link-before.png) | ![링크 클릭 후](docs/images/link-after.png) |
+| ![Before](docs/images/link-before.png) | ![After](docs/images/link-after.png) |
 
-이동한 뒤에는 툴바 왼쪽의 `←`(뒤로) · `→`(앞으로) 버튼, `Alt+←` / `Alt+→`, 또는 마우스 4·5번 버튼으로 방문한 문서 사이를 오갈 수 있습니다. 이동할 곳이 없으면 버튼이 자동으로 비활성화됩니다. 각 문서의 **스크롤 위치도 함께 기억**되어, 돌아오면 보던 자리에서 이어 볼 수 있습니다.
-
-![뒤로/앞으로 버튼 — 링크로 이동하면 뒤로 버튼이 활성화됨](docs/images/nav-buttons.png)
+![Back and forward buttons](docs/images/nav-buttons.png)
 
 ---
 
-## 🚀 시작하기
+## 🚀 Installation
 
-### 1. 내려받아 실행
+No installer, no administrator rights, no dependencies. Download, unzip, run.
 
-1. `MarkDownEditor-standalone.zip` 을 원하는 폴더에 **압축 해제**합니다.
-2. `MarkDownEditor.exe` 를 실행합니다. **설치 과정이 없습니다.**
+### Step 1 — Download
 
-> **SmartScreen 안내** — 코드 서명이 없는 실행 파일이라 처음 실행할 때 Windows가 "알 수 없는 게시자" 경고를 띄울 수 있습니다. **추가 정보 → 실행**을 누르거나, 아래 개발자용 절차로 직접 빌드하세요.
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — this link always points at the newest release.
 
-> 폴더 구성 — `MarkDownEditor.exe` 옆에 `web/`(UI), `Runtime/`(번들 WebView2), `WebView2Data/`(캐시)가 함께 있습니다. 폴더째 옮기거나 USB에 담아 다른 PC에서 그대로 써도 됩니다.
-
-### 2. `.md` 기본 프로그램으로 지정 (선택)
-
-탐색기에서 아무 `.md` 파일을 **우클릭 → 연결 프로그램 → 다른 앱 선택**에서 `MarkDownEditor.exe` 를 고르고 "항상 이 앱 사용"에 체크하면, 이후로는 더블클릭만으로 열립니다.
-
-### 요구 사항
-
-- **Windows 10 / 11 (64-bit)**
-- WebView2 런타임은 앱에 **번들**되어 있어 별도 설치가 필요 없습니다. (드물게 번들 런타임이 없는 빌드라면 시스템에 설치된 Microsoft Edge WebView2 런타임을 자동으로 사용합니다.)
-
----
-
-## 📖 기본 사용법
-
-| 하고 싶은 것 | 방법 |
+| | |
 |---|---|
-| 파일 열기 | 탐색기에서 더블클릭 · 창으로 드래그&드롭 · 타이틀바 왼쪽 `📂 열기` 버튼 · `Ctrl+O` (**여러 개 동시 선택 가능**) |
-| 최근 문서 | 열기 옆 `🕘` 버튼 |
-| 새 문서 | 탭 줄 끝의 `+` 버튼 · `Ctrl+N` |
-| 여러 파일을 한 창에 | 그냥 여러 개를 열면 자동으로 탭이 됩니다 |
-| 탭 전환 / 순서 변경 | 탭 클릭 / 탭을 드래그해 원하는 위치로 |
-| 방문한 문서로 뒤로 / 앞으로 | 툴바 `←` `→` · `Alt+←` / `Alt+→` · 마우스 4·5번 버튼 |
-| 목차 사이드바 | 탭 아래 왼쪽 `☰` 버튼 (미리보기 전용, 상태 기억) |
-| 문서 내 목차(섹션)로 이동 | 미리보기의 `#섹션` 링크 클릭 · 목차 항목 클릭 |
-| 탭 닫기 | 탭의 `×` · `Ctrl+W` |
-| 편집 / 미리보기 전환 | `✏️` 버튼 · `Ctrl+E` |
-| 찾기 / 바꾸기 (편집 모드) | `Ctrl+F` 찾기 · `Ctrl+H` 바꾸기 |
-| 저장 | `💾 저장` · `Ctrl+S` (새 문서는 저장 위치를 묻습니다) |
-| PDF로 내보내기 | 저장 옆 `📄` 버튼 · `Ctrl+P` (미리보기 내용 그대로, 라이트 테마로 출력) |
-| 이미지 붙여넣기 | 편집 중 `Ctrl+V` — 문서 옆 `images/` 폴더에 저장 + 링크 삽입 (저장된 문서에서만) |
-| 다크/라이트 전환 | 타이틀바 `🌙`/`☀` 버튼 |
-| UI 언어 변경 | 타이틀바 `🌐` 버튼 (기본: 시스템 언어 자동, 현재 언어가 툴팁·메뉴에 표시) |
-| 업데이트 확인 / 적용 | 타이틀 옆 버전 클릭 → 메뉴 첫 항목 — 새 버전이 있으면 버전 오른쪽에 빨간 점이 뜨고, 팝업의 **업데이트하기**로 바로 적용 |
-| 창 이동 / 최대화 | 타이틀바 빈 공간 드래그 / 더블클릭 |
-| 연결된 문서 열기 | 미리보기에서 링크 클릭 (`.md`는 탭 · 웹/HTML은 브라우저 · 폴더는 탐색기 · 문서 파일은 연결 프로그램) |
+| **Size** | ~331 MB — a complete WebView2 runtime is bundled, which is why there is nothing else to install |
+| **Requires** | Windows 10 or 11, 64-bit. Nothing else. |
+| **More** | [All releases](https://github.com/jjw1270/MarkdownEditor/releases) · [What's new in the latest version](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Full changelog](CHANGELOG.md) |
 
-- 저장하지 않은 변경이 있는 탭은 제목 앞에 **●** 표시가 붙고, 닫을 때 확인을 묻습니다.
-- 이미 열려 있는 파일을 다시 열면 새 탭을 만들지 않고 **기존 탭으로 이동**합니다.
+<details>
+<summary><b>Prefer the terminal?</b> Download, unpack and launch with one PowerShell block</summary>
 
-### 키보드 단축키
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
 
-| 키 | 동작 |
-|------|------|
-| `Ctrl+O` | 열기 |
-| `Ctrl+N` | 새 문서 탭 |
-| `Ctrl+S` | 저장 |
-| `Ctrl+P` | PDF로 내보내기 |
-| `Ctrl+E` | 편집 / 미리보기 전환 |
-| `Ctrl+F` | 찾기 (미리보기·편집 모두) |
-| `Ctrl+H` | 찾기 / 바꾸기 |
-| `Enter` / `Shift+Enter` | 다음 / 이전 결과 (찾기 입력창에서) |
-| `Esc` | 찾기 바 닫기 |
-| `Ctrl+B` / `Ctrl+I` | 선택 영역 굵게 / 기울임 (편집 모드, 다시 누르면 해제) |
-| `Ctrl+K` | 링크 삽입 (편집 모드 — 주소 자리가 선택된 채 삽입됨) |
-| `Tab` / `Shift+Tab` | 들여쓰기 / 내어쓰기 (편집 모드, 여러 줄 선택 지원) |
-| `Ctrl+Tab` / `Ctrl+Shift+Tab` | 다음 / 이전 탭 |
-| `Ctrl+W` | 현재 탭 닫기 |
-| `Alt+←` / `Alt+→` | 문서 뒤로 / 앞으로 이동 |
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+To update later, run the same block again — or just use the in-app updater described below.
+
+</details>
+
+### Step 2 — Unzip and run
+
+Extract the folder anywhere you can write to: `C:\Tools\MarkDownEditor`, your Desktop, a USB stick — it does not matter. Then run **`MarkDownEditor.exe`**.
+
+The folder holds `MarkDownEditor.exe` plus `web/` (the UI), `Runtime/` (the bundled WebView2), and `WebView2Data/` (cache). Keep them together and you can move, copy or carry the whole thing anywhere.
+
+> **The blue SmartScreen dialog on first run is expected.** The executable is not code-signed, so Windows shows *"Windows protected your PC"*. Click **More info → Run anyway**. It only appears once.
+> If you would rather not run an unsigned binary, building it yourself takes two commands — see *Building from source* below.
+
+### Step 3 — Make it the default app for `.md` files *(this is the point)*
+
+Once this is set, double-clicking any Markdown file in Explorer opens it rendered, instantly.
+
+1. Right-click any `.md` file in Explorer
+2. **Open with → Choose another app**
+3. Select `MarkDownEditor.exe` — if it is not in the list, scroll down and use **Choose an app on your PC**
+4. Tick **Always use this app to open .md files**, then **OK**
+
+The same works for `.markdown` and `.txt` if you want them handled too.
+
+### Updating
+
+You will not need to come back here. On startup the app checks GitHub Releases and puts a **red dot** next to the version number in the title bar when a newer build exists. Click the version → **Update**, and it downloads with a progress bar, replaces itself and restarts — your settings, open tabs and session all survive.
+
+### Uninstalling
+
+Delete the folder. That is the entire procedure — nothing was written to the registry, to `%AppData%`, or to *Add or remove programs*. (If you set the file association, Windows will simply ask you to pick a new default the next time you open a `.md` file.)
+
+### Verifying the download *(optional)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+The expected SHA-256 for every published release is recorded in the winget manifest at
+[`packaging/winget/<version>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
 
 ---
 
-## 🧜 mermaid 다이어그램
+## ⌨️ Keyboard shortcuts
 
-코드 펜스 언어를 `mermaid` 로 지정하면 GitHub/GitLab과 **동일한 문법**의 다이어그램이 렌더링됩니다. 플로차트·시퀀스·간트·상태도 등 [mermaid 문법](https://mermaid.js.org/) 전체를 지원하며, **오프라인으로 동작**하고 다크/라이트 테마에 자동으로 맞춰집니다.
+| Key | Action |
+|------|------|
+| `Ctrl+O` | Open (multi-select supported) |
+| `Ctrl+N` | New document tab |
+| `Ctrl+S` | Save |
+| `Ctrl+P` | Export as PDF |
+| `Ctrl+E` | Toggle edit / preview |
+| `Ctrl+F` | Find — works in preview *and* edit mode |
+| `Ctrl+H` | Find and replace (edit mode) |
+| `Enter` / `Shift+Enter` | Next / previous match |
+| `Esc` | Close the find bar |
+| `Ctrl+B` / `Ctrl+I` | Bold / italic (edit mode, toggles) |
+| `Ctrl+K` | Insert link — the address part is pre-selected |
+| `Tab` / `Shift+Tab` | Indent / outdent, multi-line aware |
+| `Ctrl+Tab` / `Ctrl+Shift+Tab` | Next / previous tab |
+| `Ctrl+W` | Close tab |
+| `Alt+←` / `Alt+→` | Back / forward between documents |
+| `Ctrl+Wheel` | Zoom (remembered across runs) |
+
+---
+
+## 🧜 Mermaid diagrams
+
+Tag a fenced block `mermaid` and it renders as a diagram — the [full mermaid syntax](https://mermaid.js.org/), offline, matching your current theme.
 
 ````markdown
 ```mermaid
 flowchart TD
-    A["파일 더블클릭"] --> B{"이미 실행 중?"}
-    B -->|예| C["기존 창으로 경로 전달"]
-    B -->|아니오| D["새 창 실행"]
-    C --> E["새 탭으로 문서 열기"]
+    A["Double-click a .md file"] --> B{"Already running?"}
+    B -->|Yes| C["Send the path over the named pipe"]
+    B -->|No| D["Launch a new window"]
+    C --> E["Open it as a new tab"]
     D --> E
 ```
 ````
 
-- 이 에디터로 작성한 다이어그램은 GitLab/GitHub 웹에서도 그대로 렌더링됩니다(반대도 마찬가지).
-- 문법 오류가 있는 블록은 해당 블록 자리에만 오류가 표시되고 나머지 문서는 정상 렌더링됩니다.
-
-렌더 결과는 위 [탭 + 다이어그램](#탭--다이어그램) 스크린샷을 참고하세요.
+Diagrams written here render identically on GitHub and GitLab, and vice versa. A block with a syntax error shows the error in place; the rest of the document still renders.
 
 ---
 
-## 🔒 데이터 & 프라이버시
+## 🔒 Privacy
 
-- 문서·설정을 클라우드로 보내지 않습니다. 모든 동작은 로컬에서만 이뤄집니다.
-- 유일한 네트워크 접근은 **자동 업데이트**입니다 — 시작 시(및 수동 확인 시) GitHub API에서 최신 릴리즈 버전만 익명으로 조회하고, 사용자가 직접 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다. 문서·개인 정보는 아무것도 전송하지 않습니다.
-- WebView2 캐시와 테마·언어 설정은 **실행 파일 옆 `WebView2Data/`, `theme.txt`, `lang.txt`** 에만 저장됩니다. (해당 위치에 쓸 수 없으면 임시 폴더로 자동 폴백)
-- 미리보기 안의 인라인 스크립트 실행은 **콘텐츠 보안 정책(CSP)** 으로 차단되어, 문서를 여는 것만으로 코드가 실행되지 않습니다.
-- 배포 빌드에서는 브라우저 기본 우클릭 메뉴·개발자 도구가 비활성화되어 있습니다. (앱 자체 우클릭 메뉴는 정상 동작)
+- Your documents and settings never leave your machine. All rendering, editing, and exporting is local.
+- The **only** network access is the auto-update check: an anonymous request to the GitHub Releases API for the latest version number, plus the release download itself if — and only if — you start an update. No document content, no analytics, no identifiers.
+- Theme and language preferences and the WebView2 cache are written next to the executable (`theme.txt`, `lang.txt`, `WebView2Data/`), falling back to a temp folder if that location is read-only.
+- Inline scripts inside previewed documents are blocked by a **Content Security Policy**, so opening an untrusted Markdown file cannot execute code.
+- Release builds disable the browser context menu and developer tools. (The app's own right-click menus work normally.)
 
 ---
 
-## 🛠️ 개발자용
-
-### 프로젝트 구조
-
-```
-src/
-├─ App.xaml(.cs)          # 앱 진입점 + 단일 인스턴스(뮤텍스) + 파일 경로 파이프 라우팅
-├─ MainWindow.xaml(.cs)   # WebView2 호스트 + 파일 입출력 + 로딩 스플래시/테마
-├─ MainWindow.Update.cs   # 자동 업데이트 (GitHub 릴리즈 확인 · 다운로드 · 재시작 교체)
-├─ Loc.cs                 # 네이티브 쪽 UI 문자열 (10개 언어, lang.txt 설정)
-├─ app.manifest           # DPI 인식(per-monitor v2), 긴 경로 지원
-├─ MarkDownEditor.csproj  # net9.0-windows, WebView2 패키지, web/ 복사 규칙
-└─ web/                   # UI (WebView2가 로컬 가상 호스트로 로드)
-   ├─ index.html          # 레이아웃(툴바 · 탭 · 목차 · 미리보기/편집기)
-   ├─ style.css           # 테마 변수 · GitHub 풍 스타일 · 목차/인쇄(PDF) CSS
-   ├─ app.js              # 탭 상태 관리 · 렌더링 · 백업/복구 · C# 브리지
-   ├─ i18n.js             # 웹 쪽 UI 문자열 (10개 언어)
-   ├─ marked.min.js       # 마크다운 파서
-   ├─ highlight.min.js    # 코드 하이라이팅 (오프라인 번들)
-   └─ mermaid.min.js      # mermaid 다이어그램 (오프라인 번들)
-```
-
-### 빌드
-
-```powershell
-cd src
-dotnet build -c Release
-```
-
-### 포터블 단일 실행 파일로 배포
+## 🛠️ Building from source
 
 ```powershell
 cd src
@@ -242,36 +234,55 @@ dotnet publish -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
-산출물은 `src/bin/Release/net9.0-windows/win-x64/publish/` 의 `MarkDownEditor.exe` + `web/` 입니다
-(`web/`은 exe 옆 폴더로 그대로 로드되므로 단일 파일 번들에 넣지 않습니다).
-완전 독립 실행을 위해 여기에 번들 WebView2를 담은 `Runtime/` 폴더만 더해 압축하면 배포본이 됩니다.
+Output lands in `src/bin/Release/net9.0-windows/win-x64/publish/` as `MarkDownEditor.exe` plus `web/` — the web folder is loaded from beside the exe, so it stays out of the single-file bundle. Add a WebView2 Fixed Version Runtime as `Runtime/` next to the exe for a fully self-contained build.
 
-### 아키텍처 한눈에
+### Project layout
+
+```
+src/
+├─ App.xaml(.cs)          # entry point + single instance (mutex) + file-path pipe routing
+├─ MainWindow.xaml(.cs)   # WebView2 host + file I/O + splash / theme
+├─ MainWindow.Update.cs   # auto-update (check GitHub Releases · download · restart)
+├─ Loc.cs                 # native-side UI strings (10 languages)
+├─ app.manifest           # per-monitor v2 DPI awareness, long path support
+└─ web/                   # the UI, served to WebView2 from a local virtual host
+   ├─ index.html          # layout (toolbar · tabs · TOC · preview/editor)
+   ├─ style.css           # theme variables · GitHub-like styling · TOC and print CSS
+   ├─ app.js              # tab state · rendering · backup/recovery · C# bridge
+   ├─ i18n.js             # web-side UI strings (10 languages)
+   ├─ marked.min.js       # Markdown parser
+   ├─ highlight.min.js    # code highlighting (bundled offline)
+   └─ mermaid.min.js      # mermaid diagrams (bundled offline)
+```
+
+### Architecture
 
 ```mermaid
 flowchart TD
-    A["탐색기에서 .md 더블클릭"] --> B["App: 뮤텍스로 단일 인스턴스 판별"]
-    B -->|"실행 중"| C["Named Pipe로 경로 전달 후 종료"]
-    B -->|"최초"| D["창 생성 + 파이프 서버 가동"]
-    D --> E["C# ↔ 웹(JS) 메시지 통신<br/>C#: 파일 입출력·창 라우팅 / 웹: 문서 버퍼·탭 상태 소유"]
+    A["Double-click a .md file in Explorer"] --> B["App: single-instance check via mutex"]
+    B -->|"already running"| C["Send the path over a named pipe, then exit"]
+    B -->|"first instance"| D["Create the window + start the pipe server"]
+    D --> E["C# ↔ web (JS) messaging<br/>C#: file I/O · window routing / web: document buffers · tab state"]
     C -.-> E
-    E --> F["새 탭으로 렌더링"]
+    E --> F["Render as a new tab"]
 ```
 
-- **C# 쪽**은 파일 읽기/쓰기와 "어느 인스턴스가 파일을 받을지"만 담당합니다.
-- **웹 쪽**이 열린 문서 버퍼와 탭 상태를 모두 소유합니다. 덕분에 탭이 몇 개든 **WebView2 인스턴스는 항상 1개**라 가볍습니다.
-- 둘은 `postMessage` 기반 메시지로만 통신합니다.
+The C# (WPF) side owns file I/O, the single-instance pipe, and the window chrome. The web side — vanilla JS in a **single** WebView2 — owns every document buffer and all tab state, which is why the app stays light no matter how many tabs are open. The two talk only through `postMessage`.
+
+A full feature tour is also available in [Korean](README.ko.md).
 
 ---
 
-## 💬 피드백
+## 💬 Feedback
 
-버그 신고와 기능 제안은 [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose)로 받습니다. 앱 안에서 타이틀 옆 버전 표시를 클릭해도 바로 이동할 수 있습니다(버그 신고 폼에는 현재 버전이 자동으로 채워집니다).
+Bug reports and feature requests are welcome on [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose). You can also click the version label next to the title inside the app — the bug report form arrives pre-filled with your version.
 
-## 📄 라이선스
+If the app is useful to you, a ⭐ helps other people find it.
 
-MIT — [LICENSE](LICENSE) 참고. 번들된 서드파티 구성요소는 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)에 정리되어 있습니다 (mermaid 번들에는 문서화된 로컬 패치가 하나 포함되어 있습니다).
+## 📄 License
+
+MIT — see [LICENSE](LICENSE). Bundled third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (the mermaid bundle carries one small local patch, documented there).
 
 ---
 
-<sub>Made with .NET 9 (WPF) · WebView2 · marked.js</sub>
+<sub>Made with .NET 9 (WPF) · WebView2 · marked.js · highlight.js · mermaid</sub>

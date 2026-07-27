@@ -10,7 +10,9 @@
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-[한국어](README.md) · [English](README.en.md) · [日本語](README.ja.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+[한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+
+### ⬇️ [下载 Windows 版](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip，约 331 MB · 解压即用 · [查看更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![预览 — 浅色主题](docs/images/preview-light.png)
 
@@ -39,18 +41,73 @@
 
 ![语言菜单](docs/images/menu.png)
 
-## 快速开始
+## 🚀 安装
 
-1. 从 Releases 下载 `MarkDownEditor-standalone.zip`，**解压到任意位置**。
-2. 运行 `MarkDownEditor.exe`。没有安装程序。
-3. （可选）设为 `.md` 默认应用：右键 `.md` 文件 → *打开方式* → *选择其他应用* → 选择 `MarkDownEditor.exe` 并勾选 *始终使用*。
+没有安装程序，不需要管理员权限，也不需要任何前置组件。下载、解压、运行，就这三步。
 
-> **SmartScreen 提示** — 程序未进行代码签名，首次运行时 Windows 可能提示"未知发布者"。选择 *更多信息 → 仍要运行*，或按下方步骤从源码自行构建。
+### 第 1 步 — 下载
 
-### 系统要求
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — 此链接**始终指向最新版本**。
 
-- Windows 10 / 11（64 位）
-- 无需安装 WebView2 — 已内置固定版本运行时。（未内置的构建会自动使用系统安装的 Evergreen 运行时。）
+| | |
+|---|---|
+| **体积** | 约 331 MB — 内置了完整的 WebView2 运行时，因此不需要再安装任何东西 |
+| **系统要求** | Windows 10 / 11（64 位）。除此之外别无要求。 |
+| **更多** | [全部版本](https://github.com/jjw1270/MarkdownEditor/releases) · [本次更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [完整更新日志](CHANGELOG.md) |
+
+<details>
+<summary><b>习惯用命令行？</b> 一段 PowerShell 完成下载、解压和启动</summary>
+
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
+
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+以后升级时再跑一遍同样的代码即可，也可以直接用下面说的**应用内自动更新**。
+
+</details>
+
+### 第 2 步 — 解压并运行
+
+解压到任何有写入权限的位置都可以：`C:\Tools\MarkDownEditor`、桌面、U 盘都行。然后运行 **`MarkDownEditor.exe`**。
+
+文件夹里除了 `MarkDownEditor.exe`，还有 `web/`（界面）、`Runtime/`（内置 WebView2）和 `WebView2Data/`（缓存）。把它们放在一起，整个文件夹可以随意移动、复制，或者拷进 U 盘在别的电脑上直接使用。
+
+> **首次运行时弹出的蓝色 SmartScreen 窗口属于正常现象。** 程序未经代码签名，所以 Windows 会提示"Windows 已保护你的电脑"。点击 **更多信息 → 仍要运行** 即可，只会出现这一次。
+> 如果不愿运行未签名的程序，从源码自己构建只需两条命令 — 见下方 *从源码构建*。
+
+### 第 3 步 — 设为 `.md` 的默认应用 *(这才是重点)*
+
+设置一次之后，在资源管理器里双击任何 Markdown 文件，都会立刻打开渲染好的文档。
+
+1. 在资源管理器中**右键**任意 `.md` 文件
+2. **打开方式 → 选择其他应用**
+3. 在列表中选择 `MarkDownEditor.exe` — 如果找不到，向下滚动并使用 **在这台电脑上选择应用**
+4. 勾选 **始终使用此应用打开 .md 文件**，然后点 **确定**
+
+`.markdown` 和 `.txt` 也可以用同样的方法关联。
+
+### 更新
+
+你不需要再回到这个页面。应用每次启动都会检查 GitHub releases，发现新版本时会在标题栏版本号右侧显示一个**红点**。点击版本号 → **更新**，它就会带进度条下载、自我替换并重启，你的设置、已打开的标签页和会话都会保留。
+
+### 卸载
+
+删除文件夹即可，没有别的步骤 — 注册表、`%AppData%`、"应用和功能"列表里都不会留下任何东西。（如果设置过文件关联，下次打开 `.md` 时 Windows 会让你重新选择默认应用而已。）
+
+### 校验下载文件 *(可选)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+每个版本的 SHA-256 都记录在 winget 清单 [`packaging/winget/<版本>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) 中。
 
 ## 键盘快捷键
 
@@ -82,7 +139,7 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 
 ### 架构一览
 
-C#（WPF）端负责文件读写、单实例管道和窗口外壳；Web 端（单个 WebView2 中的原生 JS）拥有全部文档缓冲区和标签页状态。两者仅通过 `postMessage` 通信。渲染使用 marked + highlight.js + mermaid，全部离线内置。完整功能介绍请参阅 [README.md](README.md)（韩语）或 [README.en.md](README.en.md)（英语）。
+C#（WPF）端负责文件读写、单实例管道和窗口外壳；Web 端（单个 WebView2 中的原生 JS）拥有全部文档缓冲区和标签页状态。两者仅通过 `postMessage` 通信。渲染使用 marked + highlight.js + mermaid，全部离线内置。完整功能介绍请参阅 [README.ko.md](README.ko.md)（韩语）或 [README.md](README.md)（英语）。
 
 ## 反馈
 

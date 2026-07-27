@@ -10,7 +10,9 @@
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-[한국어](README.md) · [English](README.en.md) · **日本語** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+[한국어](README.ko.md) · [English](README.md) · **日本語** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
+
+### ⬇️ [Windows 版をダウンロード](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, 約 331 MB · 解凍してすぐ実行 · [変更点を見る](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![プレビュー — ライトテーマ](docs/images/preview-light.png)
 
@@ -39,18 +41,73 @@
 
 ![言語メニュー](docs/images/menu.png)
 
-## はじめに
+## 🚀 インストール
 
-1. Releases から `MarkDownEditor-standalone.zip` をダウンロードし、**好きな場所に解凍**します。
-2. `MarkDownEditor.exe` を実行します。インストーラーはありません。
-3. （任意）`.md` の既定のアプリに設定：`.md` ファイルを右クリック → *プログラムから開く* → *別のアプリを選択* → `MarkDownEditor.exe` を選び、*常に使う* にチェック。
+インストーラーなし、管理者権限なし、事前準備なし。ダウンロードして解凍し、実行するだけです。
 
-> **SmartScreen について** — バイナリはコード署名されていないため、初回実行時に Windows が「発行元不明」の警告を表示することがあります。*詳細情報 → 実行* を選ぶか、下記の手順でソースからビルドしてください。
+### ステップ 1 — ダウンロード
 
-### 動作環境
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — このリンクは**常に最新版**を指します。
 
-- Windows 10 / 11（64 ビット）
-- WebView2 のインストールは不要 — 固定バージョンのランタイムを同梱しています。（同梱なしのビルドはシステムの Evergreen ランタイムを自動使用。）
+| | |
+|---|---|
+| **サイズ** | 約 331 MB — WebView2 ランタイムを丸ごと同梱しているため、他に何もインストールする必要がありません |
+| **動作環境** | Windows 10 / 11（64 ビット）。それ以外は不要です。 |
+| **その他** | [リリース一覧](https://github.com/jjw1270/MarkdownEditor/releases) · [今回の変更点](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [変更履歴すべて](CHANGELOG.md) |
+
+<details>
+<summary><b>ターミナル派の方へ</b> — PowerShell 1 ブロックでダウンロード・解凍・起動</summary>
+
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
+
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+あとで更新するときは同じブロックをもう一度実行しても、下記の**アプリ内自動更新**を使っても構いません。
+
+</details>
+
+### ステップ 2 — 解凍して実行
+
+書き込みできる場所ならどこでも構いません。`C:\Tools\MarkDownEditor`、デスクトップ、USB メモリ — どこでも動きます。解凍したら **`MarkDownEditor.exe`** を実行してください。
+
+フォルダーには `MarkDownEditor.exe` のほかに `web/`（UI）、`Runtime/`（同梱 WebView2）、`WebView2Data/`（キャッシュ）が入っています。まとめて移動・コピーすれば、USB に入れて別の PC でもそのまま使えます。
+
+> **初回起動時に青い SmartScreen 画面が出るのは正常です。** コード署名がないため、Windows が「Windows によって PC が保護されました」と警告します。**詳細情報 → 実行** を選んでください。表示されるのは 1 回だけです。
+> 署名のないバイナリを実行したくない場合は、下の *ソースからビルド* の手順でコマンド 2 つでビルドできます。
+
+### ステップ 3 — `.md` の既定のアプリに設定する *(実はこれが本題)*
+
+一度設定すれば、エクスプローラーで Markdown ファイルをダブルクリックした瞬間にレンダリング済みの文書が開きます。
+
+1. エクスプローラーで任意の `.md` ファイルを**右クリック**
+2. **プログラムから開く → 別のプログラムを選択**
+3. 一覧から `MarkDownEditor.exe` を選択 — 見つからない場合は下へスクロールして **PC 上のアプリを選択**
+4. **常に .md ファイルを開くのにこのアプリを使う** にチェック → **OK**
+
+`.markdown` や `.txt` も同じ方法で関連付けられます。
+
+### アップデート
+
+このページに戻ってくる必要はありません。起動のたびに GitHub リリースを確認し、新しいバージョンがあればタイトルバーのバージョン表示の右に**赤い点**が付きます。バージョンをクリック → **アップデート** を押せば、進捗バー付きでダウンロードして自分自身を置き換え、再起動します。設定・開いていたタブ・セッションはそのまま保持されます。
+
+### アンインストール
+
+フォルダーを削除するだけです。レジストリにも `%AppData%` にも「アプリと機能」にも、何も残していません。（ファイルの関連付けを設定していた場合、次に `.md` を開くとき Windows が既定のアプリを聞いてくるだけです。）
+
+### ダウンロードの検証 *(任意)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+各リリースの SHA-256 は winget マニフェスト [`packaging/winget/<バージョン>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) に記録されています。
 
 ## キーボードショートカット
 
@@ -82,7 +139,7 @@ exe の隣に `web/` フォルダー（および任意で WebView2 Fixed Version
 
 ### アーキテクチャ概要
 
-C#（WPF）側はファイル I/O・単一インスタンスのパイプ・ウィンドウクロームを担当し、Web 側（単一の WebView2 上のバニラ JS）がすべてのドキュメントバッファーとタブ状態を所有します。両者は `postMessage` のみで通信します。レンダリングには marked + highlight.js + mermaid を使用し、すべてオフライン用に同梱されています。全機能の詳しい紹介は [README.md](README.md)（韓国語）または [README.en.md](README.en.md)（英語）をご覧ください。
+C#（WPF）側はファイル I/O・単一インスタンスのパイプ・ウィンドウクロームを担当し、Web 側（単一の WebView2 上のバニラ JS）がすべてのドキュメントバッファーとタブ状態を所有します。両者は `postMessage` のみで通信します。レンダリングには marked + highlight.js + mermaid を使用し、すべてオフライン用に同梱されています。全機能の詳しい紹介は [README.ko.md](README.ko.md)（韓国語）または [README.md](README.md)（英語）をご覧ください。
 
 ## フィードバック
 

@@ -10,7 +10,9 @@ Dê um duplo clique em um arquivo `.md` e ele simplesmente abre — sem instala�
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
 
-[한국어](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · **Português (Brasil)**
+[한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · **Português (Brasil)**
+
+### ⬇️ [Baixar para Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>.zip, ~331 MB · descompacte e execute · [novidades](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![Prévia — tema claro](docs/images/preview-light.png)
 
@@ -39,18 +41,73 @@ Dê um duplo clique em um arquivo `.md` e ele simplesmente abre — sem instala�
 
 ![Menu de idiomas](docs/images/menu.png)
 
-## Primeiros passos
+## 🚀 Instalação
 
-1. Baixe `MarkDownEditor-standalone.zip` em Releases e **descompacte onde quiser**.
-2. Execute `MarkDownEditor.exe`. Não há instalador.
-3. (Opcional) Defina como aplicativo padrão para `.md`: clique direito em um arquivo `.md` → *Abrir com* → *Escolher outro aplicativo* → selecione `MarkDownEditor.exe` e marque *Sempre*.
+Sem instalador, sem privilégios de administrador, sem dependências. Baixe, descompacte e execute.
 
-> **Nota sobre o SmartScreen** — o binário não é assinado, então o Windows pode exibir um aviso de "fornecedor desconhecido" na primeira execução. Escolha *Mais informações → Executar assim mesmo*, ou compile a partir do código-fonte (abaixo).
+### Passo 1 — Baixar
 
-### Requisitos
+**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — este link aponta **sempre para a versão mais recente**.
 
-- Windows 10 / 11 (64 bits)
-- Não é preciso instalar o WebView2 — um runtime de versão fixa vem incluído. (Builds sem o pacote usam o runtime Evergreen instalado no sistema.)
+| | |
+|---|---|
+| **Tamanho** | ~331 MB — um runtime completo do WebView2 vem embutido, por isso não há mais nada para instalar |
+| **Requisitos** | Windows 10 ou 11, 64 bits. Nada além disso. |
+| **Mais** | [Todas as versões](https://github.com/jjw1270/MarkdownEditor/releases) · [Novidades desta versão](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Changelog completo](CHANGELOG.md) |
+
+<details>
+<summary><b>Prefere o terminal?</b> Baixar, descompactar e abrir com um bloco de PowerShell</summary>
+
+```powershell
+$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor"
+$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
+
+Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
+Expand-Archive $zip -DestinationPath $dest -Force
+Remove-Item $zip
+
+Start-Process "$dest\MarkDownEditor.exe"
+```
+
+Para atualizar depois, rode o mesmo bloco novamente — ou use o atualizador embutido descrito abaixo.
+
+</details>
+
+### Passo 2 — Descompactar e executar
+
+Extraia a pasta em qualquer lugar onde você tenha permissão de escrita: `C:\Tools\MarkDownEditor`, a Área de Trabalho, um pen drive — tanto faz. Depois execute **`MarkDownEditor.exe`**.
+
+A pasta contém `MarkDownEditor.exe` mais `web/` (a interface), `Runtime/` (o WebView2 embutido) e `WebView2Data/` (cache). Mantendo tudo junto, você pode mover, copiar ou levar a pasta inteira para onde quiser.
+
+> **A tela azul do SmartScreen na primeira execução é esperada.** O executável não é assinado, então o Windows exibe *"O Windows protegeu o seu PC"*. Clique em **Mais informações → Executar assim mesmo**. Isso aparece só uma vez.
+> Se preferir não executar um binário sem assinatura, compilar você mesmo são dois comandos — veja *Compilar a partir do código-fonte* abaixo.
+
+### Passo 3 — Tornar padrão para arquivos `.md` *(é aqui que está a graça)*
+
+Feito isso, dois cliques em qualquer arquivo Markdown no Explorador abrem o documento já renderizado.
+
+1. Clique direito em qualquer arquivo `.md` no Explorador
+2. **Abrir com → Escolher outro aplicativo**
+3. Selecione `MarkDownEditor.exe` — se não estiver na lista, role para baixo e use **Escolher um aplicativo no computador**
+4. Marque **Sempre usar este aplicativo para abrir arquivos .md** e clique em **OK**
+
+Vale o mesmo para `.markdown` e `.txt`, se você quiser.
+
+### Atualizações
+
+Você não vai precisar voltar aqui. Ao iniciar, o aplicativo consulta as releases do GitHub e mostra um **ponto vermelho** ao lado do número da versão na barra de título quando há uma versão mais nova. Clique na versão → **Atualizar**: ele baixa com barra de progresso, se substitui e reinicia — suas configurações, abas abertas e sessão continuam intactas.
+
+### Desinstalação
+
+Apague a pasta. É todo o procedimento — nada foi gravado no registro, em `%AppData%` ou em *Aplicativos e recursos*. (Se você tinha definido a associação de arquivos, o Windows apenas pedirá um novo aplicativo padrão na próxima vez que abrir um `.md`.)
+
+### Verificar o download *(opcional)*
+
+```powershell
+Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
+```
+
+O SHA-256 esperado de cada versão publicada está registrado no manifesto do winget, em [`packaging/winget/<versão>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
 
 ## Atalhos de teclado
 
@@ -82,7 +139,7 @@ Coloque a pasta `web/` (e opcionalmente um WebView2 Fixed Version Runtime como `
 
 ### Arquitetura em um parágrafo
 
-O lado C# (WPF) cuida da E/S de arquivos, do pipe de instância única e da moldura da janela; o lado web (JS puro em um único WebView2) possui todos os buffers de documentos e o estado das abas. Os dois se comunicam apenas via `postMessage`. A renderização usa marked + highlight.js + mermaid, tudo empacotado para uso offline. Para o tour completo de recursos, veja [README.md](README.md) (coreano) ou [README.en.md](README.en.md) (inglês).
+O lado C# (WPF) cuida da E/S de arquivos, do pipe de instância única e da moldura da janela; o lado web (JS puro em um único WebView2) possui todos os buffers de documentos e o estado das abas. Os dois se comunicam apenas via `postMessage`. A renderização usa marked + highlight.js + mermaid, tudo empacotado para uso offline. Para o tour completo de recursos, veja [README.ko.md](README.ko.md) (coreano) ou [README.md](README.md) (inglês).
 
 ## Feedback
 
