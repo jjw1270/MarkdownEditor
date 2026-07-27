@@ -634,11 +634,23 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  white-space: pre-wrap;
   overflow-wrap: break-word;
   font-size: 12.5px;
   user-select: text;
 }
+/* 렌더된 릴리즈 노트 마크다운 — 팝업 크기에 맞춘 축소판 문서 스타일 */
+#updNotes > :first-child { margin-top: 0; }
+#updNotes > :last-child { margin-bottom: 0; }
+#updNotes h1, #updNotes h2, #updNotes h3, #updNotes h4 { font-size: 13px; font-weight: 700; margin: 10px 0 4px; }
+#updNotes p { margin: 4px 0; }
+#updNotes ul, #updNotes ol { margin: 4px 0; padding-left: 20px; }
+#updNotes li { margin: 2px 0; }
+#updNotes code { font-family: Consolas, 'D2Coding', monospace; font-size: 11.5px; background: var(--code-bg, rgba(128,128,128,.15)); padding: 1px 4px; border-radius: 4px; }
+#updNotes pre { background: var(--code-bg, rgba(128,128,128,.15)); padding: 8px 10px; border-radius: 6px; overflow: auto; }
+#updNotes pre code { background: none; padding: 0; }
+#updNotes a { color: var(--accent); }
+#updNotes blockquote { margin: 4px 0; padding-left: 10px; border-left: 3px solid var(--border); color: var(--muted); }
+#updNotes hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
 .upd-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .upd-actions button {
   font: inherit;

@@ -2,6 +2,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MarkDownEditor;
@@ -18,6 +19,18 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // 미처리 예외로 "안내 없이" 죽지 않게 — 원인을 보여준 뒤 종료 (Handled는 건드리지 않아
+        // 오염된 상태로 계속 실행하는 일은 없음)
+        DispatcherUnhandledException += (_, ex) =>
+        {
+            try
+            {
+                MessageBox.Show(ex.Exception.Message, "MarkDownEditor — Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch { }
+        };
 
         // BOM 없는 한글(CP949/EUC-KR) 문서 폴백 디코딩용 레거시 코드페이지 등록
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -88,12 +101,19 @@ public partial class App : Application
                         PipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.None);
                     server.WaitForConnection();
                     using var reader = new StreamReader(server, new UTF8Encoding(false));
-                    var payload = reader.ReadToEnd();
+                    // 연결만 하고 쓰지 않는 비정상 클라이언트가 수신 루프를 영구 블록하지 못하게 시간 제한
+                    var read = Task.Run(reader.ReadToEnd);
+                    if (!read.Wait(TimeSpan.FromSeconds(3)))
+                    {
+                        read.ContinueWith(t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);   // dispose로 풀린 예외 관찰
+                        continue;   // using이 서버를 닫아 다음 대기로
+                    }
+                    var payload = read.Result;
                     var paths = payload.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     // 파일이 없어도(빈 실행) 기존 창을 앞으로 가져와 "실행했는데 반응 없음"을 방지
                     _window?.Dispatcher.BeginInvoke(() => _window!.OpenExternalFiles(paths));
                 }
-                catch { /* 파이프 오류 → 다시 수신 대기 */ }
+                catch { Thread.Sleep(500); /* 파이프 오류 → 잠시 후 재시도 (생성 실패 반복 시 핫루프 방지) */ }
             }
         })
         { IsBackground = true, Name = "MDE-PipeServer" };

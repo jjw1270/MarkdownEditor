@@ -184,7 +184,15 @@ public partial class MainWindow : Window
         JsonElement msg;
         try { msg = JsonSerializer.Deserialize<JsonElement>(e.WebMessageAsJson); }
         catch { return; }
+        if (msg.ValueKind != JsonValueKind.Object) return;   // 비객체 메시지(문자열·숫자 등) 무시
 
+        // 웹 측 사소한 타입 불일치(GetInt32 등)가 UI 스레드 미처리 예외 → 앱 크래시가 되지 않게 방어
+        try { HandleWebMessage(msg, e); }
+        catch { /* 잘못된 메시지는 버림 */ }
+    }
+
+    private void HandleWebMessage(JsonElement msg, CoreWebView2WebMessageReceivedEventArgs e)
+    {
         var cmd = msg.TryGetProperty("cmd", out var c) ? c.GetString() : null;
         switch (cmd)
         {
@@ -447,7 +455,7 @@ public partial class MainWindow : Window
     }
 
     // 붙여넣은 클립보드 이미지 → 문서 옆 images/ 폴더에 저장하고 상대 경로 + 미리보기용 data URI 회신
-    private void SavePastedImage(int id, string? basePath, string? mime, string? b64)
+    private async void SavePastedImage(int id, string? basePath, string? mime, string? b64)
     {
         if (id < 0 || string.IsNullOrEmpty(basePath) || string.IsNullOrEmpty(b64)) return;
         try
@@ -463,15 +471,20 @@ public partial class MainWindow : Window
             };
             if (ext == null) return;               // 알 수 없는 형식은 무시
 
-            var bytes = Convert.FromBase64String(b64);
-            var dir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(basePath))!, "images");
-            Directory.CreateDirectory(dir);
+            // 대용량 스크린샷의 base64 디코드·파일 쓰기가 UI를 멈추지 않게 백그라운드에서 수행
+            var full = await Task.Run(() =>
+            {
+                var bytes = Convert.FromBase64String(b64);
+                var dir = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(basePath))!, "images");
+                Directory.CreateDirectory(dir);
 
-            var stem = $"img_{DateTime.Now:yyyyMMdd_HHmmss}";
-            var full = Path.Combine(dir, stem + ext);
-            for (var n = 1; File.Exists(full); n++)
-                full = Path.Combine(dir, $"{stem}_{n}{ext}");
-            File.WriteAllBytes(full, bytes);
+                var stem = $"img_{DateTime.Now:yyyyMMdd_HHmmss}";
+                var p = Path.Combine(dir, stem + ext);
+                for (var n = 1; File.Exists(p); n++)
+                    p = Path.Combine(dir, $"{stem}_{n}{ext}");
+                File.WriteAllBytes(p, bytes);
+                return p;
+            });
 
             SendToWeb(new
             {
@@ -708,7 +721,17 @@ public partial class MainWindow : Window
             // 쓰기 + 이미지 맵 재생성은 UI 스레드 밖에서 (큰 문서·이미지에도 창 안 멈춤)
             var imgMap = await Task.Run(() =>
             {
-                File.WriteAllText(full, text, new UTF8Encoding(false));   // UTF-8 (BOM 없음)
+                // 임시 파일에 쓴 뒤 교체 — 쓰기 도중 크래시·전원 차단에도 원본이 잘린 채 남지 않게 (UTF-8, BOM 없음)
+                var tmp = full + ".mde-tmp";
+                try
+                {
+                    File.WriteAllText(tmp, text, new UTF8Encoding(false));
+                    File.Move(tmp, full, overwrite: true);
+                }
+                finally
+                {
+                    if (File.Exists(tmp)) try { File.Delete(tmp); } catch { }
+                }
                 // 저장 본문 기준으로 이미지 맵 재생성 → 편집 중 추가한 로컬 이미지가 미리보기에 반영됨
                 return BuildImageMap(text, Path.GetDirectoryName(full) ?? "");
             });
@@ -781,12 +804,15 @@ public partial class MainWindow : Window
     }
 
     // 감시 이벤트는 스레드풀에서 오므로 UI 스레드로 넘긴 뒤 디바운스
+    // _watchedFiles 판정도 UI 스레드에서 — SyncWatchers(UI)와의 동시 접근(HashSet 미정의 동작) 방지
     private void OnWatchedFileEvent(object? sender, FileSystemEventArgs e)
     {
         string full;
         try { full = Path.GetFullPath(e.FullPath); } catch { return; }
-        if (!_watchedFiles.Contains(full)) return;
-        Dispatcher.BeginInvoke(() => QueueReload(full));
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (_watchedFiles.Contains(full)) QueueReload(full);
+        });
     }
 
     // 저장 도구들이 이벤트를 연달아 쏘므로 500ms 잠잠해진 뒤 한 번만 처리

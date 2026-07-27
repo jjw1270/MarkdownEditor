@@ -17,7 +17,7 @@ Double-click a `.md` file and it just opens — no installation required.
 ## Highlights
 
 - **Portable** — unzip and run. The WebView2 runtime is bundled; settings and cache stay next to the exe, leaving no traces on the system.
-- **Auto-update** — the app quietly checks GitHub Releases on startup; when a new version is out, the `!` badge next to the title lights up. Update in-app with a progress bar — settings and session are preserved. (The version check is the app's only network access; no documents or personal data are ever sent.)
+- **Auto-update** — the app quietly checks GitHub Releases on startup; when a new version is out, the `!` badge next to the title lights up. Update in-app with a progress bar — settings and session are preserved. (Auto-update — an anonymous version check, plus the release download only when you start one — is the app's only network access; no documents or personal data are ever sent.)
 - **One window, many tabs** — every file opens as a tab in a single window (single-instance via mutex + named pipe). Tabs can be reordered by drag & drop, cycled with `Ctrl+Tab`.
 - **All links work** — `.md` links open in a new tab, web links in your browser, folders in Explorer, other documents in their default apps. Cross-document anchors (`doc.md#section`) are supported.
 - **Back / Forward** — toolbar buttons, `Alt+←`/`Alt+→`, or mouse buttons 4/5.
@@ -82,7 +82,7 @@ Place the `web/` folder (and optionally a WebView2 Fixed Version Runtime as `Run
 
 ### Architecture in one paragraph
 
-The C# (WPF) side owns file I/O, the single-instance pipe, and window chrome; the web side (vanilla JS in a single WebView2) owns all document buffers and tab state. The two communicate only via `postMessage`. Rendering uses marked + highlight.js + mermaid, all bundled for offline use. See `README.md` for the full feature tour (Korean).
+The C# (WPF) side owns file I/O, the single-instance pipe, and window chrome; the web side (vanilla JS in a single WebView2) owns all document buffers and tab state. The two communicate only via `postMessage`. Rendering uses marked + highlight.js + mermaid, all bundled for offline use. See [README.md](README.md) for the full feature tour (Korean).
 
 ## Feedback
 

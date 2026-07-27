@@ -17,7 +17,7 @@ Dê um duplo clique em um arquivo `.md` e ele simplesmente abre — sem instala�
 ## Destaques
 
 - **Portátil** — descompacte e execute. O runtime do WebView2 vem incluído; configurações e cache ficam ao lado do exe, sem deixar rastros no sistema.
-- **Atualização automática** — o aplicativo verifica silenciosamente o GitHub Releases ao iniciar; quando há uma nova versão, o selo `!` ao lado do título se acende. Atualize dentro do próprio aplicativo com barra de progresso — configurações e sessão são preservadas. (Essa verificação de versão é o único acesso à rede do aplicativo; nenhum documento ou dado pessoal é enviado.)
+- **Atualização automática** — o aplicativo verifica silenciosamente o GitHub Releases ao iniciar; quando há uma nova versão, o selo `!` ao lado do título se acende. Atualize dentro do próprio aplicativo com barra de progresso — configurações e sessão são preservadas. (A atualização automática — verificação anônima de versão e download apenas quando você a inicia — é o único acesso à rede do aplicativo; nenhum documento ou dado pessoal é enviado.)
 - **Uma janela, várias abas** — cada arquivo abre como aba em uma única janela (instância única via mutex + named pipe). As abas podem ser reordenadas arrastando e alternadas com `Ctrl+Tab`.
 - **Todos os links funcionam** — links `.md` abrem em nova aba, links da web no navegador, pastas no Explorer e outros documentos em seus aplicativos padrão. Âncoras entre documentos (`doc.md#seção`) são suportadas.
 - **Voltar / Avançar** — botões da barra de ferramentas, `Alt+←`/`Alt+→` ou botões 4/5 do mouse.

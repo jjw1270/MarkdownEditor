@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace MarkDownEditor;
 
-// ---- 자동 업데이트 (TODO.md 설계) ----
+// ---- 자동 업데이트 (docs/spec-auto-update.md 설계) ----
 // 확인: GitHub 릴리즈 API (시작 시 조용히 1회 + 팝업의 "지금 확인").
 // 적용: zip을 %TEMP%에 다운로드 → 앱 폴더 안 .update\payload에 압축 해제(같은 볼륨이라
 //       도우미가 rename만으로 교체) → 평소 종료 절차를 거쳐 종료가 "확정"된 뒤(Closed)에만
@@ -109,6 +109,13 @@ public partial class MainWindow
                     _ = ApplyUpdateAsync();
 #endif
             }
+            else if (latest > CurrentVersion)
+            {
+                // 새 버전 릴리즈에 규약 자산(zip)이 없음 — "최신 버전"으로 오인시키지 않는다.
+                // 수동 확인이면 다운로드 페이지로 폴백, 자동 확인은 조용히 넘어감(자산 업로드 중일 수 있음).
+                _updateAvail = null;
+                if (manual) { ShellOpen(UpdateReleasesPage); SendUpdateStatus("fallback"); }
+            }
             else
             {
                 _updateAvail = null;
@@ -200,6 +207,8 @@ public partial class MainWindow
         catch
         {
             SendUpdateStatus("error", reason: "apply");
+            // 실패한 다운로드의 부분 zip이 %TEMP%에 남지 않게 정리
+            try { File.Delete(Path.Combine(Path.GetTempPath(), "MarkDownEditor-update.zip")); } catch { }
             try { await Task.Run(CleanupUpdateLeftovers); } catch { }
         }
         finally { _updateBusy = false; }
@@ -249,7 +258,7 @@ $pay = {Q(payloadDir)}
 try {{ Wait-Process -Id {Environment.ProcessId} -Timeout 120 -ErrorAction SilentlyContinue }} catch {{}}
 Start-Sleep -Milliseconds 500
 # WebView2 자식 프로세스(msedgewebview2)가 잠깐 남아 Runtime\을 잠글 수 있음 → 재시도 루프
-$items = @('web', 'Runtime', 'MarkDownEditor.exe')   # exe를 마지막에
+$items = @({string.Join(", ", UpdateItems.Select(Q))})   # exe를 마지막에 (C# UpdateItems와 단일 출처)
 $done = @()
 $ok = $true
 foreach ($n in $items) {{
@@ -323,6 +332,9 @@ Remove-Item $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
             if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
         }
         catch { }
+        // 이전 실행이 남긴 %TEMP% 잔재(실패한 부분 zip·사용 끝난 도우미 스크립트) 정리
+        foreach (var n in new[] { "MarkDownEditor-update.zip", "MarkDownEditor-update.ps1" })
+            try { File.Delete(Path.Combine(Path.GetTempPath(), n)); } catch { }
     }
 
     private static bool IsDirWritable(string dir)

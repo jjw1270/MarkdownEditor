@@ -17,7 +17,7 @@ Doppelklick auf eine `.md`-Datei und sie öffnet sich einfach — keine Installa
 ## Highlights
 
 - **Portabel** — entpacken und starten. Die WebView2-Laufzeit ist gebündelt; Einstellungen und Cache bleiben neben der Exe und hinterlassen keine Spuren im System.
-- **Automatische Updates** — die App prüft beim Start unauffällig GitHub Releases; gibt es eine neue Version, leuchtet das `!`-Abzeichen neben dem Titel auf. Das Update läuft direkt in der App mit Fortschrittsbalken — Einstellungen und Sitzung bleiben erhalten. (Diese Versionsprüfung ist der einzige Netzwerkzugriff der App; es werden niemals Dokumente oder persönliche Daten gesendet.)
+- **Automatische Updates** — die App prüft beim Start unauffällig GitHub Releases; gibt es eine neue Version, leuchtet das `!`-Abzeichen neben dem Titel auf. Das Update läuft direkt in der App mit Fortschrittsbalken — Einstellungen und Sitzung bleiben erhalten. (Das automatische Update — anonyme Versionsprüfung und Download nur bei von Ihnen gestartetem Update — ist der einzige Netzwerkzugriff der App; es werden niemals Dokumente oder persönliche Daten gesendet.)
 - **Ein Fenster, viele Tabs** — jede Datei öffnet sich als Tab in einem einzigen Fenster (Einzelinstanz über Mutex + Named Pipe). Tabs lassen sich per Drag & Drop umsortieren und mit `Ctrl+Tab` durchschalten.
 - **Alle Links funktionieren** — `.md`-Links öffnen sich in einem neuen Tab, Weblinks im Browser, Ordner im Explorer, andere Dokumente in ihrer Standard-App. Dokumentübergreifende Anker (`doc.md#abschnitt`) werden unterstützt.
 - **Zurück / Vorwärts** — Symbolleisten-Buttons, `Alt+←`/`Alt+→` oder Maustasten 4/5.

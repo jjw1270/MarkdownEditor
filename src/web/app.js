@@ -118,6 +118,7 @@ function applyLocale(lang) {
   setTitle(els.maxBtn, winMaximized ? L.winRestore : L.winMax);
   setTitle(els.closeBtn, L.winClose);
   setTitle(els.appVer, L.verTip);   // 버전 표시(정보·피드백 메뉴) 툴팁
+  document.documentElement.lang = langCurrent;   // 스크린리더·철자검사가 보는 문서 언어 동기화
   // 업데이트 배지·팝업 고정 문자열 (상태 문구는 renderUpdate가 담당)
   setTitle(els.updBtn, els.updBtn.classList.contains('avail') ? L.updNewTip : L.updTip);
   setTitle(els.updClose, L.findCloseTitle);
@@ -278,7 +279,13 @@ function render(force) {
   highlightCode();
   applyToc();                          // 목차가 켜져 있으면 새 내용 기준으로 재생성
   // 미리보기 찾기가 열려 있으면 새 DOM 기준으로 매치 재계산 (외부 변경 반영 등)
-  if (!els.findbar.hidden && find.mode === 'preview') recomputeMatches(true);
+  if (!els.findbar.hidden && find.mode === 'preview') {
+    recomputeMatches(true);
+    // mermaid 소스 텍스트에 걸린 매치는 SVG 치환 후 유령이 됨 → 다이어그램 완료 후 재계산
+    if (els.preview.querySelector('.mermaid')) mermaidRun.then(() => {
+      if (!els.findbar.hidden && find.mode === 'preview' && activeTab() === t) recomputeMatches(true);
+    });
+  }
   if (t) {
     const text = t.text, img = t.img;
     mermaidRun.then(() => {            // mermaid 완료 시점에 상태가 그대로일 때만 저장
@@ -626,7 +633,7 @@ function sendState() {
   const t = activeTab();
   host.postMessage({
     cmd: 'state',
-    name: t ? t.name : '새 문서',
+    name: t ? t.name : L.newDoc,
     activeDirty: t ? t.dirty : false,
     anyDirty: tabs.some(x => x.dirty),
     paths: tabs.filter(x => x.path).map(x => x.path),   // C#의 외부 변경 감시 대상
@@ -677,10 +684,7 @@ function removeTabSilently(id) {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx < 0) return;
   tabs.splice(idx, 1);
-  const removedUpToCur = navStack.slice(0, navIndex + 1).filter(x => x === id).length;
-  navStack = navStack.filter(x => x !== id);
-  navIndex -= removedUpToCur;
-  if (navIndex > navStack.length - 1) navIndex = navStack.length - 1;
+  pruneNavHistory(id);
   renderTabs();
   sendState();
   updateNavButtons();
@@ -698,7 +702,9 @@ function focusTab(id) {
   hideFind();                              // 탭을 바꾸면 찾기 바는 이전 문서 기준이므로 닫음
   saveScroll();                            // 현재 탭 스크롤 위치 보존
   const cur = activeTab();
-  if (cur) captureEditState(cur);          // 떠나는 탭의 미저장 입력·커서 보존
+  // 편집 중일 때만 캡처 — 미리보기 탭의 정본은 t.text이며, editor.value는 외부 변경
+  // 자동 반영·이미지 삽입 이후일 수 있는 옛 스냅샷이라 되써넣으면 반영분이 유실된다
+  if (cur && cur.editing) captureEditState(cur);   // 떠나는 탭의 미저장 입력·커서 보존
   activeId = id;
   const t = activeTab();
   if (!t) return;
@@ -722,6 +728,20 @@ function recordVisit(id) {
 }
 
 function tabAlive(id) { return tabs.some(t => t.id === id); }
+
+// 히스토리에서 닫힌 탭을 제거하고 그로 인해 생긴 인접 중복을 압축 — navIndex도 함께 보정
+// (중복을 남기면 뒤로 버튼이 활성인데 한 번 눌러도 이동 없는 죽은 스텝이 생긴다)
+function pruneNavHistory(id) {
+  const compact = [];
+  let ni = -1;
+  for (let i = 0; i < navStack.length; i++) {
+    const x = navStack[i];
+    if (x !== id && (compact.length === 0 || compact[compact.length - 1] !== x)) compact.push(x);
+    if (i === navIndex) ni = compact.length - 1;
+  }
+  navStack = compact;
+  navIndex = ni;
+}
 
 function goBack() {
   let i = navIndex - 1;
@@ -770,10 +790,7 @@ function closeTab(id) {
   backupNow();                                 // 닫힌 탭 반영해 백업 갱신
 
   // 히스토리에서 닫힌 탭 제거 + 현재 위치 보정
-  const removedUpToCur = navStack.slice(0, navIndex + 1).filter(x => x === id).length;
-  navStack = navStack.filter(x => x !== id);
-  navIndex -= removedUpToCur;
-  if (navIndex > navStack.length - 1) navIndex = navStack.length - 1;
+  pruneNavHistory(id);
 
   if (wasActive) {
     activeId = null;
@@ -879,6 +896,7 @@ function save() {
   const t = activeTab();
   if (!t) return;
   if (t.editing) t.text = els.editor.value;  // 편집 중이면 최신값 반영
+  t.savedText = t.text;                      // saved 응답에서 그 사이 입력 여부 판정용
   if (host) host.postMessage({ cmd: 'save', id: t.id, path: t.path, text: t.text });
 }
 
@@ -1095,29 +1113,14 @@ function closeOtherTabs(keepId) {
 function showTabMenu(x, y, tabId) {
   const t = tabs.find(v => v.id === tabId);
   if (!t) return;
-  els.ctxmenu.innerHTML = '';
-  const add = (label, act, disabled) => {
-    const it = document.createElement('div');
-    it.className = 'ctx-item' + (disabled ? ' disabled' : '');
-    it.textContent = label;
-    if (!disabled) it.addEventListener('click', () => { hideTabMenu(); act(); });
-    els.ctxmenu.appendChild(it);
-  };
-  const sep = () => {
-    const s = document.createElement('div');
-    s.className = 'ctx-sep';
-    els.ctxmenu.appendChild(s);
-  };
-  add(L.ctxClose, () => closeTab(tabId));
-  add(L.ctxCloseOthers, () => closeOtherTabs(tabId), tabs.length < 2);
-  sep();
-  add(L.ctxReveal, () => { if (host) host.postMessage({ cmd: 'reveal', path: t.path }); }, !t.path);
-  add(L.ctxCopyPath, () => copyText(t.path), !t.path);
-
-  els.ctxmenu.hidden = false;
-  const r = els.ctxmenu.getBoundingClientRect();           // 화면 밖으로 나가지 않게 보정
-  els.ctxmenu.style.left = Math.max(0, Math.min(x, window.innerWidth - r.width - 4)) + 'px';
-  els.ctxmenu.style.top = Math.max(0, Math.min(y, window.innerHeight - r.height - 4)) + 'px';
+  // 공용 메뉴 빌더 사용 — 다른 메뉴와 role=menuitem·mousedown 처리 통일
+  showMenuAtPoint([
+    { label: L.ctxClose, act: () => closeTab(tabId) },
+    { label: L.ctxCloseOthers, act: () => closeOtherTabs(tabId), disabled: tabs.length < 2 },
+    'sep',
+    { label: L.ctxReveal, act: () => { if (host) host.postMessage({ cmd: 'reveal', path: t.path }); }, disabled: !t.path },
+    { label: L.ctxCopyPath, act: () => copyText(t.path), disabled: !t.path },
+  ], x, y);
 }
 
 document.addEventListener('click', hideTabMenu);
@@ -1221,7 +1224,7 @@ function showRecentMenu() {
 }
 menuButton(els.recentBtn, showRecentMenu);
 
-// ---- PDF·테마 버튼 (구 ⋯ 메뉴 해체 — 언어·버전만 🌐 메뉴에 남음) ----
+// ---- PDF·테마 버튼 (구 ⋯ 메뉴 해체 — 언어만 🌐 메뉴에 남음, 버전은 타이틀 옆 표시) ----
 els.pdfBtn.addEventListener('click', exportPdf);
 els.themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
 
@@ -1304,11 +1307,41 @@ function renderUpdate() {
   }
 
   els.updNotesWrap.hidden = !upd.notes || !(avail || busy);
-  els.updNotes.textContent = upd.notes || '';   // 릴리즈 본문은 텍스트로만 (스크립트/HTML 주입 차단)
+  renderUpdateNotes(upd.notes || '');
 
   els.updCheckBtn.disabled = upd.status === 'checking' || busy;
   els.updApplyBtn.disabled = !avail;
 }
+
+// 릴리즈 노트를 마크다운으로 렌더 — marked 출력에서 위험 요소를 제거해 주입 차단은 유지.
+// 이미지·미디어·svg도 제거: 노트 표시가 업데이트 확인 외의 네트워크 접근을 만들지 않게.
+// base는 문서 전체의 상대 URL 기준을 바꿔 지연 로드(mermaid.min.js)를 하이재킹할 수 있어 필수 제거.
+let updNotesRendered = null;   // 마지막 렌더 원문 — 진행 틱마다 재렌더돼 노트 스크롤이 리셋되는 것 방지
+function renderUpdateNotes(md) {
+  if (md === updNotesRendered) return;
+  updNotesRendered = md;
+  const tmpl = document.createElement('template');
+  tmpl.innerHTML = marked.parse(md);
+  tmpl.content.querySelectorAll('script, style, base, iframe, object, embed, link, meta, img, picture, video, audio, source, form, svg, math').forEach((n) => n.remove());
+  for (const el of tmpl.content.querySelectorAll('*')) {
+    for (const attr of [...el.attributes]) {
+      const name = attr.name.toLowerCase();
+      if (name.startsWith('on') || name === 'style' || name === 'src' || name === 'srcset'
+          || name === 'background' || name.endsWith(':href')) { el.removeAttribute(attr.name); continue; }
+      if (name === 'href' && (el.tagName !== 'A' || !/^(https?:|mailto:)/i.test(attr.value))) el.removeAttribute(attr.name);   // 링크는 <a>의 http(s)·mailto만 허용
+    }
+  }
+  els.updNotes.replaceChildren(tmpl.content);
+}
+
+// 노트 안 링크는 WebView 내 탐색 대신 기본 브라우저로
+els.updNotes.addEventListener('click', (e) => {
+  const a = e.target.closest('a');
+  if (!a) return;
+  e.preventDefault();
+  const href = a.getAttribute('href') || '';
+  if (/^(https?:|mailto:)/i.test(href) && host) host.postMessage({ cmd: 'openExternal', url: href });
+});
 
 function showUpdatePopup() {
   els.updOverlay.hidden = false;
@@ -1423,7 +1456,10 @@ function paintPreviewHighlights() {
   CSS.highlights.delete('mdfind');
   CSS.highlights.delete('mdfind-cur');
   if (!previewMatches.length) return;
-  CSS.highlights.set('mdfind', new Highlight(...previewMatches));
+  // 스프레드 대신 add 루프 — 매치 수만 개(대용량 문서 + 한 글자 검색)에서 인수 개수 한계 예외 방지
+  const all = new Highlight();
+  for (const r of previewMatches) all.add(r);
+  CSS.highlights.set('mdfind', all);
   if (find.index >= 0) CSS.highlights.set('mdfind-cur', new Highlight(previewMatches[find.index]));
 }
 
@@ -2027,7 +2063,10 @@ if (host) {
       if (!t) return;
       t.path = m.path || t.path;
       t.name = m.name || t.name;
-      t.dirty = false;
+      // 저장 요청~응답 사이에 입력이 있었다면 dirty 유지 (그 사이 편집분이 미저장 표시 없이 사라지는 것 방지)
+      const curText = (t.id === activeId && t.editing) ? els.editor.value : t.text;
+      t.dirty = t.savedText !== undefined && curText !== t.savedText;
+      t.savedText = undefined;
       t.img = m.imgMap || null;               // 저장 시점 기준 이미지 맵 (편집 중 추가분 반영)
       backupNow();                            // 저장된 탭은 백업에서 즉시 제거
       renderTabs();
