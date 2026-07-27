@@ -101,14 +101,6 @@ No hará falta que vuelvas aquí. Al arrancar, la aplicación consulta las relea
 
 Borra la carpeta. Ese es todo el procedimiento: no se escribió nada en el registro, ni en `%AppData%`, ni en *Aplicaciones y características*. (Si habías fijado la asociación de archivos, Windows simplemente te pedirá elegir una nueva aplicación predeterminada la próxima vez que abras un `.md`.)
 
-### Verificar la descarga *(opcional)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-El SHA-256 esperado de cada versión publicada está registrado en el manifiesto de winget, en [`packaging/winget/<versión>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ## Atajos de teclado
 
 | Tecla | Acción |

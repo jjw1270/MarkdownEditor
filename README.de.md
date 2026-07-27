@@ -101,14 +101,6 @@ Sie müssen nicht hierher zurückkehren. Beim Start prüft die App die GitHub-Re
 
 Löschen Sie den Ordner. Das ist alles — nichts wurde in die Registry, nach `%AppData%` oder in *Apps & Features* geschrieben. (Falls Sie die Dateiverknüpfung gesetzt haben, fragt Windows beim nächsten Öffnen einer `.md`-Datei einfach nach einer neuen Standard-App.)
 
-### Download überprüfen *(optional)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-Der erwartete SHA-256-Wert jeder veröffentlichten Version steht im winget-Manifest unter [`packaging/winget/<Version>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ## Tastenkürzel
 
 | Taste | Aktion |

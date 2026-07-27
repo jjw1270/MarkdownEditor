@@ -101,14 +101,6 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 フォルダーを削除するだけです。レジストリにも `%AppData%` にも「アプリと機能」にも、何も残していません。（ファイルの関連付けを設定していた場合、次に `.md` を開くとき Windows が既定のアプリを聞いてくるだけです。）
 
-### ダウンロードの検証 *(任意)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-各リリースの SHA-256 は winget マニフェスト [`packaging/winget/<バージョン>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) に記録されています。
-
 ## キーボードショートカット
 
 | キー | 動作 |

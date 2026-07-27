@@ -101,14 +101,6 @@ Você não vai precisar voltar aqui. Ao iniciar, o aplicativo consulta as releas
 
 Apague a pasta. É todo o procedimento — nada foi gravado no registro, em `%AppData%` ou em *Aplicativos e recursos*. (Se você tinha definido a associação de arquivos, o Windows apenas pedirá um novo aplicativo padrão na próxima vez que abrir um `.md`.)
 
-### Verificar o download *(opcional)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-O SHA-256 esperado de cada versão publicada está registrado no manifesto do winget, em [`packaging/winget/<versão>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ## Atalhos de teclado
 
 | Tecla | Ação |

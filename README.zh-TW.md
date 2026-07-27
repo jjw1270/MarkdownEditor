@@ -101,14 +101,6 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 刪除資料夾就結束了 — 登錄檔、`%AppData%`、「應用程式與功能」清單中都不會留下任何東西。（如果曾設定檔案關聯，下次開啟 `.md` 時 Windows 只會請你重新選擇預設應用程式。）
 
-### 驗證下載檔案 *(選用)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-每個版本的 SHA-256 都記錄在 winget 資訊清單 [`packaging/winget/<版本>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) 中。
-
 ## 鍵盤快速鍵
 
 | 按鍵 | 動作 |

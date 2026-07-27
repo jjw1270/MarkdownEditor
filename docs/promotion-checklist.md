@@ -95,55 +95,6 @@ and in the existing format.
       의 대안으로 연결. "typora alternative" 검색에서 상위에 뜨는 사이트라 유입이 실제로 있다.
 - [ ] **[Product Hunt](https://www.producthunt.com/)** — 무료. 화요일~목요일 오전(PST) 등록이 유리.
 
-### 3-3. winget 등록
-
-`packaging/winget/1.2.2/` 에 매니페스트 4종이 준비되어 있다.
-등록되면 `winget search markdown` 결과와 winget.run 같은 검색 사이트에 노출되고,
-`winget install jjw1270.MarkDownEditor` 로 설치되면 SmartScreen 마찰도 줄어든다.
-
-- [x] 로컬 구조 검증: `winget validate --manifest packaging/winget/1.2.2`
-      (2026-07-27, winget v1.29에서 성공)
-- [x] 로컬 매니페스트로 설치·실행·제거 테스트
-      (2026-07-27, winget v1.29에서 1.2.2 파일·별칭·WebView2 실행과 제거 등록 해제 확인)
-
-  ```powershell
-  # 관리자 PowerShell — 로컬 매니페스트 설치 기능은 기본적으로 꺼져 있다.
-  winget settings --enable LocalManifestFiles
-  winget install --manifest packaging/winget/1.2.2 --accept-package-agreements
-  markdowneditor
-  # 로컬 매니페스트는 아직 공식 소스 ID와 연결되지 않으므로 이름으로 제거한다.
-  winget uninstall --name MarkDownEditor --exact
-  winget settings --disable LocalManifestFiles
-  ```
-
-  이 PC에서는 WinGet 보관 파일 검사에서 `0x8A150060`을 반환했다. 같은 ZIP의 SHA-256 일치와
-  Microsoft Defender 사용자 지정 검사 무탐지를 확인한 뒤, 로컬 테스트에 한해 재정의 옵션으로 설치했다.
-  재정의 기능은 기본적으로 꺼져 있으므로 필요한 경우에만 다음처럼 사용하고 테스트 직후 다시 끈다.
-
-  ```powershell
-  # SHA-256 확인과 별도 보안 검사를 먼저 통과한 로컬 테스트 파일에만 사용한다.
-  winget settings --enable LocalArchiveMalwareScanOverride
-  winget install --manifest packaging/winget/1.2.2 --accept-package-agreements `
-    --ignore-local-archive-malware-scan
-  winget settings --disable LocalArchiveMalwareScanOverride
-  ```
-
-  upstream PR의 보안 검사에서 배포 파일이 실제로 차단되면 로컬 재정의와 무관하게 등록할 수 없으므로,
-  그 경우 원인을 확인하고 안전한 새 배포 파일로 매니페스트 URL·해시를 갱신한다.
-
-  앱은 포터블 설정·캐시를 실행 파일 옆 `WebView2Data/`에 보존한다. 로컬 소스 설치에서는 제거 후
-  약 8 MB가 남았고 `--purge`도 적용되지 않았다. 공식 소스 등록 후 `--id jjw1270.MarkDownEditor`로
-  설치·제거가 연결되는지와 `--purge` 동작을 다시 확인한다. 현재 사용하는 PC에서 시험하면 이 폴더와
-  portable 등록, 명령 별칭이 남을 수 있으므로 Windows Sandbox 또는 폐기 가능한 VM을 권장한다.
-- [x] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
-      `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 →
-      [PR #408328](https://github.com/microsoft/winget-pkgs/pull/408328) 생성
-      (2026-07-27, 리뷰 가능 상태·CLA 완료·자동 검사 진행 중)
-
-> 주의: 배포 zip이 **약 347 MB**(WebView2 고정 버전 런타임 번들 포함)라 리뷰어가 크기를
-> 지적할 수 있다. 그럴 경우 런타임을 뺀 경량 zip을 별도 에셋으로 추가해 그쪽을 winget에
-> 등록하는 편이 통과가 쉽다.
-
 ---
 
 ## 4. 초기 star 확보 — GitHub 내부 검색 랭킹에 직접 반영
@@ -201,9 +152,6 @@ https://github.com/jjw1270/MarkdownEditor
 - [ ] 릴리즈 **제목에 키워드**를 넣는다: `v1.2.3 — Markdown viewer for Windows` 처럼.
       릴리즈 페이지도 개별적으로 색인된다.
 - [ ] 릴리즈 노트 첫 문단에 앱이 무엇인지 한 줄 요약을 넣는다 (릴리즈 페이지만 보고 들어온 사람 대상).
-- [ ] 새 버전마다 `packaging/winget/` 에 버전 폴더를 복사해 URL·SHA256·ReleaseDate만 갱신 후 PR.
-      SHA256: `Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256`
-
 ---
 
 ## 하지 말 것

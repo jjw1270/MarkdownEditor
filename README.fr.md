@@ -101,14 +101,6 @@ Vous n'aurez pas besoin de revenir ici. Au démarrage, l'application interroge l
 
 Supprimez le dossier. C'est toute la procédure : rien n'a été écrit dans le registre, dans `%AppData%` ni dans *Applications et fonctionnalités*. (Si vous aviez défini l'association de fichiers, Windows vous demandera simplement de choisir une nouvelle application par défaut à la prochaine ouverture d'un `.md`.)
 
-### Vérifier le téléchargement *(facultatif)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-Le SHA-256 attendu de chaque version publiée est consigné dans le manifeste winget, dans [`packaging/winget/<version>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ## Raccourcis clavier
 
 | Touche | Action |

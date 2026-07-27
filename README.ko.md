@@ -177,15 +177,6 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 폴더를 지우면 끝입니다. 레지스트리에도, `%AppData%` 에도, **앱 및 기능** 목록에도 아무것도 남기지 않았습니다. (파일 연결을 지정했다면 다음에 `.md` 파일을 열 때 Windows가 새 기본 앱을 물어볼 뿐입니다.)
 
-### 내려받은 파일 검증 *(선택)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-각 릴리즈의 SHA-256 값은 winget 매니페스트
-[`packaging/winget/<버전>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) 에 기록되어 있습니다.
-
 ---
 
 ## 📖 기본 사용법

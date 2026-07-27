@@ -163,15 +163,6 @@ You will not need to come back here. On startup the app checks GitHub Releases a
 
 Delete the folder. That is the entire procedure — nothing was written to the registry, to `%AppData%`, or to *Add or remove programs*. (If you set the file association, Windows will simply ask you to pick a new default the next time you open a `.md` file.)
 
-### Verifying the download *(optional)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-The expected SHA-256 for every published release is recorded in the winget manifest at
-[`packaging/winget/<version>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ---
 
 ## ⌨️ Keyboard shortcuts

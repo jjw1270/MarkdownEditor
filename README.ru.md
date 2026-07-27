@@ -101,14 +101,6 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 Удалите папку — вот и вся процедура. Ничего не записано ни в реестр, ни в `%AppData%`, ни в список «Приложения и возможности». (Если вы назначали сопоставление файлов, Windows просто спросит новое приложение по умолчанию при следующем открытии `.md`.)
 
-### Проверка загруженного файла *(по желанию)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-Ожидаемый SHA-256 каждого выпуска записан в манифесте winget: [`packaging/winget/<версия>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget).
-
 ## Горячие клавиши
 
 | Клавиша | Действие |

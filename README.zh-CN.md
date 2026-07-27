@@ -101,14 +101,6 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 删除文件夹即可，没有别的步骤 — 注册表、`%AppData%`、"应用和功能"列表里都不会留下任何东西。（如果设置过文件关联，下次打开 `.md` 时 Windows 会让你重新选择默认应用而已。）
 
-### 校验下载文件 *(可选)*
-
-```powershell
-Get-FileHash MarkDownEditor-standalone.zip -Algorithm SHA256
-```
-
-每个版本的 SHA-256 都记录在 winget 清单 [`packaging/winget/<版本>/jjw1270.MarkDownEditor.installer.yaml`](packaging/winget) 中。
-
 ## 键盘快捷键
 
 | 按键 | 操作 |
