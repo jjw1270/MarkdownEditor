@@ -138,7 +138,7 @@ and in the existing format.
 - [x] [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) 포크 →
       `manifests/j/jjw1270/MarkDownEditor/1.2.2/` 에 복사 →
       [PR #408328](https://github.com/microsoft/winget-pkgs/pull/408328) 생성
-      (2026-07-27, 초안·CLA 및 자동 검사 대기)
+      (2026-07-27, 리뷰 가능 상태·CLA 완료·자동 검사 진행 중)
 
 > 주의: 배포 zip이 **약 347 MB**(WebView2 고정 버전 런타임 번들 포함)라 리뷰어가 크기를
 > 지적할 수 있다. 그럴 경우 런타임을 뺀 경량 zip을 별도 에셋으로 추가해 그쪽을 winget에
