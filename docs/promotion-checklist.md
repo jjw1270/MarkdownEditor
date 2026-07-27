@@ -11,14 +11,14 @@
 `GitHub - jjw1270/MarkdownEditor: {description}` 형태라, **description이 곧 구글 검색 제목**이다.
 비워두면 검색 결과에 키워드가 하나도 노출되지 않는다.
 
-- [ ] **Description**
+- [x] **Description**
 
   ```
   Lightweight portable Markdown viewer & editor for Windows. Tabs, mermaid diagrams, dark mode, PDF export. No install, no telemetry.
   ```
 
-- [ ] **Website**: `https://jjw1270.github.io/MarkdownEditor/`
-- [ ] **Topics** (최대 20개, 소문자·하이픈만 허용).
+- [x] **Website**: `https://jjw1270.github.io/MarkdownEditor/`
+- [x] **Topics** (최대 20개, 소문자·하이픈만 허용).
       `github.com/topics/markdown-editor` 같은 주제 페이지에 자동 노출된다.
 
   ```
@@ -27,7 +27,7 @@
   notepad-alternative typora-alternative markdown-to-pdf
   ```
 
-- [ ] **Releases** 섹션 체크 유지 (사이드바에 다운로드 노출)
+- [x] **Releases** 섹션 체크 유지 (사이드바에 다운로드 노출)
 
 ---
 
@@ -35,9 +35,9 @@
 
 랜딩 페이지는 `docs/index.html` 에 이미 있다. 설정만 하면 된다.
 
-- [ ] **Settings → Pages → Source: Deploy from a branch → `main` / `/docs` → Save**
-- [ ] 몇 분 뒤 `https://jjw1270.github.io/MarkdownEditor/` 접속 확인
-- [ ] 위 1번의 Website 필드에 이 주소 입력
+- [x] **Settings → Pages → Source: Deploy from a branch → `main` / `/docs` → Save**
+- [x] 몇 분 뒤 `https://jjw1270.github.io/MarkdownEditor/` 접속 확인
+- [x] 위 1번의 Website 필드에 이 주소 입력
 
 리포 페이지와 별개로 **구글이 인덱싱하는 페이지가 하나 더** 생기고,
 `docs/index.html` 에는 canonical · Open Graph · JSON-LD(SoftwareApplication) 메타가 들어 있어
@@ -47,8 +47,8 @@
 > `docs/robots.txt`는 표준 위치인 `https://jjw1270.github.io/robots.txt`가 될 수 없다.
 > 그래서 효력이 없는 파일은 두지 않고, 아래처럼 Search Console과 Bing에 sitemap을 직접 제출한다.
 
-- [ ] **Google Search Console** (무료)에 `https://jjw1270.github.io/MarkdownEditor/` 등록 →
-      sitemap 제출 → 색인 생성 요청. 크롤링을 몇 주 앞당길 수 있다.
+- [x] **Google Search Console** (무료)에 `https://jjw1270.github.io/MarkdownEditor/` 등록 →
+      sitemap 제출 → URL 색인 등록 상태 확인.
 - [ ] **Bing Webmaster Tools** 도 동일하게 (Search Console에서 가져오기 지원)
 
 ---
