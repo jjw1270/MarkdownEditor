@@ -116,6 +116,31 @@ body {
 }
 #appIcon { width: 16px; height: 16px; -webkit-user-drag: none; }
 
+/* 업데이트 배지 (타이틀 바로 오른쪽 원형 ! 버튼) — 타이틀은 클릭 통과지만 배지는 클릭 가능 */
+#appTitle #updBtn {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+#appTitle #updBtn:hover { background: var(--btn-hover); color: var(--fg); }
+/* 새 버전 감지: 배너·팝업 없이 배지 강조(색+펄스)로만 알림 */
+#appTitle #updBtn.avail,
+#appTitle #updBtn.avail:hover { background: var(--accent); color: #fff; animation: updpulse 2s ease-out infinite; }
+@keyframes updpulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+  70%  { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
 /* 탭 줄: 좌측 탭 + 우측 문서 액션 버튼.
    활성 탭이 경계선을 덮고 본문과 이어지도록 탭은 줄 바닥까지 내려간다 (메모장/브라우저식) */
 #tabrow {
@@ -539,6 +564,88 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
   box-shadow: 0 12px 48px rgba(0, 0, 0, .55);
 }
 
+/* 업데이트 팝업 (타이틀 옆 ! 배지 클릭) */
+#updOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, .35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#updOverlay[hidden] { display: none; }
+#updDialog {
+  width: 460px;
+  max-width: calc(100vw - 48px);
+  max-height: min(560px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--bar);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, .3);
+  font-size: 13px;
+  user-select: none;
+}
+.upd-head { display: flex; align-items: center; }
+#updTitle { flex: 1; font-weight: 600; font-size: 14px; }
+#updClose {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+#updClose:hover { background: var(--btn-hover); color: var(--fg); }
+.upd-vers { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; color: var(--muted); }
+.upd-vers b { color: var(--fg); font-weight: 600; }
+#updMsg { min-height: 18px; }
+#updMsg.err { color: var(--hl-kw); }   /* 실패 메시지 — 테마별 빨강 토큰 재사용 */
+#updBarWrap { display: flex; align-items: center; gap: 10px; }
+#updBar { flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+#updBarFill { height: 100%; width: 0; border-radius: 3px; background: var(--accent); transition: width .2s ease; }
+#updBarFill.ind { animation: updind 1.2s ease-in-out infinite; }   /* 압축 해제 등 비율 미상 구간 */
+@keyframes updind { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+#updPct { min-width: 38px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+#updNotesWrap { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+#updNotesLabel { font-weight: 600; font-size: 12px; color: var(--muted); }
+#updNotes {
+  min-height: 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font-size: 12.5px;
+  user-select: text;
+}
+.upd-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.upd-actions button {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--btn);
+  color: var(--fg);
+  cursor: pointer;
+}
+.upd-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.upd-actions button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.upd-actions button.primary:hover { filter: brightness(1.08); color: #fff; }
+.upd-actions button:disabled { opacity: .45; cursor: default; }
+.upd-actions button:disabled:hover { border-color: var(--border); color: var(--fg); filter: none; }
+.upd-actions button.primary:disabled:hover { color: #fff; }
+
 /* 하단 토스트 알림 */
 #toast {
   position: fixed;
@@ -607,7 +714,7 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
     --hl-fn: #8250df;
     --hl-attr: #953800;
   }
-  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox { display: none !important; }
+  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox, #updOverlay { display: none !important; }
   ::highlight(mdfind), ::highlight(mdfind-cur) { background-color: transparent; }   /* 찾기 표시는 인쇄 제외 */
   html, body { height: auto; }
   main { display: block; }

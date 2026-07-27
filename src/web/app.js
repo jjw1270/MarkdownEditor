@@ -41,6 +41,23 @@ const els = {
   findClose: document.getElementById('findClose'),
   replaceOne: document.getElementById('replaceOne'),
   replaceAll: document.getElementById('replaceAll'),
+  updBtn: document.getElementById('updBtn'),
+  updOverlay: document.getElementById('updOverlay'),
+  updClose: document.getElementById('updClose'),
+  updTitle: document.getElementById('updTitle'),
+  updCurLabel: document.getElementById('updCurLabel'),
+  updCur: document.getElementById('updCur'),
+  updLatestLabel: document.getElementById('updLatestLabel'),
+  updLatest: document.getElementById('updLatest'),
+  updMsg: document.getElementById('updMsg'),
+  updBarWrap: document.getElementById('updBarWrap'),
+  updBarFill: document.getElementById('updBarFill'),
+  updPct: document.getElementById('updPct'),
+  updNotesWrap: document.getElementById('updNotesWrap'),
+  updNotesLabel: document.getElementById('updNotesLabel'),
+  updNotes: document.getElementById('updNotes'),
+  updCheckBtn: document.getElementById('updCheckBtn'),
+  updApplyBtn: document.getElementById('updApplyBtn'),
 };
 
 // ---- 로케일 ----
@@ -99,6 +116,16 @@ function applyLocale(lang) {
   setTitle(els.minBtn, L.winMin);
   setTitle(els.maxBtn, winMaximized ? L.winRestore : L.winMax);
   setTitle(els.closeBtn, L.winClose);
+  // 업데이트 배지·팝업 고정 문자열 (상태 문구는 renderUpdate가 담당)
+  setTitle(els.updBtn, els.updBtn.classList.contains('avail') ? L.updNewTip : L.updTip);
+  setTitle(els.updClose, L.findCloseTitle);
+  els.updTitle.textContent = L.updTitle;
+  els.updCurLabel.textContent = L.updCurrent;
+  els.updLatestLabel.textContent = L.updLatest;
+  els.updNotesLabel.textContent = L.updNotes;
+  els.updCheckBtn.textContent = L.updCheckNow;
+  els.updApplyBtn.textContent = L.updDo;
+  if (!els.updOverlay.hidden) renderUpdate();   // 팝업이 열려 있으면 상태 문구도 새 언어로
   if (tabs.length) renderTabs();   // 탭의 닫기/새 문서 툴팁 갱신
 }
 
@@ -1224,6 +1251,76 @@ function setLang(mode) {
   if (host) host.postMessage({ cmd: 'lang', value: mode });
 }
 
+// ---- 자동 업데이트 (타이틀 옆 ! 배지 + 팝업) ----
+// 실제 확인·다운로드·적용은 C#(MainWindow.Update.cs)이 수행하고, 웹은 상태 표시만 담당.
+// status: idle | checking | latest | available | downloading | extracting | restarting | fallback | error
+const upd = { status: 'idle', latest: null, notes: '', pct: 0, reason: '' };
+
+function renderUpdate() {
+  const avail = upd.status === 'available';
+  els.updBtn.classList.toggle('avail', avail);
+  setTitle(els.updBtn, avail ? L.updNewTip : L.updTip);
+  if (els.updOverlay.hidden) return;   // 팝업이 닫혀 있으면 배지만 갱신
+
+  els.updCur.textContent = 'v' + (appVersion || '?');
+  els.updLatest.textContent = upd.latest ? 'v' + upd.latest : '—';
+
+  const msgs = {
+    idle: '',
+    checking: L.updChecking,
+    latest: L.updUpToDate,
+    available: L.updAvailable,
+    downloading: L.updDownloading,
+    extracting: L.updPreparing,
+    restarting: L.updRestart,
+    fallback: L.updFallback,
+    error: upd.reason === 'space' ? L.updNoSpace : (upd.reason === 'apply' ? L.updFailed : L.updCheckFailed),
+  };
+  els.updMsg.textContent = msgs[upd.status] ?? '';
+  els.updMsg.classList.toggle('err', upd.status === 'error');
+
+  const busy = upd.status === 'downloading' || upd.status === 'extracting' || upd.status === 'restarting';
+  els.updBarWrap.hidden = !busy;
+  if (busy) {
+    const ind = upd.status !== 'downloading' || upd.pct < 0;   // 비율 미상 구간 → 흐르는 바
+    els.updBarFill.classList.toggle('ind', ind);
+    els.updBarFill.style.width = ind ? '100%' : upd.pct + '%';
+    els.updPct.textContent = ind ? '' : upd.pct + '%';
+  }
+
+  els.updNotesWrap.hidden = !upd.notes || !(avail || busy);
+  els.updNotes.textContent = upd.notes || '';   // 릴리즈 본문은 텍스트로만 (스크립트/HTML 주입 차단)
+
+  els.updCheckBtn.disabled = upd.status === 'checking' || busy;
+  els.updApplyBtn.disabled = !avail;
+}
+
+function showUpdatePopup() {
+  els.updOverlay.hidden = false;
+  if (upd.status === 'idle') requestUpdateCheck();   // 시작 시 자동 확인이 실패/미완이면 열면서 한 번 확인
+  renderUpdate();
+}
+function hideUpdatePopup() { els.updOverlay.hidden = true; }   // 진행 중인 다운로드는 C#에서 계속됨
+
+function requestUpdateCheck() {
+  if (!host) return;
+  upd.status = 'checking';
+  renderUpdate();
+  host.postMessage({ cmd: 'updateCheck' });
+}
+
+els.updBtn.addEventListener('click', showUpdatePopup);
+els.updClose.addEventListener('click', hideUpdatePopup);
+els.updOverlay.addEventListener('click', (e) => { if (e.target === els.updOverlay) hideUpdatePopup(); });
+els.updCheckBtn.addEventListener('click', requestUpdateCheck);
+els.updApplyBtn.addEventListener('click', () => {
+  if (!host) return;
+  upd.status = 'downloading';
+  upd.pct = 0;
+  renderUpdate();
+  host.postMessage({ cmd: 'updateApply' });
+});
+
 // ---- 세션 복원 (마지막에 열려 있던 탭) ----
 // 부팅 시점 값을 먼저 읽어 둔다 — 첫 sendState의 saveSession이 키를 덮어쓰기 전에.
 const SESSION_KEY = 'session';
@@ -1682,6 +1779,8 @@ els.preview.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   // 라이트박스가 열려 있으면 Esc로 닫기 (최우선)
   if (e.key === 'Escape' && !els.lightbox.hidden) { e.preventDefault(); closeLightbox(); return; }
+  // 업데이트 팝업이 열려 있으면 Esc로 닫기
+  if (e.key === 'Escape' && !els.updOverlay.hidden) { e.preventDefault(); hideUpdatePopup(); return; }
   // 우클릭 메뉴가 열려 있으면 Esc로 닫기
   if (e.key === 'Escape' && !els.ctxmenu.hidden) { e.preventDefault(); hideTabMenu(); return; }
   // 찾기 바가 열려 있으면 Esc로 닫기 (포커스가 에디터 등 어디에 있든)
@@ -1947,6 +2046,18 @@ if (host) {
       // 최근 문서/세션의 파일이 삭제·이동됨 → 목록에서 제거 (세션 복원 중이면 조용히)
       dropRecent(m.path || '');
       if (!m.quiet) toast(L.fileMissing((m.path || '').split(/[\\/]/).pop()));
+    } else if (m.cmd === 'updateStatus') {
+      // 확인 결과 (latest/notes는 새 버전이 있을 때만 값이 옴)
+      upd.status = m.status || 'idle';
+      upd.reason = m.reason || '';
+      upd.latest = m.latest || null;
+      upd.notes = m.notes || '';
+      renderUpdate();
+    } else if (m.cmd === 'updateProgress') {
+      upd.pct = typeof m.percent === 'number' ? m.percent : -1;
+      upd.status = m.phase === 'download' ? 'downloading'
+        : m.phase === 'extract' ? 'extracting' : 'restarting';
+      renderUpdate();
     }
   });
 

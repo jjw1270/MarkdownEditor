@@ -51,6 +51,7 @@ public partial class MainWindow : Window
         SourceInitialized += (_, _) => ApplyTitleBarTheme(theme);
         Loaded += OnLoaded;
         Closing += OnClosing;
+        Closed += (_, _) => LaunchHelperIfPending();   // 업데이트 적용은 종료가 "확정"된 뒤에만
         StateChanged += OnWindowStateChanged;
     }
 
@@ -197,6 +198,7 @@ public partial class MainWindow : Window
                 _pendingFiles.Clear();
                 HideSplash();
                 Web.Focus();   // 실행 직후 클릭 없이도 단축키·키 스크롤이 동작하도록 키보드 포커스 부여
+                _ = StartupUpdateFlowAsync();   // 잔재 정리 + 조용한 업데이트 확인 (실패 무시)
                 break;
             case "theme":
                 var themeName = msg.TryGetProperty("value", out var th) ? th.GetString() ?? "" : "";
@@ -273,6 +275,13 @@ public partial class MainWindow : Window
                 break;
             case "winclose":
                 Close();
+                break;
+            // ---- 자동 업데이트 (MainWindow.Update.cs) ----
+            case "updateCheck":
+                _ = CheckForUpdateAsync(manual: true);
+                break;
+            case "updateApply":
+                _ = ApplyUpdateAsync();
                 break;
         }
     }
@@ -816,16 +825,22 @@ public partial class MainWindow : Window
 
     private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (!_anyDirty) return;
-        if (_closeConfirmShowing) { e.Cancel = true; return; }
-        _closeConfirmShowing = true;
-        try
+        if (_anyDirty)
         {
-            var r = MessageBox.Show(this, Loc.CloseConfirm, Loc.CapConfirm,
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (r != MessageBoxResult.Yes) e.Cancel = true;
+            if (_closeConfirmShowing) { e.Cancel = true; }
+            else
+            {
+                _closeConfirmShowing = true;
+                try
+                {
+                    var r = MessageBox.Show(this, Loc.CloseConfirm, Loc.CapConfirm,
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (r != MessageBoxResult.Yes) e.Cancel = true;
+                }
+                finally { _closeConfirmShowing = false; }
+            }
         }
-        finally { _closeConfirmShowing = false; }
+        if (e.Cancel) CancelPendingApply();   // 업데이트로 시작된 종료가 취소됨 → 적용 보류 해제
     }
 
     private void SendToWeb(object payload)

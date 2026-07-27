@@ -32,6 +32,9 @@ const I18N = {
     ctxCut: '잘라내기', ctxCopy: '복사', ctxPaste: '붙여넣기', ctxSelectAll: '모두 선택', ctxOpenLink: '링크 열기', ctxCopyLink: '링크 주소 복사', ctxViewImage: '이미지 크게 보기', ctxFind: '찾기', ctxEditMode: '편집 모드로', pasteDenied: '클립보드를 읽을 수 없습니다',
     fmtBold: '굵게', fmtItalic: '기울임', fmtStrike: '취소선', fmtH1: '제목 1', fmtH2: '제목 2', fmtH3: '제목 3', fmtBullet: '글머리 기호 목록', fmtNumber: '번호 목록', fmtTask: '체크박스 목록', fmtQuote: '인용', fmtCode: '코드', fmtLink: '링크', fmtTable: '표 삽입', fmtHr: '구분선 삽입', fmtLinkText: '텍스트', fmtLinkUrl: '주소', fmtCol: '항목',
     winMin: '최소화', winMax: '최대화', winRestore: '이전 크기로 복원', winClose: '닫기',
+    updTip: '업데이트 확인', updNewTip: '새 버전 사용 가능', updTitle: '업데이트', updCurrent: '현재 버전', updLatest: '최신 버전', updNotes: '릴리즈 노트', updCheckNow: '지금 확인', updDo: '업데이트하기',
+    updChecking: '확인 중…', updUpToDate: '최신 버전을 사용 중입니다.', updAvailable: '새 버전이 있습니다. 업데이트하면 앱이 다시 시작됩니다.', updDownloading: '다운로드 중…', updPreparing: '적용 준비 중…', updRestart: '적용을 위해 앱을 다시 시작합니다…',
+    updCheckFailed: '확인에 실패했습니다. 네트워크 연결을 확인해 주세요.', updFailed: '업데이트에 실패했습니다. 잠시 후 다시 시도해 주세요.', updNoSpace: '디스크 여유 공간이 부족하여 업데이트할 수 없습니다.', updFallback: '이 설치 위치에서는 자동 업데이트를 사용할 수 없어 다운로드 페이지를 열었습니다.',
   },
   'en': {
     newDoc: 'Untitled',
@@ -63,6 +66,9 @@ const I18N = {
     ctxCut: 'Cut', ctxCopy: 'Copy', ctxPaste: 'Paste', ctxSelectAll: 'Select all', ctxOpenLink: 'Open link', ctxCopyLink: 'Copy link address', ctxViewImage: 'View image', ctxFind: 'Find', ctxEditMode: 'Switch to edit mode', pasteDenied: 'Cannot read clipboard',
     fmtBold: 'Bold', fmtItalic: 'Italic', fmtStrike: 'Strikethrough', fmtH1: 'Heading 1', fmtH2: 'Heading 2', fmtH3: 'Heading 3', fmtBullet: 'Bulleted list', fmtNumber: 'Numbered list', fmtTask: 'Task list', fmtQuote: 'Quote', fmtCode: 'Code', fmtLink: 'Link', fmtTable: 'Insert table', fmtHr: 'Insert divider', fmtLinkText: 'text', fmtLinkUrl: 'address', fmtCol: 'Column',
     winMin: 'Minimize', winMax: 'Maximize', winRestore: 'Restore', winClose: 'Close',
+    updTip: 'Check for updates', updNewTip: 'New version available', updTitle: 'Update', updCurrent: 'Current version', updLatest: 'Latest version', updNotes: 'Release notes', updCheckNow: 'Check now', updDo: 'Update',
+    updChecking: 'Checking…', updUpToDate: 'You are on the latest version.', updAvailable: 'A new version is available. The app restarts after updating.', updDownloading: 'Downloading…', updPreparing: 'Preparing to apply…', updRestart: 'Restarting the app to apply…',
+    updCheckFailed: 'Check failed. Please check your network connection.', updFailed: 'Update failed. Please try again later.', updNoSpace: 'Not enough free disk space to update.', updFallback: 'Automatic update is not available in this install location — the download page was opened instead.',
   },
   'ja': {
     newDoc: '無題',
@@ -94,6 +100,9 @@ const I18N = {
     ctxCut: '切り取り', ctxCopy: 'コピー', ctxPaste: '貼り付け', ctxSelectAll: 'すべて選択', ctxOpenLink: 'リンクを開く', ctxCopyLink: 'リンクのアドレスをコピー', ctxViewImage: '画像を拡大表示', ctxFind: '検索', ctxEditMode: '編集モードへ', pasteDenied: 'クリップボードを読み取れません',
     fmtBold: '太字', fmtItalic: '斜体', fmtStrike: '取り消し線', fmtH1: '見出し 1', fmtH2: '見出し 2', fmtH3: '見出し 3', fmtBullet: '箇条書きリスト', fmtNumber: '番号付きリスト', fmtTask: 'チェックリスト', fmtQuote: '引用', fmtCode: 'コード', fmtLink: 'リンク', fmtTable: '表を挿入', fmtHr: '区切り線を挿入', fmtLinkText: 'テキスト', fmtLinkUrl: 'アドレス', fmtCol: '列',
     winMin: '最小化', winMax: '最大化', winRestore: '元に戻す', winClose: '閉じる',
+    updTip: '更新の確認', updNewTip: '新しいバージョンがあります', updTitle: 'アップデート', updCurrent: '現在のバージョン', updLatest: '最新バージョン', updNotes: 'リリースノート', updCheckNow: '今すぐ確認', updDo: 'アップデート',
+    updChecking: '確認中…', updUpToDate: 'お使いのバージョンは最新です。', updAvailable: '新しいバージョンがあります。アップデート後にアプリが再起動します。', updDownloading: 'ダウンロード中…', updPreparing: '適用の準備中…', updRestart: '適用のためアプリを再起動します…',
+    updCheckFailed: '確認に失敗しました。ネットワーク接続を確認してください。', updFailed: 'アップデートに失敗しました。しばらくしてからもう一度お試しください。', updNoSpace: 'ディスクの空き容量が不足しているためアップデートできません。', updFallback: 'このインストール場所では自動アップデートを利用できないため、ダウンロードページを開きました。',
   },
   'zh-CN': {
     newDoc: '无标题',
@@ -125,6 +134,9 @@ const I18N = {
     ctxCut: '剪切', ctxCopy: '复制', ctxPaste: '粘贴', ctxSelectAll: '全选', ctxOpenLink: '打开链接', ctxCopyLink: '复制链接地址', ctxViewImage: '查看大图', ctxFind: '查找', ctxEditMode: '切换到编辑模式', pasteDenied: '无法读取剪贴板',
     fmtBold: '加粗', fmtItalic: '斜体', fmtStrike: '删除线', fmtH1: '标题 1', fmtH2: '标题 2', fmtH3: '标题 3', fmtBullet: '无序列表', fmtNumber: '有序列表', fmtTask: '任务列表', fmtQuote: '引用', fmtCode: '代码', fmtLink: '链接', fmtTable: '插入表格', fmtHr: '插入分隔线', fmtLinkText: '文本', fmtLinkUrl: '网址', fmtCol: '列',
     winMin: '最小化', winMax: '最大化', winRestore: '还原', winClose: '关闭',
+    updTip: '检查更新', updNewTip: '有新版本可用', updTitle: '更新', updCurrent: '当前版本', updLatest: '最新版本', updNotes: '更新说明', updCheckNow: '立即检查', updDo: '立即更新',
+    updChecking: '正在检查…', updUpToDate: '当前已是最新版本。', updAvailable: '发现新版本。更新后应用将重新启动。', updDownloading: '正在下载…', updPreparing: '正在准备应用更新…', updRestart: '正在重新启动应用以完成更新…',
+    updCheckFailed: '检查失败，请检查网络连接。', updFailed: '更新失败，请稍后重试。', updNoSpace: '磁盘可用空间不足，无法更新。', updFallback: '此安装位置不支持自动更新，已打开下载页面。',
   },
   'zh-TW': {
     newDoc: '未命名',
@@ -156,6 +168,9 @@ const I18N = {
     ctxCut: '剪下', ctxCopy: '複製', ctxPaste: '貼上', ctxSelectAll: '全選', ctxOpenLink: '開啟連結', ctxCopyLink: '複製連結位址', ctxViewImage: '檢視大圖', ctxFind: '尋找', ctxEditMode: '切換到編輯模式', pasteDenied: '無法讀取剪貼簿',
     fmtBold: '粗體', fmtItalic: '斜體', fmtStrike: '刪除線', fmtH1: '標題 1', fmtH2: '標題 2', fmtH3: '標題 3', fmtBullet: '項目符號清單', fmtNumber: '編號清單', fmtTask: '工作清單', fmtQuote: '引用', fmtCode: '程式碼', fmtLink: '連結', fmtTable: '插入表格', fmtHr: '插入分隔線', fmtLinkText: '文字', fmtLinkUrl: '網址', fmtCol: '欄',
     winMin: '最小化', winMax: '最大化', winRestore: '還原', winClose: '關閉',
+    updTip: '檢查更新', updNewTip: '有新版本可用', updTitle: '更新', updCurrent: '目前版本', updLatest: '最新版本', updNotes: '版本資訊', updCheckNow: '立即檢查', updDo: '立即更新',
+    updChecking: '正在檢查…', updUpToDate: '目前已是最新版本。', updAvailable: '發現新版本。更新後應用程式將重新啟動。', updDownloading: '正在下載…', updPreparing: '正在準備套用更新…', updRestart: '正在重新啟動應用程式以完成更新…',
+    updCheckFailed: '檢查失敗，請確認網路連線。', updFailed: '更新失敗，請稍後再試。', updNoSpace: '磁碟可用空間不足，無法更新。', updFallback: '此安裝位置不支援自動更新，已開啟下載頁面。',
   },
   'es': {
     newDoc: 'Sin título',
@@ -187,6 +202,9 @@ const I18N = {
     ctxCut: 'Cortar', ctxCopy: 'Copiar', ctxPaste: 'Pegar', ctxSelectAll: 'Seleccionar todo', ctxOpenLink: 'Abrir enlace', ctxCopyLink: 'Copiar dirección del enlace', ctxViewImage: 'Ver imagen', ctxFind: 'Buscar', ctxEditMode: 'Cambiar a modo edición', pasteDenied: 'No se puede leer el portapapeles',
     fmtBold: 'Negrita', fmtItalic: 'Cursiva', fmtStrike: 'Tachado', fmtH1: 'Título 1', fmtH2: 'Título 2', fmtH3: 'Título 3', fmtBullet: 'Lista con viñetas', fmtNumber: 'Lista numerada', fmtTask: 'Lista de tareas', fmtQuote: 'Cita', fmtCode: 'Código', fmtLink: 'Enlace', fmtTable: 'Insertar tabla', fmtHr: 'Insertar separador', fmtLinkText: 'texto', fmtLinkUrl: 'dirección', fmtCol: 'Columna',
     winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Cerrar',
+    updTip: 'Buscar actualizaciones', updNewTip: 'Nueva versión disponible', updTitle: 'Actualización', updCurrent: 'Versión actual', updLatest: 'Última versión', updNotes: 'Notas de la versión', updCheckNow: 'Comprobar ahora', updDo: 'Actualizar',
+    updChecking: 'Comprobando…', updUpToDate: 'Ya tienes la última versión.', updAvailable: 'Hay una nueva versión. La aplicación se reiniciará tras actualizar.', updDownloading: 'Descargando…', updPreparing: 'Preparando para aplicar…', updRestart: 'Reiniciando la aplicación para aplicar…',
+    updCheckFailed: 'No se pudo comprobar. Revisa tu conexión de red.', updFailed: 'La actualización falló. Inténtalo de nuevo más tarde.', updNoSpace: 'No hay suficiente espacio libre en disco para actualizar.', updFallback: 'La actualización automática no está disponible en esta ubicación; se abrió la página de descarga.',
   },
   'fr': {
     newDoc: 'Sans titre',
@@ -218,6 +236,9 @@ const I18N = {
     ctxCut: 'Couper', ctxCopy: 'Copier', ctxPaste: 'Coller', ctxSelectAll: 'Tout sélectionner', ctxOpenLink: 'Ouvrir le lien', ctxCopyLink: 'Copier le lien', ctxViewImage: 'Afficher l’image', ctxFind: 'Rechercher', ctxEditMode: 'Passer en mode édition', pasteDenied: 'Presse-papiers illisible',
     fmtBold: 'Gras', fmtItalic: 'Italique', fmtStrike: 'Barré', fmtH1: 'Titre 1', fmtH2: 'Titre 2', fmtH3: 'Titre 3', fmtBullet: 'Liste à puces', fmtNumber: 'Liste numérotée', fmtTask: 'Liste de tâches', fmtQuote: 'Citation', fmtCode: 'Code', fmtLink: 'Lien', fmtTable: 'Insérer un tableau', fmtHr: 'Insérer un séparateur', fmtLinkText: 'texte', fmtLinkUrl: 'adresse', fmtCol: 'Colonne',
     winMin: 'Réduire', winMax: 'Agrandir', winRestore: 'Restaurer', winClose: 'Fermer',
+    updTip: 'Rechercher des mises à jour', updNewTip: 'Nouvelle version disponible', updTitle: 'Mise à jour', updCurrent: 'Version actuelle', updLatest: 'Dernière version', updNotes: 'Notes de version', updCheckNow: 'Vérifier maintenant', updDo: 'Mettre à jour',
+    updChecking: 'Vérification…', updUpToDate: 'Vous utilisez la dernière version.', updAvailable: 'Une nouvelle version est disponible. L’application redémarrera après la mise à jour.', updDownloading: 'Téléchargement…', updPreparing: 'Préparation de l’installation…', updRestart: 'Redémarrage de l’application pour appliquer…',
+    updCheckFailed: 'Échec de la vérification. Vérifiez votre connexion réseau.', updFailed: 'Échec de la mise à jour. Réessayez plus tard.', updNoSpace: 'Espace disque insuffisant pour la mise à jour.', updFallback: 'La mise à jour automatique n’est pas disponible à cet emplacement — la page de téléchargement a été ouverte.',
   },
   'de': {
     newDoc: 'Unbenannt',
@@ -249,6 +270,9 @@ const I18N = {
     ctxCut: 'Ausschneiden', ctxCopy: 'Kopieren', ctxPaste: 'Einfügen', ctxSelectAll: 'Alles auswählen', ctxOpenLink: 'Link öffnen', ctxCopyLink: 'Linkadresse kopieren', ctxViewImage: 'Bild vergrößern', ctxFind: 'Suchen', ctxEditMode: 'In den Bearbeitungsmodus', pasteDenied: 'Zwischenablage nicht lesbar',
     fmtBold: 'Fett', fmtItalic: 'Kursiv', fmtStrike: 'Durchgestrichen', fmtH1: 'Überschrift 1', fmtH2: 'Überschrift 2', fmtH3: 'Überschrift 3', fmtBullet: 'Aufzählung', fmtNumber: 'Nummerierte Liste', fmtTask: 'Aufgabenliste', fmtQuote: 'Zitat', fmtCode: 'Code', fmtLink: 'Link', fmtTable: 'Tabelle einfügen', fmtHr: 'Trennlinie einfügen', fmtLinkText: 'Text', fmtLinkUrl: 'Adresse', fmtCol: 'Spalte',
     winMin: 'Minimieren', winMax: 'Maximieren', winRestore: 'Wiederherstellen', winClose: 'Schließen',
+    updTip: 'Nach Updates suchen', updNewTip: 'Neue Version verfügbar', updTitle: 'Update', updCurrent: 'Aktuelle Version', updLatest: 'Neueste Version', updNotes: 'Versionshinweise', updCheckNow: 'Jetzt prüfen', updDo: 'Aktualisieren',
+    updChecking: 'Prüfung läuft…', updUpToDate: 'Sie verwenden die neueste Version.', updAvailable: 'Eine neue Version ist verfügbar. Die App wird nach dem Update neu gestartet.', updDownloading: 'Wird heruntergeladen…', updPreparing: 'Anwendung wird vorbereitet…', updRestart: 'App wird zum Anwenden neu gestartet…',
+    updCheckFailed: 'Prüfung fehlgeschlagen. Bitte Netzwerkverbindung prüfen.', updFailed: 'Update fehlgeschlagen. Bitte später erneut versuchen.', updNoSpace: 'Nicht genügend freier Speicherplatz für das Update.', updFallback: 'Automatisches Update ist an diesem Installationsort nicht möglich — die Download-Seite wurde geöffnet.',
   },
   'ru': {
     newDoc: 'Без имени',
@@ -280,6 +304,9 @@ const I18N = {
     ctxCut: 'Вырезать', ctxCopy: 'Копировать', ctxPaste: 'Вставить', ctxSelectAll: 'Выделить всё', ctxOpenLink: 'Открыть ссылку', ctxCopyLink: 'Копировать адрес ссылки', ctxViewImage: 'Открыть изображение', ctxFind: 'Найти', ctxEditMode: 'В режим редактирования', pasteDenied: 'Не удалось прочитать буфер обмена',
     fmtBold: 'Жирный', fmtItalic: 'Курсив', fmtStrike: 'Зачёркнутый', fmtH1: 'Заголовок 1', fmtH2: 'Заголовок 2', fmtH3: 'Заголовок 3', fmtBullet: 'Маркированный список', fmtNumber: 'Нумерованный список', fmtTask: 'Список задач', fmtQuote: 'Цитата', fmtCode: 'Код', fmtLink: 'Ссылка', fmtTable: 'Вставить таблицу', fmtHr: 'Вставить разделитель', fmtLinkText: 'текст', fmtLinkUrl: 'адрес', fmtCol: 'Столбец',
     winMin: 'Свернуть', winMax: 'Развернуть', winRestore: 'Восстановить', winClose: 'Закрыть',
+    updTip: 'Проверить обновления', updNewTip: 'Доступна новая версия', updTitle: 'Обновление', updCurrent: 'Текущая версия', updLatest: 'Последняя версия', updNotes: 'Примечания к выпуску', updCheckNow: 'Проверить сейчас', updDo: 'Обновить',
+    updChecking: 'Проверка…', updUpToDate: 'У вас последняя версия.', updAvailable: 'Доступна новая версия. После обновления приложение перезапустится.', updDownloading: 'Загрузка…', updPreparing: 'Подготовка к установке…', updRestart: 'Перезапуск приложения для применения…',
+    updCheckFailed: 'Не удалось проверить. Проверьте подключение к сети.', updFailed: 'Не удалось обновить. Повторите попытку позже.', updNoSpace: 'Недостаточно свободного места на диске для обновления.', updFallback: 'Автообновление недоступно в этом расположении — открыта страница загрузки.',
   },
   'pt-BR': {
     newDoc: 'Sem título',
@@ -311,6 +338,9 @@ const I18N = {
     ctxCut: 'Recortar', ctxCopy: 'Copiar', ctxPaste: 'Colar', ctxSelectAll: 'Selecionar tudo', ctxOpenLink: 'Abrir link', ctxCopyLink: 'Copiar endereço do link', ctxViewImage: 'Ver imagem', ctxFind: 'Localizar', ctxEditMode: 'Mudar para edição', pasteDenied: 'Não foi possível ler a área de transferência',
     fmtBold: 'Negrito', fmtItalic: 'Itálico', fmtStrike: 'Tachado', fmtH1: 'Título 1', fmtH2: 'Título 2', fmtH3: 'Título 3', fmtBullet: 'Lista com marcadores', fmtNumber: 'Lista numerada', fmtTask: 'Lista de tarefas', fmtQuote: 'Citação', fmtCode: 'Código', fmtLink: 'Link', fmtTable: 'Inserir tabela', fmtHr: 'Inserir divisor', fmtLinkText: 'texto', fmtLinkUrl: 'endereço', fmtCol: 'Coluna',
     winMin: 'Minimizar', winMax: 'Maximizar', winRestore: 'Restaurar', winClose: 'Fechar',
+    updTip: 'Verificar atualizações', updNewTip: 'Nova versão disponível', updTitle: 'Atualização', updCurrent: 'Versão atual', updLatest: 'Última versão', updNotes: 'Notas da versão', updCheckNow: 'Verificar agora', updDo: 'Atualizar',
+    updChecking: 'Verificando…', updUpToDate: 'Você já está na versão mais recente.', updAvailable: 'Há uma nova versão. O aplicativo será reiniciado após a atualização.', updDownloading: 'Baixando…', updPreparing: 'Preparando para aplicar…', updRestart: 'Reiniciando o aplicativo para aplicar…',
+    updCheckFailed: 'Falha na verificação. Verifique sua conexão de rede.', updFailed: 'Falha na atualização. Tente novamente mais tarde.', updNoSpace: 'Espaço em disco insuficiente para atualizar.', updFallback: 'A atualização automática não está disponível neste local de instalação — a página de download foi aberta.',
   },
 };
 

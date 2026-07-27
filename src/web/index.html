@@ -26,8 +26,15 @@
               stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    <!-- 정중앙 고정 (pointer-events 없음 → 위에서도 창 드래그 가능) -->
-    <span id="appTitle"><img id="appIcon" src="appicon.png" alt="" draggable="false" />MarkDownEditor</span>
+    <!-- 정중앙 고정 (pointer-events 없음 → 위에서도 창 드래그 가능)
+         업데이트 배지(!)만 클릭 가능 — 새 버전 감지 시 강조 색+펄스로 알림 -->
+    <span id="appTitle"><img id="appIcon" src="appicon.png" alt="" draggable="false" />MarkDownEditor<button id="updBtn" title="업데이트 확인">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="6.4" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M8 4.7v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <circle cx="8" cy="11.2" r="1" fill="currentColor"/>
+      </svg>
+    </button></span>
     <!-- 남은 빈 공간 전체가 창 드래그 영역 -->
     <div class="spacer"></div>
 
@@ -233,6 +240,33 @@
 
   <!-- 이미지 클릭 확대 (라이트박스): 클릭·Esc로 닫기 -->
   <div id="lightbox" hidden><img id="lightboxImg" alt="" /></div>
+
+  <!-- 업데이트 팝업 (타이틀 옆 ! 배지 클릭) — 문자열은 applyLocale이 채움 -->
+  <div id="updOverlay" hidden>
+    <div id="updDialog" role="dialog" aria-modal="true" aria-labelledby="updTitle">
+      <div class="upd-head">
+        <span id="updTitle">업데이트</span>
+        <button id="updClose" title="닫기 (Esc)">✕</button>
+      </div>
+      <div class="upd-vers">
+        <span id="updCurLabel">현재 버전</span><b id="updCur">-</b>
+        <span id="updLatestLabel">최신 버전</span><b id="updLatest">-</b>
+      </div>
+      <div id="updMsg"></div>
+      <div id="updBarWrap" hidden>
+        <div id="updBar"><div id="updBarFill"></div></div>
+        <span id="updPct"></span>
+      </div>
+      <div id="updNotesWrap" hidden>
+        <div id="updNotesLabel">릴리즈 노트</div>
+        <div id="updNotes"></div>
+      </div>
+      <div class="upd-actions">
+        <button id="updCheckBtn">지금 확인</button>
+        <button id="updApplyBtn" class="primary" disabled>업데이트하기</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 하단 토스트 알림 (PDF 저장·이미지 붙여넣기 등) -->
   <div id="toast"></div>
