@@ -1,0 +1,24 @@
+name: "💡 기능 제안 (Feature request)"
+description: "새 기능이나 개선 아이디어를 제안해주세요. / Suggest a new feature or an improvement."
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제안해 주셔서 감사합니다! 어떤 언어로 작성하셔도 좋습니다.
+        Thanks for the suggestion! Any language is fine.
+  - type: textarea
+    id: problem
+    attributes:
+      label: "어떤 점이 불편했나요? (What problem would this solve?)"
+      description: "지금 어떻게 쓰고 있고, 무엇이 아쉬운지 알려주세요. / How do you work around it today?"
+  - type: textarea
+    id: solution
+    attributes:
+      label: "원하는 기능 (What would you like to happen?)"
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: "참고 자료 (Anything else — examples, screenshots, links)"

@@ -1,0 +1,42 @@
+name: "🐞 버그 신고 (Bug report)"
+description: "동작이 이상하거나 오류가 있으면 알려주세요. / Report something that isn't working."
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        신고해 주셔서 감사합니다! 아는 만큼만 채워주셔도 됩니다. 어떤 언어로 작성하셔도 좋습니다.
+        Thanks for reporting! Fill in what you know — any language is fine.
+  - type: input
+    id: app-version
+    attributes:
+      label: "앱 버전 (App version)"
+      description: "타이틀 텍스트 오른쪽에 표시됩니다. / Shown to the right of the title text."
+      placeholder: "v1.2.0"
+    validations:
+      required: true
+  - type: input
+    id: windows-version
+    attributes:
+      label: "Windows 버전 (Windows version)"
+      placeholder: "Windows 11 Pro 24H2"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: "무슨 문제가 있었나요? (What happened?)"
+      description: "실제로 일어난 일과 기대했던 동작을 알려주세요. / What actually happened, and what did you expect instead?"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "재현 방법 (Steps to reproduce)"
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+  - type: textarea
+    id: extra
+    attributes:
+      label: "스크린샷·추가 정보 (Screenshots / anything else)"
+      description: "문제가 나는 마크다운 조각이 있다면 함께 붙여주세요. / If a specific markdown snippet triggers it, paste it here."

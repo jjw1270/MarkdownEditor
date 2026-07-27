@@ -9,7 +9,7 @@
     <AssemblyName>MarkDownEditor</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon_New.ico</ApplicationIcon>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <Product>MarkDownEditor</Product>
     <Copyright>Copyright (c) 2026 jjw1270</Copyright>
     <RepositoryUrl>https://github.com/jjw1270/MarkdownEditor</RepositoryUrl>

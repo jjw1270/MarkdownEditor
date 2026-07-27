@@ -84,6 +84,10 @@ exe の隣に `web/` フォルダー（および任意で WebView2 Fixed Version
 
 C#（WPF）側はファイル I/O・単一インスタンスのパイプ・ウィンドウクロームを担当し、Web 側（単一の WebView2 上のバニラ JS）がすべてのドキュメントバッファーとタブ状態を所有します。両者は `postMessage` のみで通信します。レンダリングには marked + highlight.js + mermaid を使用し、すべてオフライン用に同梱されています。全機能の詳しい紹介は [README.md](README.md)（韓国語）または [README.en.md](README.en.md)（英語）をご覧ください。
 
+## フィードバック
+
+バグ報告や機能のリクエストは [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose) へどうぞ。アプリ内でタイトル横のバージョン表示をクリックしても移動できます（バグ報告フォームには現在のバージョンが自動入力されます）。
+
 ## ライセンス
 
 MIT — [LICENSE](LICENSE) を参照。同梱のサードパーティコンポーネントは

@@ -84,6 +84,10 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 
 C#（WPF）端負責檔案 I/O、單一執行個體管道和視窗外框；Web 端（單一 WebView2 中的原生 JS）擁有全部文件緩衝區和分頁狀態。兩者僅透過 `postMessage` 通訊。渲染使用 marked + highlight.js + mermaid，全部離線內建。完整功能介紹請參閱 [README.md](README.md)（韓文）或 [README.en.md](README.en.md)（英文）。
 
+## 意見回饋
+
+歡迎到 [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose) 回報問題或提出功能建議——也可以在應用程式內點選標題旁的版本號直接前往（問題回報表單會自動填入目前版本）。
+
 ## 授權
 
 MIT — 參見 [LICENSE](LICENSE)。內建的第三方元件見

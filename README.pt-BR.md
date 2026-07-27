@@ -84,6 +84,10 @@ Coloque a pasta `web/` (e opcionalmente um WebView2 Fixed Version Runtime como `
 
 O lado C# (WPF) cuida da E/S de arquivos, do pipe de instância única e da moldura da janela; o lado web (JS puro em um único WebView2) possui todos os buffers de documentos e o estado das abas. Os dois se comunicam apenas via `postMessage`. A renderização usa marked + highlight.js + mermaid, tudo empacotado para uso offline. Para o tour completo de recursos, veja [README.md](README.md) (coreano) ou [README.en.md](README.en.md) (inglês).
 
+## Feedback
+
+Relatos de bugs e sugestões de recursos são bem-vindos no [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose) — ou clique no rótulo de versão ao lado do título dentro do aplicativo (o formulário de bug já vem preenchido com sua versão atual).
+
 ## Licença
 
 MIT — veja [LICENSE](LICENSE). Os componentes de terceiros incluídos estão listados em

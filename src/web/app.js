@@ -117,6 +117,7 @@ function applyLocale(lang) {
   setTitle(els.minBtn, L.winMin);
   setTitle(els.maxBtn, winMaximized ? L.winRestore : L.winMax);
   setTitle(els.closeBtn, L.winClose);
+  setTitle(els.appVer, L.verTip);   // 버전 표시(정보·피드백 메뉴) 툴팁
   // 업데이트 배지·팝업 고정 문자열 (상태 문구는 renderUpdate가 담당)
   setTitle(els.updBtn, els.updBtn.classList.contains('avail') ? L.updNewTip : L.updTip);
   setTitle(els.updClose, L.findCloseTitle);
@@ -1247,10 +1248,23 @@ function setLang(mode) {
   if (host) host.postMessage({ cmd: 'lang', value: mode });
 }
 
-// 타이틀 옆 버전 클릭 → GitHub 저장소 (구 🌐 메뉴의 버전 항목에서 이동)
-els.appVer.addEventListener('click', () => {
-  if (host) host.postMessage({ cmd: 'openExternal', url: 'https://github.com/jjw1270/MarkdownEditor' });
-});
+// 타이틀 옆 버전 클릭 → 정보·피드백 메뉴 (저장소 / 버그 신고 / 기능 제안)
+// 이슈는 앱이 직접 전송하지 않고 GitHub 이슈 폼을 브라우저로 연다 — 버전 필드만 URL로 미리 채움
+const REPO_URL = 'https://github.com/jjw1270/MarkdownEditor';
+function openIssueForm(template) {
+  let url = REPO_URL + '/issues/new?template=' + template;
+  if (template === 'bug_report.yml' && appVersion) url += '&app-version=' + encodeURIComponent('v' + appVersion);
+  if (host) host.postMessage({ cmd: 'openExternal', url });
+}
+function showVerMenu() {
+  showMenuAt([
+    { label: L.verMenuRepo, tip: REPO_URL, act: () => { if (host) host.postMessage({ cmd: 'openExternal', url: REPO_URL }); } },
+    'sep',
+    { label: L.verMenuBug, act: () => openIssueForm('bug_report.yml') },
+    { label: L.verMenuIdea, act: () => openIssueForm('feature_request.yml') },
+  ], els.appVer);
+}
+menuButton(els.appVer, showVerMenu);
 
 // ---- 자동 업데이트 (타이틀 옆 ! 배지 + 팝업) ----
 // 실제 확인·다운로드·적용은 C#(MainWindow.Update.cs)이 수행하고, 웹은 상태 표시만 담당.
@@ -1653,7 +1667,7 @@ document.addEventListener('mousedown', (e) => {
 }, true);   // 캡처 단계 — 가장자리에 걸친 다른 요소보다 먼저 처리
 
 // 버튼
-let appVersion = '';   // 버전은 🌐 언어 메뉴 하단에 표시 (C#의 app 메시지로 수신)
+let appVersion = '';   // 타이틀 옆 버전 표시·버그 신고 프리필에 사용 (C#의 app 메시지로 수신)
 els.openBtn.addEventListener('click', openFile);
 els.toggleBtn.addEventListener('click', toggleMode);
 els.saveBtn.addEventListener('click', save);

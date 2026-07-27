@@ -116,7 +116,7 @@ body {
 }
 #appIcon { width: 16px; height: 16px; -webkit-user-drag: none; }
 
-/* 버전 표시 (타이틀 텍스트 오른쪽) — 클릭하면 GitHub 저장소 (구 🌐 메뉴 항목에서 이동) */
+/* 버전 표시 (타이틀 텍스트 오른쪽) — 클릭하면 정보·피드백 메뉴 (저장소·버그 신고·기능 제안) */
 #appTitle #appVer {
   pointer-events: auto;
   font-size: 11px;

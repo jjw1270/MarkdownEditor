@@ -84,6 +84,10 @@ Place the `web/` folder (and optionally a WebView2 Fixed Version Runtime as `Run
 
 The C# (WPF) side owns file I/O, the single-instance pipe, and window chrome; the web side (vanilla JS in a single WebView2) owns all document buffers and tab state. The two communicate only via `postMessage`. Rendering uses marked + highlight.js + mermaid, all bundled for offline use. See `README.md` for the full feature tour (Korean).
 
+## Feedback
+
+Bug reports and feature requests are welcome on [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose) — or click the version label next to the title inside the app (the bug form is pre-filled with your current version).
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Bundled third-party components are listed in

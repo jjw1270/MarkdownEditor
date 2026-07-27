@@ -84,6 +84,10 @@ Legen Sie den Ordner `web/` (und optional eine WebView2 Fixed Version Runtime al
 
 Die C#-Seite (WPF) übernimmt Datei-E/A, die Einzelinstanz-Pipe und den Fensterrahmen; die Web-Seite (Vanilla JS in einem einzigen WebView2) besitzt alle Dokumentpuffer und den Tab-Zustand. Beide kommunizieren ausschließlich über `postMessage`. Das Rendering nutzt marked + highlight.js + mermaid, alles für den Offline-Betrieb gebündelt. Die vollständige Funktionsübersicht finden Sie in [README.md](README.md) (Koreanisch) oder [README.en.md](README.en.md) (Englisch).
 
+## Feedback
+
+Fehlermeldungen und Funktionswünsche sind auf [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose) willkommen — oder klicken Sie in der App auf die Versionsanzeige neben dem Titel (das Fehlerformular ist mit Ihrer aktuellen Version vorausgefüllt).
+
 ## Lizenz
 
 MIT — siehe [LICENSE](LICENSE). Gebündelte Drittanbieter-Komponenten sind in
