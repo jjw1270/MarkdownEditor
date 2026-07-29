@@ -4,7 +4,6 @@ MarkDownEditor est un visualiseur et éditeur Markdown pour Windows 10 et 11. Il
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -19,7 +18,7 @@ MarkDownEditor est un visualiseur et éditeur Markdown pour Windows 10 et 11. Il
 
 - **Deux paquets** — l'installateur intègre l'application à Windows pour l'utilisateur actuel. Le ZIP portable contient WebView2 et conserve ses données près de l'exécutable lorsque le dossier est accessible en écriture.
 - **Mise à jour automatique** — l'application consulte anonymement GitHub Releases au démarrage. Le téléchargement ne commence que lorsque vous lancez la mise à jour et aucun document n'est transmis.
-- **Une fenêtre, plusieurs onglets** — chaque fichier s'ouvre dans un onglet d'une fenêtre unique (instance unique via mutex + named pipe). Les onglets se réordonnent par glisser-déposer et se parcourent avec `Ctrl+Tab`.
+- **Une fenêtre, plusieurs onglets** — chaque fichier s'ouvre dans un onglet d'une fenêtre unique. Les onglets se réordonnent par glisser-déposer et se parcourent avec `Ctrl+Tab`.
 - **Liens de document** — les liens `.md` s'ouvrent dans un nouvel onglet, les liens web dans le navigateur, les dossiers dans l'Explorateur et les documents pris en charge dans leur application par défaut. Les ancres entre documents (`doc.md#section`) sont prises en charge.
 - **Précédent / Suivant** — boutons de la barre d'outils, `Alt+←`/`Alt+→`, ou boutons 4/5 de la souris.
 - **Rendu façon GitHub** — tableaux, coloration syntaxique (hors ligne) et **diagrammes mermaid** (hors ligne, adaptés au thème).
@@ -84,7 +83,7 @@ Extrayez le dossier n'importe où vous avez le droit d'écrire : `C:\Tools\MarkD
 Le dossier contient `MarkDownEditor.exe` ainsi que `web/` (l'interface), `Runtime/` (le WebView2 embarqué) et `WebView2Data/` (le cache). Tant qu'ils restent ensemble, vous pouvez déplacer, copier ou emporter le dossier entier où vous voulez.
 
 > **La fenêtre bleue SmartScreen au premier lancement est normale.** L'exécutable n'est pas signé, Windows affiche donc *« Windows a protégé votre ordinateur »*. Cliquez sur **Informations complémentaires → Exécuter quand même**. Cela n'apparaît qu'une fois.
-> Si vous préférez ne pas exécuter un binaire non signé, le compiler vous-même tient en deux commandes — voir *Compiler depuis les sources* plus bas.
+> Si vous préférez compiler l'application, consultez le [guide de développement en anglais](DEVELOPMENT.md).
 
 ### Étape 3 — En faire l'application par défaut pour `.md`
 
@@ -128,22 +127,7 @@ Au démarrage, l'application interroge anonymement GitHub Releases. Après **Met
 - Les documents sont traités localement et ne sont jamais envoyés. Aucune télémétrie ni aucun identifiant.
 - Pendant l'utilisation, le réseau sert uniquement à vérifier GitHub Releases et à télécharger une mise à jour que vous lancez. À la première installation, Setup peut télécharger WebView2 depuis Microsoft s'il manque dans Windows.
 - L'édition installée stocke ses données dans `%LOCALAPPDATA%\MarkDownEditor` ; la portable utilise `WebView2Data/` ou `%TEMP%\MarkDownEditor` si l'emplacement est en lecture seule.
-- Une politique de sécurité du contenu stricte bloque scripts, modules, changements d'URL de base et requêtes automatiques d'images distantes. Les images locales restent locales.
-
-## Compiler depuis les sources
-
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-Sortie : `src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`.
-Placez le dossier `web/` (et éventuellement un WebView2 Fixed Version Runtime nommé `Runtime/`) à côté de l'exe.
-
-### L'architecture en un paragraphe
-
-Le côté C# (WPF) gère les E/S de fichiers, le tube d'instance unique et le cadre de la fenêtre ; le côté web (JS pur dans un unique WebView2) possède tous les tampons de documents et l'état des onglets. Les deux ne communiquent que par `postMessage`. Le rendu utilise marked + highlight.js + mermaid, le tout embarqué pour un usage hors ligne. Pour le tour complet des fonctionnalités, voir [README.ko.md](README.ko.md) (coréen) ou [README.md](README.md) (anglais).
+- L'aperçu bloque le contenu exécutable et ne charge pas automatiquement les images distantes. Les images locales restent sur votre ordinateur.
 
 ## Retours
 
@@ -152,4 +136,4 @@ Signalements de bugs et propositions de fonctionnalités sont les bienvenus sur 
 ## Licence
 
 MIT — voir [LICENSE](LICENSE). Les composants tiers embarqués sont listés dans
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (note : le bundle mermaid contient un petit correctif local documenté).
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

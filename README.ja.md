@@ -4,7 +4,6 @@ MarkDownEditor は Windows 10・11 用の Markdown ビューアー兼エディ�
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -19,7 +18,7 @@ MarkDownEditor は Windows 10・11 用の Markdown ビューアー兼エディ�
 
 - **2 種類のパッケージ** — インストーラー版は現在のユーザー向けに Windows へ登録します。ポータブル版は WebView2 を同梱し、書き込み可能なら実行ファイルの隣にデータを保存します。
 - **自動アップデート** — 起動時に GitHub Releases を匿名で確認します。ダウンロードはユーザーが更新を開始したときだけ行い、文書は送信しません。
-- **ウィンドウは 1 つ、ドキュメントはタブで** — すべてのファイルが 1 つのウィンドウのタブとして開きます（ミューテックス + 名前付きパイプによる単一インスタンス）。タブはドラッグ & ドロップで並べ替え、`Ctrl+Tab` で切り替え。
+- **ウィンドウは 1 つ、ドキュメントはタブで** — すべてのファイルが 1 つのウィンドウのタブとして開きます。タブはドラッグ & ドロップで並べ替え、`Ctrl+Tab` で切り替えます。
 - **文書リンク** — `.md` リンクは新しいタブ、Web リンクはブラウザー、フォルダーはエクスプローラー、対応文書は既定のアプリで開きます。`doc.md#セクション` 形式のドキュメント間アンカーにも対応します。
 - **戻る / 進む** — ツールバーのボタン、`Alt+←`/`Alt+→`、またはマウスの第 4・第 5 ボタンで。
 - **GitHub スタイルのレンダリング** — 表、コードハイライト（オフライン）、**mermaid ダイアグラム**（オフライン、テーマ連動）。
@@ -84,7 +83,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 フォルダーには `MarkDownEditor.exe` のほかに `web/`（UI）、`Runtime/`（同梱 WebView2）、`WebView2Data/`（キャッシュ）が入っています。まとめて移動・コピーすれば、USB に入れて別の PC でもそのまま使えます。
 
 > **初回起動時に青い SmartScreen 画面が出るのは正常です。** コード署名がないため、Windows が「Windows によって PC が保護されました」と警告します。**詳細情報 → 実行** を選んでください。表示されるのは 1 回だけです。
-> 署名のないバイナリを実行したくない場合は、下の *ソースからビルド* の手順でコマンド 2 つでビルドできます。
+> 自分でビルドする場合は、別ファイルの[英語版開発ガイド](DEVELOPMENT.md)を参照してください。
 
 ### ステップ 3 — `.md` の既定のアプリに設定する
 
@@ -128,22 +127,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 - 文書はローカルで処理され、アップロードされません。テレメトリや識別子もありません。
 - アプリ使用中のネットワークは GitHub Releases の匿名確認と、ユーザーが開始した更新だけに使います。初回インストール時に WebView2 がなければ、Setup が Microsoft から取得することがあります。
 - インストール版のデータは `%LOCALAPPDATA%\MarkDownEditor`、ポータブル版は `WebView2Data/`（読み取り専用時は `%TEMP%\MarkDownEditor`）に保存します。
-- 厳格な Content Security Policy がスクリプト、プラグイン、基準 URL の変更、リモート画像の自動要求を遮断します。ローカル画像はローカルのまま埋め込みます。
-
-## ソースからビルド
-
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-出力：`src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`
-exe の隣に `web/` フォルダー（および任意で WebView2 Fixed Version Runtime を `Runtime/` として）を置いてください。
-
-### アーキテクチャ概要
-
-C#（WPF）側はファイル I/O・単一インスタンスのパイプ・ウィンドウクロームを担当し、Web 側（単一の WebView2 上のバニラ JS）がすべてのドキュメントバッファーとタブ状態を所有します。両者は `postMessage` のみで通信します。レンダリングには marked + highlight.js + mermaid を使用し、すべてオフライン用に同梱されています。全機能の詳しい紹介は [README.ko.md](README.ko.md)（韓国語）または [README.md](README.md)（英語）をご覧ください。
+- プレビューは実行可能なコンテンツを遮断し、リモート画像を自動では読み込みません。ローカル画像はパソコン内にとどまります。
 
 ## フィードバック
 
@@ -152,4 +136,4 @@ C#（WPF）側はファイル I/O・単一インスタンスのパイプ・ウ�
 ## ライセンス
 
 MIT — [LICENSE](LICENSE) を参照。同梱のサードパーティコンポーネントは
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) に記載されています（mermaid バンドルには文書化された小さなローカルパッチが含まれます）。
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) に記載されています。

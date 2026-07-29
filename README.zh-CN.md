@@ -4,7 +4,6 @@ MarkDownEditor 是适用于 Windows 10 和 11 的 Markdown 查看器与编辑器
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -19,7 +18,7 @@ MarkDownEditor 是适用于 Windows 10 和 11 的 Markdown 查看器与编辑器
 
 - **两种软件包** — 安装程序为当前用户注册 Windows 集成；便携 ZIP 内置 WebView2，并在目录可写时把数据保存在可执行文件旁边。
 - **自动更新** — 启动时匿名查询 GitHub Releases。只有用户选择更新后才会下载，文档不会被发送。
-- **一个窗口，多个标签页** — 所有文件都在同一窗口中以标签页打开（互斥体 + 命名管道实现单实例）。标签页可拖拽排序，`Ctrl+Tab` 循环切换。
+- **一个窗口，多个标签页** — 所有文件都在同一窗口中以标签页打开。标签页可拖拽排序，`Ctrl+Tab` 循环切换。
 - **文档链接** — `.md` 链接在新标签页打开，网页链接用浏览器，文件夹用资源管理器，支持的文档用默认应用打开。支持跨文档锚点（`doc.md#章节`）。
 - **后退 / 前进** — 工具栏按钮、`Alt+←`/`Alt+→`，或鼠标第 4/5 键。
 - **GitHub 风格渲染** — 表格、代码高亮（离线）、**mermaid 图表**（离线、跟随主题）。
@@ -84,7 +83,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 文件夹里除了 `MarkDownEditor.exe`，还有 `web/`（界面）、`Runtime/`（内置 WebView2）和 `WebView2Data/`（缓存）。把它们放在一起，整个文件夹可以随意移动、复制，或者拷进 U 盘在别的电脑上直接使用。
 
 > **首次运行时弹出的蓝色 SmartScreen 窗口属于正常现象。** 程序未经代码签名，所以 Windows 会提示"Windows 已保护你的电脑"。点击 **更多信息 → 仍要运行** 即可，只会出现这一次。
-> 如果不愿运行未签名的程序，从源码自己构建只需两条命令 — 见下方 *从源码构建*。
+> 如果希望自行构建，请参阅单独的[英文开发文档](DEVELOPMENT.md)。
 
 ### 第 3 步 — 设为 `.md` 的默认应用
 
@@ -128,22 +127,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 - 文档仅在本地处理，从不上传；没有遥测或标识符。
 - 应用运行时，网络仅用于匿名检查 GitHub Releases 和下载你主动开始的更新。首次安装时，若 Windows 缺少 WebView2，安装程序可能从 Microsoft 下载该组件。
 - 安装版数据位于 `%LOCALAPPDATA%\MarkDownEditor`；便携版使用 `WebView2Data/`，只读位置则回退到 `%TEMP%\MarkDownEditor`。
-- 严格的内容安全策略会阻止脚本、插件、基准 URL 修改和远程图片自动请求；本地图片始终在本地嵌入。
-
-## 从源码构建
-
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-输出：`src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`
-将 `web/` 文件夹（以及可选的 WebView2 固定版本运行时 `Runtime/`）放在 exe 旁边即可。
-
-### 架构一览
-
-C#（WPF）端负责文件读写、单实例管道和窗口外壳；Web 端（单个 WebView2 中的原生 JS）拥有全部文档缓冲区和标签页状态。两者仅通过 `postMessage` 通信。渲染使用 marked + highlight.js + mermaid，全部离线内置。完整功能介绍请参阅 [README.ko.md](README.ko.md)（韩语）或 [README.md](README.md)（英语）。
+- 预览会阻止可执行内容，也不会自动加载远程图片。本地图片始终留在你的电脑上。
 
 ## 反馈
 
@@ -152,4 +136,4 @@ C#（WPF）端负责文件读写、单实例管道和窗口外壳；Web 端（�
 ## 许可证
 
 MIT — 参见 [LICENSE](LICENSE)。内置的第三方组件见
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)（注：mermaid 包含一个已记录的小型本地补丁）。
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。

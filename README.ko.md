@@ -4,7 +4,6 @@ MarkDownEditor는 Windows 10·11용 마크다운 뷰어 겸 에디터입니다. 
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -57,7 +56,7 @@ MarkDownEditor는 Windows 10·11용 마크다운 뷰어 겸 에디터입니다. 
 - **우클릭 메뉴** — 미리보기(복사·링크 열기·주소 복사·이미지 확대·찾기), 편집기(잘라내기·복사·붙여넣기·모두 선택)를 우클릭으로.
 - **찾기 / 바꾸기** — `Ctrl+F` 찾기는 **미리보기·편집 모두** 지원(미리보기는 전체 매치 하이라이트), `Ctrl+H` 바꾸기는 편집 모드에서. 대소문자 구분과 **모두 바꾸기**를 지원합니다.
 - **이미지 클릭 확대** — 미리보기의 이미지를 클릭하면 화면 가득 크게 보여줍니다(클릭·`Esc`로 닫기).
-- **자동 업데이트** — 새 버전이 나오면 타이틀 옆에 **빨간 점**이 표시됩니다. 포터블판은 검증한 ZIP을 원자적으로 교체하고, 설치판은 검증한 다음 설치 프로그램을 실행해 Windows 제거 정보까지 올바르게 갱신합니다.
+- **자동 업데이트** — 새 버전이 나오면 타이틀 옆에 **빨간 점**이 표시됩니다. **업데이트**를 누르면 현재 배포판에 맞는 파일을 내려받아 설치합니다.
 - **설치판 또는 포터블판** — 설치판은 자동 보안 업데이트되는 시스템 WebView2와 `%LOCALAPPDATA%\MarkDownEditor` 데이터 폴더를 사용합니다. 포터블판은 Fixed Runtime을 포함하고 설정·캐시를 실행 파일 옆에 둡니다.
 
 ---
@@ -106,7 +105,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 폴더 안에는 `MarkDownEditor.exe` 와 함께 `web/`(UI), `Runtime/`(번들 WebView2), `WebView2Data/`(캐시)가 들어 있습니다. 이 폴더를 통째로 옮기거나 복사하거나 USB에 담아 다른 PC에서 그대로 써도 됩니다.
 
 > **처음 실행할 때 뜨는 파란 SmartScreen 창은 정상입니다.** 코드 서명이 없는 실행 파일이라 Windows가 *"Windows의 PC 보호"* 경고를 띄웁니다. **추가 정보 → 실행**을 누르세요. 한 번만 뜹니다.
-> 서명 없는 파일을 실행하기 꺼려진다면 직접 빌드해도 됩니다 — 아래 *개발자용* 절차로 명령 두 줄이면 됩니다.
+> 직접 빌드하려면 별도의 [영문 개발 문서](DEVELOPMENT.md)를 참고하세요.
 
 ### `.md` 기본 프로그램으로 지정
 
@@ -185,12 +184,9 @@ Start-Process "$dest\MarkDownEditor.exe"
 
 ````markdown
 ```mermaid
-flowchart TD
-    A["파일 더블클릭"] --> B{"이미 실행 중?"}
-    B -->|예| C["기존 창으로 경로 전달"]
-    B -->|아니오| D["새 창 실행"]
-    C --> E["새 탭으로 문서 열기"]
-    D --> E
+flowchart LR
+    A["초안"] --> B["검토"]
+    B --> C["배포"]
 ```
 ````
 
@@ -204,57 +200,7 @@ flowchart TD
 - 문서·설정을 클라우드로 보내지 않습니다. 모든 동작은 로컬에서만 이뤄집니다.
 - 앱 사용 중 네트워크 접근은 **자동 업데이트**로 제한됩니다. GitHub API에서 최신 버전을 익명으로 확인하고 사용자가 업데이트를 실행한 경우에만 릴리즈 파일을 내려받습니다. 최초 설치 때 Windows에 WebView2가 없으면 설치 프로그램이 Microsoft에서 Runtime을 받을 수 있습니다. 문서·개인 정보는 아무것도 전송하지 않습니다.
 - 설치판의 WebView2 캐시, 테마·언어 설정, 세션 복구 내용과 최근 문서 경로는 `%LOCALAPPDATA%\MarkDownEditor`에 저장됩니다. 포터블판은 실행 파일 옆 **`WebView2Data/`** 를 사용하며, 해당 위치가 읽기 전용이면 `%TEMP%\MarkDownEditor`로 폴백합니다.
-- 미리보기 HTML에서 스크립트·프레임·폼·이벤트 속성·문서 전체에 적용되는 스타일을 제거합니다. **콘텐츠 보안 정책(CSP)** 도 플러그인, 기준 URL 변경, 폼 전송, 프레임과 원격 이미지 자동 요청을 차단합니다. 로컬 이미지는 네이티브 호스트가 로컬 데이터로 바꿔 표시합니다.
-- 배포 빌드에서는 브라우저 기본 우클릭 메뉴·개발자 도구가 비활성화되어 있습니다. (앱 자체 우클릭 메뉴는 정상 동작)
-
----
-
-## 개발자용
-
-### 프로젝트 구조
-
-```
-src/
-├─ App.xaml(.cs)          # 앱 진입점 + 단일 인스턴스(뮤텍스) + 파일 경로 파이프 라우팅
-├─ MainWindow.xaml(.cs)   # WebView2 호스트 + 파일 입출력 + 로딩 스플래시/테마
-├─ MainWindow.Update.cs   # 자동 업데이트 (GitHub 릴리즈 확인 · 다운로드 · 재시작 교체)
-├─ Loc.cs                 # 네이티브 쪽 UI 문자열 (10개 언어, lang.txt 설정)
-├─ app.manifest           # DPI 인식(per-monitor v2), 긴 경로 지원
-├─ MarkDownEditor.csproj  # net10.0-windows, WebView2 패키지, web/ 복사 규칙
-└─ web/                   # UI (WebView2가 로컬 가상 호스트로 로드)
-   ├─ index.html          # 레이아웃(툴바 · 탭 · 목차 · 미리보기/편집기)
-   ├─ style.css           # 테마 변수 · GitHub 풍 스타일 · 목차/인쇄(PDF) CSS
-   ├─ app.js              # 탭 상태 관리 · 렌더링 · 백업/복구 · C# 브리지
-   ├─ i18n.js             # 웹 쪽 UI 문자열 (10개 언어)
-   ├─ marked.min.js       # 마크다운 파서
-   ├─ highlight.min.js    # 코드 하이라이팅 (오프라인 번들)
-   └─ mermaid.min.js      # mermaid 다이어그램 (오프라인 번들)
-```
-
-```powershell
-.\tests\RepositoryContracts.ps1
-.\scripts\build-release.ps1 -RuntimeSource C:\path\to\WebView2FixedRuntime
-```
-
-저장소는 .NET SDK 10.0.302와 Inno Setup 7.0.2를 고정합니다. 릴리즈 스크립트가 동일한 게시물에서 설치판·포터블판을 만들고, WebView2 bootstrapper 해시를 검증한 뒤 `SHA256SUMS.txt`와 기계 판독 가능한 manifest를 생성합니다. 배포·데이터·신뢰 경계는 [DESIGN.md](DESIGN.md)를 참고하세요.
-
-현재 버전의 전체 E2E 릴리즈 근거는 [QA_REPORT_2026-07-29.md](QA_REPORT_2026-07-29.md)에 기록했습니다.
-
-### 아키텍처 한눈에
-
-```mermaid
-flowchart TD
-    A["탐색기에서 .md 더블클릭"] --> B["App: 뮤텍스로 단일 인스턴스 판별"]
-    B -->|"실행 중"| C["Named Pipe로 경로 전달 후 종료"]
-    B -->|"최초"| D["창 생성 + 파이프 서버 가동"]
-    D --> E["C# ↔ 웹(JS) 메시지 통신<br/>C#: 파일 입출력·창 라우팅 / 웹: 문서 버퍼·탭 상태 소유"]
-    C -.-> E
-    E --> F["새 탭으로 렌더링"]
-```
-
-- **C# 쪽**은 파일 읽기/쓰기와 "어느 인스턴스가 파일을 받을지"만 담당합니다.
-- **웹 쪽**이 열린 문서 버퍼와 탭 상태를 모두 소유합니다. 덕분에 탭이 몇 개든 **WebView2 인스턴스는 항상 1개**라 가볍습니다.
-- 둘은 `postMessage` 기반 메시지로만 통신합니다.
+- 미리보기는 실행 가능한 콘텐츠와 원격 이미지 자동 요청을 차단합니다. 로컬 이미지는 내 컴퓨터 안에서만 읽습니다.
 
 ---
 
@@ -264,8 +210,4 @@ flowchart TD
 
 ## 라이선스
 
-MIT — [LICENSE](LICENSE) 참고. 번들된 서드파티 구성요소는 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)에 정리되어 있습니다 (mermaid 번들에는 문서화된 로컬 패치가 하나 포함되어 있습니다).
-
----
-
-<sub>Made with .NET 10 (WPF) · WebView2 · marked.js</sub>
+MIT — [LICENSE](LICENSE) 참고. 번들된 서드파티 구성요소는 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)에 정리되어 있습니다.

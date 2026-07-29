@@ -4,7 +4,6 @@ MarkDownEditor é um visualizador e editor de Markdown para Windows 10 e 11. Ele
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -19,7 +18,7 @@ MarkDownEditor é um visualizador e editor de Markdown para Windows 10 e 11. Ele
 
 - **Dois pacotes** — o instalador integra o aplicativo ao Windows para o usuário atual. O ZIP portátil inclui o WebView2 e guarda os dados ao lado do executável quando a pasta permite gravação.
 - **Atualização automática** — o aplicativo consulta o GitHub Releases anonimamente ao iniciar. O download só começa quando você escolhe atualizar e nenhum documento é enviado.
-- **Uma janela, várias abas** — cada arquivo abre como aba em uma única janela (instância única via mutex + named pipe). As abas podem ser reordenadas arrastando e alternadas com `Ctrl+Tab`.
+- **Uma janela, várias abas** — cada arquivo abre como aba em uma única janela. As abas podem ser reordenadas arrastando e alternadas com `Ctrl+Tab`.
 - **Links de documentos** — links `.md` abrem em nova aba, links da web no navegador, pastas no Explorer e documentos compatíveis em seus aplicativos padrão. Âncoras entre documentos (`doc.md#seção`) são suportadas.
 - **Voltar / Avançar** — botões da barra de ferramentas, `Alt+←`/`Alt+→` ou botões 4/5 do mouse.
 - **Renderização no estilo GitHub** — tabelas, destaque de código (offline) e **diagramas mermaid** (offline, integrados ao tema).
@@ -84,7 +83,7 @@ Extraia a pasta em qualquer lugar onde você tenha permissão de escrita: `C:\To
 A pasta contém `MarkDownEditor.exe` mais `web/` (a interface), `Runtime/` (o WebView2 embutido) e `WebView2Data/` (cache). Mantendo tudo junto, você pode mover, copiar ou levar a pasta inteira para onde quiser.
 
 > **A tela azul do SmartScreen na primeira execução é esperada.** O executável não é assinado, então o Windows exibe *"O Windows protegeu o seu PC"*. Clique em **Mais informações → Executar assim mesmo**. Isso aparece só uma vez.
-> Se preferir não executar um binário sem assinatura, compilar você mesmo são dois comandos — veja *Compilar a partir do código-fonte* abaixo.
+> Se preferir compilar o aplicativo, consulte o [guia de desenvolvimento em inglês](DEVELOPMENT.md).
 
 ### Passo 3 — Tornar padrão para arquivos `.md`
 
@@ -128,22 +127,7 @@ Ao iniciar, o aplicativo consulta o GitHub Releases anonimamente. Depois de clic
 - Os documentos são processados localmente e nunca enviados. Não há telemetria nem identificadores.
 - Durante o uso, a rede serve apenas para verificar o GitHub Releases e baixar uma atualização iniciada por você. Na primeira instalação, o Setup pode baixar o WebView2 da Microsoft se ele não existir no Windows.
 - A edição instalada guarda dados em `%LOCALAPPDATA%\MarkDownEditor`; a portátil usa `WebView2Data/` ou `%TEMP%\MarkDownEditor` se o local for somente leitura.
-- Uma política de segurança de conteúdo rígida bloqueia scripts, plugins, mudanças de URL base e solicitações automáticas de imagens remotas. Imagens locais permanecem locais.
-
-## Compilando do código-fonte
-
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-Saída: `src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`.
-Coloque a pasta `web/` (e opcionalmente um WebView2 Fixed Version Runtime como `Runtime/`) ao lado do exe.
-
-### Arquitetura em um parágrafo
-
-O lado C# (WPF) cuida da E/S de arquivos, do pipe de instância única e da moldura da janela; o lado web (JS puro em um único WebView2) possui todos os buffers de documentos e o estado das abas. Os dois se comunicam apenas via `postMessage`. A renderização usa marked + highlight.js + mermaid, tudo empacotado para uso offline. Para o tour completo de recursos, veja [README.ko.md](README.ko.md) (coreano) ou [README.md](README.md) (inglês).
+- A visualização bloqueia conteúdo executável e não carrega imagens remotas automaticamente. As imagens locais permanecem no seu computador.
 
 ## Feedback
 
@@ -152,4 +136,4 @@ Relatos de bugs e sugestões de recursos são bem-vindos no [GitHub Issues](http
 ## Licença
 
 MIT — veja [LICENSE](LICENSE). Os componentes de terceiros incluídos estão listados em
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (nota: o pacote do mermaid carrega um pequeno patch local documentado).
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

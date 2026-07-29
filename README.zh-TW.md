@@ -4,7 +4,6 @@ MarkDownEditor 是適用於 Windows 10 和 11 的 Markdown 檢視器與編輯器
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -19,7 +18,7 @@ MarkDownEditor 是適用於 Windows 10 和 11 的 Markdown 檢視器與編輯器
 
 - **兩種套件** — 安裝程式為目前使用者註冊 Windows 整合；可攜式 ZIP 內建 WebView2，並在資料夾可寫入時將資料保存在執行檔旁邊。
 - **自動更新** — 啟動時匿名查詢 GitHub Releases。只有使用者選擇更新後才會下載，文件不會被傳送。
-- **一個視窗，多個分頁** — 所有檔案都在同一視窗中以分頁開啟（互斥鎖 + 具名管道實現單一執行個體）。分頁可拖曳排序，`Ctrl+Tab` 循環切換。
+- **一個視窗，多個分頁** — 所有檔案都在同一視窗中以分頁開啟。分頁可拖曳排序，`Ctrl+Tab` 循環切換。
 - **文件連結** — `.md` 連結在新分頁開啟，網頁連結用瀏覽器，資料夾用檔案總管，支援的文件用預設應用程式開啟。支援跨文件錨點（`doc.md#章節`）。
 - **上一頁 / 下一頁** — 工具列按鈕、`Alt+←`/`Alt+→`，或滑鼠第 4/5 鍵。
 - **GitHub 風格渲染** — 表格、程式碼標示（離線）、**mermaid 圖表**（離線、跟隨主題）。
@@ -84,7 +83,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 資料夾中除了 `MarkDownEditor.exe`，還有 `web/`（介面）、`Runtime/`（內建 WebView2）與 `WebView2Data/`（快取）。把它們放在一起，整個資料夾可以隨意搬移、複製，或放進隨身碟在別台電腦上直接使用。
 
 > **首次執行時跳出的藍色 SmartScreen 視窗是正常的。** 程式未經程式碼簽署，因此 Windows 會顯示「Windows 已保護您的電腦」。點選 **其他資訊 → 仍要執行** 即可，只會出現這一次。
-> 如果不想執行未簽署的程式，從原始碼自行建置只需兩道指令 — 見下方 *從原始碼建置*。
+> 如果希望自行建置，請參閱獨立的[英文開發文件](DEVELOPMENT.md)。
 
 ### 步驟 3 — 設為 `.md` 的預設應用程式
 
@@ -128,22 +127,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 - 文件只在本機處理，絕不會上傳；沒有遙測或識別碼。
 - 應用程式執行時，網路僅用於匿名檢查 GitHub Releases 和下載你主動開始的更新。首次安裝時，若 Windows 缺少 WebView2，安裝程式可能從 Microsoft 下載該元件。
 - 安裝版資料位於 `%LOCALAPPDATA%\MarkDownEditor`；可攜式版本使用 `WebView2Data/`，唯讀位置則退回 `%TEMP%\MarkDownEditor`。
-- 嚴格的內容安全政策會阻擋指令碼、外掛、基準 URL 變更與遠端圖片自動要求；本機圖片始終在本機嵌入。
-
-## 從原始碼建置
-
-```powershell
-cd src
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-輸出：`src/bin/Release/net10.0-windows/win-x64/publish/MarkDownEditor.exe`
-將 `web/` 資料夾（以及選用的 WebView2 固定版本執行階段 `Runtime/`）放在 exe 旁邊即可。
-
-### 架構一覽
-
-C#（WPF）端負責檔案 I/O、單一執行個體管道和視窗外框；Web 端（單一 WebView2 中的原生 JS）擁有全部文件緩衝區和分頁狀態。兩者僅透過 `postMessage` 通訊。渲染使用 marked + highlight.js + mermaid，全部離線內建。完整功能介紹請參閱 [README.ko.md](README.ko.md)（韓文）或 [README.md](README.md)（英文）。
+- 預覽會阻擋可執行內容，也不會自動載入遠端圖片。本機圖片始終留在你的電腦上。
 
 ## 意見回饋
 
@@ -152,4 +136,4 @@ C#（WPF）端負責檔案 I/O、單一執行個體管道和視窗外框；Web �
 ## 授權
 
 MIT — 參見 [LICENSE](LICENSE)。內建的第三方元件見
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)（註：mermaid 包含一個已記錄的小型本機修補）。
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。

@@ -4,7 +4,6 @@ MarkDownEditor is a Markdown viewer and editor for Windows 10 and 11. Set it as 
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
-![.NET](https://img.shields.io/badge/.NET-10.0-512bd4)
 ![Languages](https://img.shields.io/badge/UI-10%20languages-2ea44f)
 [![Release](https://img.shields.io/github/v/release/jjw1270/MarkdownEditor?include_prereleases)](https://github.com/jjw1270/MarkdownEditor/releases)
 [![Downloads](https://img.shields.io/github/downloads/jjw1270/MarkdownEditor/total?color=success)](https://github.com/jjw1270/MarkdownEditor/releases)
@@ -33,7 +32,7 @@ I built MarkDownEditor because opening a Markdown file on Windows often meant st
 **Reading**
 
 - **Double-click to open** — set it as the default `.md` handler and Explorer does the rest.
-- **One window, many tabs** — open twenty files and you get twenty tabs, not twenty windows (single instance via mutex + named pipe). Tabs reorder by drag & drop and cycle with `Ctrl+Tab`.
+- **One window, many tabs** — open twenty files and you get twenty tabs, not twenty windows. Tabs reorder by drag & drop and cycle with `Ctrl+Tab`.
 - **Drag & drop** — drop `.md` / `.txt` files onto the window to open them as tabs.
 - **GitHub-style rendering** — headings, tables, task lists, blockquotes, and code, styled to match what you see on GitHub.
 - **Syntax highlighting** — fenced blocks with a language tag (` ```cs `, ` ```bash `) get colored. Bundled offline, theme-aware.
@@ -62,7 +61,7 @@ I built MarkDownEditor because opening a Markdown file on Windows often meant st
 - **10 UI languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português (Brasil). Follows your OS language by default; switch anytime from `🌐`.
 - **Compact chrome** — tabs and tools live in a custom title bar, Notepad-style.
 - **Per-tab state** — zoom level (`Ctrl+Wheel`), scroll position, and editor caret position are restored when you switch tabs.
-- **In-app updates** — a red dot appears next to the version when a new release is out. Portable installs atomically replace their ZIP payload; installed copies run the verified next installer so Windows' uninstall metadata stays correct.
+- **In-app updates** — a red dot appears next to the version when a new release is available. Choose **Update** to download and install the matching package.
 
 ---
 
@@ -110,7 +109,7 @@ Extract the folder anywhere you can write to: `C:\Tools\MarkDownEditor`, your De
 The folder holds `MarkDownEditor.exe` plus `web/` (the UI), `Runtime/` (the bundled WebView2), and `WebView2Data/` (cache). Keep them together and you can move, copy or carry the whole thing anywhere.
 
 > **The blue SmartScreen dialog on first run is expected.** The executable is not code-signed, so Windows shows *"Windows protected your PC"*. Click **More info → Run anyway**. It only appears once.
-> If you would rather not run an unsigned binary, building it yourself takes two commands — see *Building from source* below.
+> If you would rather build it yourself, see the separate [development guide](DEVELOPMENT.md).
 
 ### Make it the default app for `.md` files
 
@@ -163,12 +162,9 @@ Tag a fenced block `mermaid` and the bundled renderer displays it offline using 
 
 ````markdown
 ```mermaid
-flowchart TD
-    A["Double-click a .md file"] --> B{"Already running?"}
-    B -->|Yes| C["Send the path over the named pipe"]
-    B -->|No| D["Launch a new window"]
-    C --> E["Open it as a new tab"]
-    D --> E
+flowchart LR
+    A["Draft"] --> B["Review"]
+    B --> C["Publish"]
 ```
 ````
 
@@ -181,56 +177,7 @@ The fenced-block format is also understood by GitHub and GitLab. A syntax error 
 - Your documents and settings never leave your machine. All rendering, editing, and exporting is local.
 - During app use, network access is limited to the auto-update check: an anonymous GitHub Releases request and a release download only when you start an update. On first installation, Setup may also download Microsoft's WebView2 Runtime if Windows does not already have it. No document content, analytics, or identifiers are sent.
 - The installed edition stores theme and language preferences, session recovery data, recent-document paths, and WebView2 cache under `%LOCALAPPDATA%\MarkDownEditor`. The portable edition stores them in `WebView2Data/` beside the executable, with `%TEMP%\MarkDownEditor` as a read-only fallback.
-- Previewed HTML is stripped of scripts, frames, forms, event handlers, and document-wide styles. A **Content Security Policy** also blocks plugins, base-URL rewriting, form submission, frames, and automatic remote-image requests. Local images are resolved by the native host and rendered as local data.
-- Release builds disable the browser context menu and developer tools. (The app's own right-click menus work normally.)
-
----
-
-## Building from source
-
-```powershell
-.\tests\RepositoryContracts.ps1
-.\scripts\build-release.ps1 -RuntimeSource C:\path\to\WebView2FixedRuntime
-```
-
-The repository pins .NET SDK 10.0.302 and Inno Setup 7.0.2. The release script publishes one self-contained app, creates both distributions, verifies the pinned WebView2 bootstrapper, and writes SHA-256 sums plus a machine-readable manifest. See [DESIGN.md](DESIGN.md) for distribution and trust boundaries.
-
-The current end-to-end release evidence is recorded in [QA_REPORT_2026-07-29.md](QA_REPORT_2026-07-29.md).
-
-### Project layout
-
-```
-src/
-├─ App.xaml(.cs)          # entry point + single instance (mutex) + file-path pipe routing
-├─ MainWindow.xaml(.cs)   # WebView2 host + file I/O + splash / theme
-├─ MainWindow.Update.cs   # auto-update (check GitHub Releases · download · restart)
-├─ Loc.cs                 # native-side UI strings (10 languages)
-├─ app.manifest           # per-monitor v2 DPI awareness, long path support
-└─ web/                   # the UI, served to WebView2 from a local virtual host
-   ├─ index.html          # layout (toolbar · tabs · TOC · preview/editor)
-   ├─ style.css           # theme variables · GitHub-like styling · TOC and print CSS
-   ├─ app.js              # tab state · rendering · backup/recovery · C# bridge
-   ├─ i18n.js             # web-side UI strings (10 languages)
-   ├─ marked.min.js       # Markdown parser
-   ├─ highlight.min.js    # code highlighting (bundled offline)
-   └─ mermaid.min.js      # mermaid diagrams (bundled offline)
-```
-
-### Architecture
-
-```mermaid
-flowchart TD
-    A["Double-click a .md file in Explorer"] --> B["App: single-instance check via mutex"]
-    B -->|"already running"| C["Send the path over a named pipe, then exit"]
-    B -->|"first instance"| D["Create the window + start the pipe server"]
-    D --> E["C# ↔ web (JS) messaging<br/>C#: file I/O · window routing / web: document buffers · tab state"]
-    C -.-> E
-    E --> F["Render as a new tab"]
-```
-
-The C# (WPF) side owns file I/O, the single-instance pipe, and the window chrome. The web side — vanilla JS in a **single** WebView2 — owns every document buffer and all tab state, which is why the app stays light no matter how many tabs are open. The two talk only through `postMessage`.
-
-A full feature tour is also available in [Korean](README.ko.md).
+- The preview removes executable content and does not load remote images automatically. Local images remain on your machine.
 
 ---
 
@@ -240,8 +187,4 @@ Bug reports and feature requests are welcome on [GitHub Issues](https://github.c
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Bundled third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (the mermaid bundle carries one small local patch, documented there).
-
----
-
-<sub>Made with .NET 10 (WPF) · WebView2 · marked.js · highlight.js · mermaid</sub>
+MIT — see [LICENSE](LICENSE). Bundled third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

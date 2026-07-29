@@ -15,6 +15,7 @@ $appJs = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\app.js") -Raw
 $installer = Get-Content -LiteralPath (Join-Path $repoRoot "installer\MarkDownEditor.iss") -Raw
 $site = Get-Content -LiteralPath (Join-Path $repoRoot "docs\index.html") -Raw
 $changelog = Get-Content -LiteralPath (Join-Path $repoRoot "CHANGELOG.md") -Raw
+$development = Get-Content -LiteralPath (Join-Path $repoRoot "DEVELOPMENT.md") -Raw
 $workflows = Get-ChildItem -LiteralPath (Join-Path $repoRoot ".github\workflows") -Filter "*.yml"
 
 Assert-True ($version -match '^\d+\.\d+\.\d+$') "Project version must have three numeric parts."
@@ -36,6 +37,9 @@ Assert-True (-not ($appJs -match "mousedown'[\s\S]{0,180}postMessage\(\{ cmd: 'w
 Assert-True ($site.Contains(('"softwareVersion": "' + $version + '"'))) "Website version is stale."
 Assert-True ($site.Contains('html lang="en"') -or $site.Contains('<html lang="en"')) "Website must use English as the global default."
 Assert-True ($changelog.Contains("## $version")) "Changelog does not contain the current version."
+Assert-True ($development.Contains("## Architecture")) "English developer documentation must describe the architecture."
+Assert-True ($development.Contains(".\scripts\build-release.ps1")) "English developer documentation must describe release packaging."
+Assert-True ($development.Contains(".\tests\RepositoryContracts.ps1")) "English developer documentation must describe validation."
 foreach ($workflow in $workflows) {
     $content = Get-Content -LiteralPath $workflow.FullName -Raw
     foreach ($use in [regex]::Matches($content, 'uses:\s*[^\s@]+@([^\s#]+)')) {
@@ -52,7 +56,17 @@ $readmes = [ordered]@{
 }
 foreach ($pair in $readmes.GetEnumerator()) {
     $content = Get-Content -LiteralPath (Join-Path $repoRoot $pair.Key) -Raw
-    Assert-True ($content.Contains(".NET-10.0")) "$($pair.Key) has a stale .NET badge."
+    Assert-True (-not $content.Contains("dotnet publish")) "$($pair.Key) must contain user documentation only."
+    Assert-True (-not $content.Contains("scripts\build-release.ps1")) "$($pair.Key) must not contain release instructions."
+    Assert-True (-not $content.Contains("postMessage")) "$($pair.Key) must not contain implementation architecture."
+    Assert-True (-not $content.Contains("named pipe")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains("Named Pipe")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains("mutex")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains("뮤텍스")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains("互斥")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains("мьютекс")) "$($pair.Key) must not expose single-instance implementation details."
+    Assert-True (-not $content.Contains(".NET-10.0")) "$($pair.Key) must not contain developer-only runtime badges."
+    Assert-True ($content.Contains("](DEVELOPMENT.md)")) "$($pair.Key) must link to the separate English development guide."
     Assert-True ($content.Contains("docs/images/$($pair.Value)/preview.png")) "$($pair.Key) has no localized preview."
     Assert-True ($content.Contains("docs/images/$($pair.Value)/menu.png")) "$($pair.Key) has no localized menu image."
     Assert-True (Test-Path -LiteralPath (Join-Path $repoRoot "docs\images\$($pair.Value)\preview.png")) `
@@ -80,7 +94,7 @@ foreach ($locale in $imageManifest.locales) {
     }
 }
 
-foreach ($fileName in $readmes.Keys) {
+foreach ($fileName in @($readmes.Keys) + "DEVELOPMENT.md") {
     $path = Join-Path $repoRoot $fileName
     $content = Get-Content -LiteralPath $path -Raw
     $linkScan = [regex]::Replace($content, '(?s)```.*?```', '')
