@@ -13,8 +13,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.302
 
@@ -27,6 +27,8 @@ jobs:
           if ($env:GITHUB_REF_NAME -ne "v$version") {
             throw "Tag $env:GITHUB_REF_NAME does not match project v$version"
           }
+          node --check src/web/app.js
+          node --check src/web/i18n.js
 
       - name: Install pinned Inno Setup
         shell: pwsh
@@ -43,10 +45,12 @@ jobs:
         run: |
           $zip = Join-Path $env:RUNNER_TEMP "runtime-seed.zip"
           $seed = Join-Path $env:RUNNER_TEMP "runtime-seed"
-          Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/download/v1.2.2/MarkDownEditor-standalone.zip" -OutFile $zip
-          $expected = "5C8B1BB81B1C7A96E44CFAC7584D032FB4AB856EB6CA3C5FD236EFD6717942F2"
+          Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/download/v1.3.0/MarkDownEditor-standalone.zip" -OutFile $zip
+          $expected = "8B1DF04C9E75311F60F53A73399780891C8A5BF4CB8F26CC473CB8D1CB0F735A"
           if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne $expected) { throw "Runtime seed hash mismatch" }
           Expand-Archive $zip -DestinationPath $seed
+          $runtimeVersion = (Get-Item "$seed\Runtime\msedgewebview2.exe").VersionInfo.ProductVersion
+          if ($runtimeVersion -ne "150.0.4078.65") { throw "Unexpected Fixed Runtime version: $runtimeVersion" }
           "MDE_RUNTIME_SOURCE=$seed\Runtime" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Build release packages

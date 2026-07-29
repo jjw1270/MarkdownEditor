@@ -122,6 +122,9 @@ try {
                 $rect.Right - [int](154 * $scale), $rect.Top + [int](24 * $scale)) | Out-Null
             [ReadmeCaptureNative]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
             [ReadmeCaptureNative]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
+            # 메뉴를 연 뒤 포인터를 문서로 옮겨 언어 버튼의 hover 툴팁이 캡처에 남지 않게 한다.
+            [ReadmeCaptureNative]::SetCursorPos(
+                $rect.Left + [int](700 * $scale), $rect.Top + [int](500 * $scale)) | Out-Null
             Start-Sleep -Milliseconds 600
             Save-WindowImage $handle (Join-Path $localeOutput "menu.png")
         }

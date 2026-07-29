@@ -1,7 +1,6 @@
 # MarkDownEditor
 
-**轻快的 Windows 便携版 Markdown 查看器 & 编辑器。**
-双击 `.md` 文件即可打开 — 无需安装。
+MarkDownEditor 是适用于 Windows 10 和 11 的 Markdown 查看器与编辑器，提供安装程序和便携 ZIP，不需要账户，也不收集遥测数据。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -12,21 +11,21 @@
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Windows 安装程序](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [便携 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[查看更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### [Windows 安装程序](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [便携 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[查看更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![预览 — 简体中文界面](docs/images/zh-CN/preview.png)
 
-## 亮点
+## 功能
 
-- **默认便携** — 解压即用。内置 WebView2 运行时，设置与缓存保存在 exe 旁边；如果该文件夹为只读，则改用 `%TEMP%\MarkDownEditor`。
-- **自动更新** — 启动时静默检查 GitHub Releases；有新版本时，标题栏版本号右侧会出现红点；点击版本号 → **有新版本可用**，即可在应用内带进度条完成更新，设置与会话全部保留。（自动更新——匿名版本检查，以及仅在执行更新时下载发布文件——是本应用唯一的网络访问，绝不发送任何文档或个人数据。）
+- **两种软件包** — 安装程序为当前用户注册 Windows 集成；便携 ZIP 内置 WebView2，并在目录可写时把数据保存在可执行文件旁边。
+- **自动更新** — 启动时匿名查询 GitHub Releases。只有用户选择更新后才会下载，文档不会被发送。
 - **一个窗口，多个标签页** — 所有文件都在同一窗口中以标签页打开（互斥体 + 命名管道实现单实例）。标签页可拖拽排序，`Ctrl+Tab` 循环切换。
-- **所有链接都可用** — `.md` 链接在新标签页打开，网页链接用浏览器，文件夹用资源管理器，其他文档用默认应用。支持跨文档锚点（`doc.md#章节`）。
+- **文档链接** — `.md` 链接在新标签页打开，网页链接用浏览器，文件夹用资源管理器，支持的文档用默认应用打开。支持跨文档锚点（`doc.md#章节`）。
 - **后退 / 前进** — 工具栏按钮、`Alt+←`/`Alt+→`，或鼠标第 4/5 键。
 - **GitHub 风格渲染** — 表格、代码高亮（离线）、**mermaid 图表**（离线、跟随主题）。
 - **目录侧边栏** — 随阅读位置自动高亮当前章节（scroll-spy）。
 - **编辑 ↔ 预览** — `Ctrl+E` 切换，两种模式间滚动位置保持同步。
-- **格式栏** — 编辑模式下显示：加粗、标题、列表、复选框、引用、代码、链接、表格、分隔线，一键插入。**不懂 Markdown 语法也能用**（全部可用 `Ctrl+Z` 撤销）。
+- **格式栏** — 可插入加粗、标题、列表、复选框、引用、代码、链接、表格和分隔线，修改可用 `Ctrl+Z` 撤销。
 - **右键菜单** — 预览区（复制、打开链接、复制链接地址、查看图片、查找），编辑区（剪切 / 复制 / 粘贴 / 全选）。
 - **查找 / 替换** — `Ctrl+F` 在预览（全部匹配高亮）和编辑模式下均可用；`Ctrl+H` 在编辑模式下替换。
 - **导出 PDF** — 保存按钮旁的 `📄`，或 `Ctrl+P`，始终以浅色主题输出。
@@ -41,7 +40,7 @@
 
 ![语言菜单](docs/images/zh-CN/menu.png)
 
-## 🚀 安装
+## 安装
 
 提供适用于 Windows 10 1809 或更高版本 / Windows 11 x64 的两种包，均不需要管理员权限。
 
@@ -87,7 +86,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 > **首次运行时弹出的蓝色 SmartScreen 窗口属于正常现象。** 程序未经代码签名，所以 Windows 会提示"Windows 已保护你的电脑"。点击 **更多信息 → 仍要运行** 即可，只会出现这一次。
 > 如果不愿运行未签名的程序，从源码自己构建只需两条命令 — 见下方 *从源码构建*。
 
-### 第 3 步 — 设为 `.md` 的默认应用 *(这才是重点)*
+### 第 3 步 — 设为 `.md` 的默认应用
 
 设置一次之后，在资源管理器里双击任何 Markdown 文件，都会立刻打开渲染好的文档。
 

@@ -1,7 +1,6 @@
 # MarkDownEditor
 
-**Un visor y editor de Markdown rápido y portable para Windows.**
-Haz doble clic en un archivo `.md` y simplemente se abre — sin instalación.
+MarkDownEditor es un visor y editor de Markdown para Windows 10 y 11. Está disponible como instalador o ZIP portátil y no usa cuentas ni telemetría.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -12,21 +11,21 @@ Haz doble clic en un archivo `.md` y simplemente se abre — sin instalación.
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **Español** · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Instalador de Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ZIP portátil](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[novedades](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### [Instalador de Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ZIP portátil](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[novedades](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![Vista previa — interfaz en español](docs/images/es/preview.png)
 
 ## Características
 
-- **Portable de forma predeterminada** — descomprime y ejecuta. El runtime de WebView2 viene incluido; la configuración y la caché se guardan junto al exe. Si esa carpeta es de solo lectura, se usa `%TEMP%\MarkDownEditor`.
-- **Actualización automática** — la aplicación comprueba silenciosamente GitHub Releases al iniciar; cuando hay una versión nueva, aparece un punto rojo junto a la versión en la barra de título. Haz clic en la versión → **Nueva versión disponible** y actualiza dentro de la aplicación con barra de progreso — la configuración y la sesión se conservan. (La actualización automática — comprobación anónima de versión y descarga solo cuando la inicias — es el único acceso a la red de la aplicación; nunca se envían documentos ni datos personales.)
+- **Dos paquetes** — el instalador integra la aplicación en Windows para el usuario actual. El ZIP portátil incluye WebView2 y guarda sus datos junto al ejecutable cuando la carpeta lo permite.
+- **Actualización automática** — la aplicación consulta GitHub Releases de forma anónima al iniciar. La descarga solo comienza cuando eliges actualizar y no se envían documentos.
 - **Una ventana, muchas pestañas** — cada archivo se abre como pestaña en una sola ventana (instancia única mediante mutex + named pipe). Las pestañas se reordenan arrastrando y se recorren con `Ctrl+Tab`.
-- **Todos los enlaces funcionan** — los enlaces `.md` se abren en una pestaña nueva, los enlaces web en tu navegador, las carpetas en el Explorador y los demás documentos en su aplicación predeterminada. Se admiten anclas entre documentos (`doc.md#sección`).
+- **Enlaces de documentos** — los enlaces `.md` se abren en una pestaña nueva, los enlaces web en el navegador, las carpetas en el Explorador y los documentos compatibles en su aplicación predeterminada. Se admiten anclas entre documentos (`doc.md#sección`).
 - **Atrás / Adelante** — botones de la barra de herramientas, `Alt+←`/`Alt+→`, o botones 4/5 del ratón.
 - **Renderizado estilo GitHub** — tablas, resaltado de código (sin conexión) y **diagramas mermaid** (sin conexión, adaptados al tema).
 - **Barra lateral de índice** — con resaltado de la sección actual según el desplazamiento (scroll-spy).
 - **Edición ↔ Vista previa** — `Ctrl+E`, con la posición de desplazamiento sincronizada entre ambos modos.
-- **Barra de formato** — aparece en modo edición: negrita, títulos, listas, casillas, cita, código, enlace, tabla, separador — un clic cada uno, **sin necesidad de saber Markdown** (todo se deshace con `Ctrl+Z`).
+- **Barra de formato** — inserta negrita, títulos, listas, casillas, citas, código, enlaces, tablas y separadores. Los cambios se pueden deshacer con `Ctrl+Z`.
 - **Menús contextuales** — clic derecho en la vista previa (copiar, abrir enlace, copiar dirección, ver imagen, buscar) o en el editor (cortar/copiar/pegar/seleccionar todo).
 - **Buscar / Reemplazar** — `Ctrl+F` funciona tanto en la vista previa (resaltado de todas las coincidencias) como en edición; `Ctrl+H` reemplaza en modo edición.
 - **Exportar a PDF** — el botón `📄` junto a Guardar, o `Ctrl+P`, siempre en tema claro.
@@ -41,7 +40,7 @@ Haz doble clic en un archivo `.md` y simplemente se abre — sin instalación.
 
 ![Menú de idiomas](docs/images/es/menu.png)
 
-## 🚀 Instalación
+## Instalación
 
 Hay dos paquetes para Windows 10 versión 1809 o posterior y Windows 11 (x64). Ninguno requiere permisos de administrador.
 
@@ -87,7 +86,7 @@ La carpeta contiene `MarkDownEditor.exe` más `web/` (la interfaz), `Runtime/` (
 > **El aviso azul de SmartScreen en el primer arranque es normal.** El ejecutable no está firmado, así que Windows muestra *"Windows protegió su PC"*. Pulsa **Más información → Ejecutar de todas formas**. Solo aparece una vez.
 > Si prefieres no ejecutar un binario sin firmar, compilarlo tú mismo son dos comandos — consulta *Compilar desde el código fuente* más abajo.
 
-### Paso 3 — Ponerlo como aplicación predeterminada para `.md` *(esto es lo importante)*
+### Paso 3 — Ponerlo como aplicación predeterminada para `.md`
 
 Una vez configurado, doble clic en cualquier archivo Markdown del Explorador y se abre renderizado al instante.
 

@@ -212,7 +212,9 @@ public partial class MainWindow
             var payload = Path.Combine(appDir, ".update", "payload");
             await Task.Run(() =>
             {
-                ValidateUpdateArchive(tempAsset);
+                var expandedBytes = ValidateUpdateArchive(tempAsset);
+                if (FreeBytes(appDir) < expandedBytes + (100L << 20))
+                    throw new IOException("not enough space for expanded update payload");
                 var staging = Path.Combine(appDir, ".update");
                 if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true);
                 Directory.CreateDirectory(payload);
@@ -285,7 +287,7 @@ public partial class MainWindow
             throw new InvalidDataException("update sha256 mismatch");
     }
 
-    private static void ValidateUpdateArchive(string zipPath)
+    private static long ValidateUpdateArchive(string zipPath)
     {
         const long maxExpandedBytes = 2L << 30;
         using var archive = ZipFile.OpenRead(zipPath);
@@ -302,23 +304,32 @@ public partial class MainWindow
         foreach (var entry in archive.Entries)
         {
             var name = entry.FullName.Replace('\\', '/');
-            var segments = name.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            var allowed = name.Equals("MarkDownEditor.exe", StringComparison.OrdinalIgnoreCase) ||
-                          name.StartsWith("web/", StringComparison.OrdinalIgnoreCase) ||
-                          name.StartsWith("Runtime/", StringComparison.OrdinalIgnoreCase);
-            if (name.Length == 0 || name.StartsWith('/') || segments.Any(s => s == "..") || !allowed)
+            var canonical = name.EndsWith('/') ? name[..^1] : name;
+            var segments = canonical.Split('/', StringSplitOptions.None);
+            var allowed = canonical.Equals("MarkDownEditor.exe", StringComparison.OrdinalIgnoreCase) ||
+                          canonical.StartsWith("web/", StringComparison.OrdinalIgnoreCase) ||
+                          canonical.Equals("web", StringComparison.OrdinalIgnoreCase) ||
+                          canonical.StartsWith("Runtime/", StringComparison.OrdinalIgnoreCase) ||
+                          canonical.Equals("Runtime", StringComparison.OrdinalIgnoreCase);
+            if (canonical.Length == 0 || name.StartsWith('/') || !allowed ||
+                segments.Any(s => s.Length == 0 || s is "." or ".." || s.Contains(':') ||
+                                  s.EndsWith(' ') || s.EndsWith('.')))
                 throw new InvalidDataException($"unexpected update entry: {name}");
-            if (!seen.Add(name))
+            var unixType = (entry.ExternalAttributes >> 16) & 0xF000;
+            if (unixType == 0xA000 || ((FileAttributes)entry.ExternalAttributes).HasFlag(FileAttributes.ReparsePoint))
+                throw new InvalidDataException($"update entry cannot be a link: {name}");
+            if (!seen.Add(canonical))
                 throw new InvalidDataException($"duplicate update entry: {name}");
 
             expandedBytes = checked(expandedBytes + entry.Length);
             if (expandedBytes > maxExpandedBytes)
                 throw new InvalidDataException("update payload is too large");
-            required.Remove(name);
+            required.Remove(canonical);
         }
 
         if (required.Count > 0)
             throw new InvalidDataException("update payload is incomplete");
+        return expandedBytes;
     }
 
     private static void ValidateExtractedPayload(string payload, Version expectedVersion)

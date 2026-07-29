@@ -1,22 +1,19 @@
-MarkDownEditor is a fast, private Markdown viewer and editor for Windows 10/11. Version 1.3.0 adds a lightweight installer while keeping the fully self-contained portable package.
+MarkDownEditor 1.3.1 is a maintenance release focused on saving, file reloads, document anchors, and update safety.
 
-## Highlights
+## Changes
 
-- Added a ~45 MB per-user Windows installer with Start menu and Open With integration. It uses automatically serviced Evergreen WebView2 and does not request administrator rights.
-- The installer needs Internet only when WebView2 is absent and reports an installation error if that prerequisite cannot be installed.
-- Kept the ~325 MB portable ZIP with a bundled Fixed WebView2 Runtime for USB and fully offline use.
-- Split updates by distribution: portable copies atomically replace the ZIP payload, while installed copies run the next verified installer.
-- Added strict update URL, size, SHA-256, archive-structure, required-file, and version validation.
-- Blocked automatic remote-image requests from opened Markdown documents.
-- Fixed title-bar double-click maximize/restore without regressing normal window dragging.
-- Moved to .NET 10 LTS and refreshed all ten README files, localized screenshots, website copy, privacy guidance, and release documentation.
+- Saves to the same file now run in request order. If `Ctrl+S` is pressed again while a save is still running, an older request can no longer overwrite the newer text or clear its unsaved marker.
+- An external edit made immediately after an in-app save is detected instead of being ignored by the save-event debounce.
+- Windows paths that differ only by letter case resolve to the same tab.
+- Heading anchors preserve Japanese, Chinese, accented, Cyrillic, Korean, and other Unicode text.
+- Raw HTML in a Markdown preview can no longer add scripts, frames, forms, event handlers, or styles that affect the whole application window.
+- Portable updates reject ambiguous archive paths, alternate data streams, and link entries. Available disk space is checked against the expanded package size before extraction.
+- The automated QA suite now covers these cases through the running WebView2 application. Release workflows use current SHA-pinned GitHub Actions and verify the bundled Fixed WebView2 Runtime version.
 
 ## Downloads
 
-- `MarkDownEditor-Setup-x64.exe` — recommended for normal use.
-- `MarkDownEditor-standalone.zip` — fully portable, includes Fixed WebView2 Runtime.
-- `SHA256SUMS.txt` and `release-manifest.json` — integrity and build metadata.
+- `MarkDownEditor-Setup-x64.exe` — per-user Windows installer.
+- `MarkDownEditor-standalone.zip` — portable package with Fixed WebView2 Runtime.
+- `SHA256SUMS.txt` and `release-manifest.json` — checksums and build metadata.
 
-## Security note
-
-The binaries are not Authenticode-signed yet, so Windows SmartScreen may display a first-run warning. Release assets include SHA-256 checksums, and the in-app updater verifies GitHub's asset digest and the package version before applying an update.
+The binaries are not Authenticode-signed, so Windows SmartScreen may show a warning on first run. The updater verifies the GitHub asset digest, package structure, and application version before applying an update.

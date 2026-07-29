@@ -14,7 +14,13 @@ $next = Join-Path $qaRoot "next"
 $server = Join-Path $qaRoot "server"
 New-Item -ItemType Directory -Force -Path $current, $next, $server | Out-Null
 
-foreach ($build in @(@{ Version = "1.3.0"; Output = $current }, @{ Version = "1.3.1"; Output = $next })) {
+[xml]$project = Get-Content -LiteralPath (Join-Path $repo "src\MarkDownEditor.csproj")
+$currentVersion = [version][string]$project.Project.PropertyGroup.Version
+$currentVersionText = $currentVersion.ToString(3)
+$nextVersion = [version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
+$nextVersionText = $nextVersion.ToString(3)
+
+foreach ($build in @(@{ Version = $currentVersionText; Output = $current }, @{ Version = $nextVersionText; Output = $next })) {
     & dotnet publish (Join-Path $repo "src\MarkDownEditor.csproj") -c Debug -r win-x64 `
         --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
         "-p:Version=$($build.Version)" -o $build.Output | Out-Null
@@ -44,7 +50,7 @@ finally { $archive.Dispose() }
 $size = (Get-Item -LiteralPath $updateZip).Length
 $sha = (Get-FileHash -LiteralPath $updateZip -Algorithm SHA256).Hash.ToLowerInvariant()
 $release = @{
-    tag_name = "v1.3.1"
+    tag_name = "v$nextVersionText"
     body = "Portable update E2E"
     assets = @(@{
         name = "MarkDownEditor-standalone.zip"
@@ -72,7 +78,7 @@ try {
         $exe = Join-Path $current "MarkDownEditor.exe"
         if (Test-Path -LiteralPath $exe) {
             $version = (Get-Item -LiteralPath $exe).VersionInfo.FileVersion
-            if ($version -like "1.3.1*") { $updated = $true; break }
+            if ($version -like "$nextVersionText*") { $updated = $true; break }
         }
     } while ((Get-Date) -lt $deadline)
 

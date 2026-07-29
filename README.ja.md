@@ -1,7 +1,6 @@
 # MarkDownEditor
 
-**Windows 用の軽快なポータブル Markdown ビューアー & エディター。**
-`.md` ファイルをダブルクリックするだけで開きます — インストール不要。
+MarkDownEditor は Windows 10・11 用の Markdown ビューアー兼エディターです。インストーラー版とポータブル ZIP 版があり、アカウントやテレメトリは使用しません。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -12,21 +11,21 @@
 
 [한국어](README.ko.md) · [English](README.md) · **日本語** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Windows インストーラー](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ポータブル ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[変更点を見る](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### [Windows インストーラー](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ポータブル ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[変更点を見る](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![プレビュー — 日本語 UI](docs/images/ja/preview.png)
 
-## 主な特長
+## 機能
 
-- **基本はポータブル** — 解凍して実行するだけ。WebView2 ランタイムを同梱し、設定・キャッシュは exe の隣に保存されます。そのフォルダーが読み取り専用の場合は `%TEMP%\MarkDownEditor` を使用します。
-- **自動アップデート** — 起動時に GitHub リリースを静かに確認します。新しいバージョンがあるとタイトル横のバージョン表示の右に赤い点が付き、バージョンをクリックして開くメニューの「新しいバージョンがあります」から、アプリ内で進行状況を見ながらアップデートできます。設定とセッションは保持されます。（自動アップデート — 匿名のバージョン確認と、実行時のみのリリースのダウンロード — がアプリ唯一のネットワークアクセスで、ドキュメントや個人情報は一切送信されません。）
+- **2 種類のパッケージ** — インストーラー版は現在のユーザー向けに Windows へ登録します。ポータブル版は WebView2 を同梱し、書き込み可能なら実行ファイルの隣にデータを保存します。
+- **自動アップデート** — 起動時に GitHub Releases を匿名で確認します。ダウンロードはユーザーが更新を開始したときだけ行い、文書は送信しません。
 - **ウィンドウは 1 つ、ドキュメントはタブで** — すべてのファイルが 1 つのウィンドウのタブとして開きます（ミューテックス + 名前付きパイプによる単一インスタンス）。タブはドラッグ & ドロップで並べ替え、`Ctrl+Tab` で切り替え。
-- **すべてのリンクが動作** — `.md` リンクは新しいタブ、Web リンクはブラウザー、フォルダーはエクスプローラー、その他のドキュメントは既定のアプリで開きます。`doc.md#セクション` 形式のドキュメント間アンカーにも対応。
+- **文書リンク** — `.md` リンクは新しいタブ、Web リンクはブラウザー、フォルダーはエクスプローラー、対応文書は既定のアプリで開きます。`doc.md#セクション` 形式のドキュメント間アンカーにも対応します。
 - **戻る / 進む** — ツールバーのボタン、`Alt+←`/`Alt+→`、またはマウスの第 4・第 5 ボタンで。
 - **GitHub スタイルのレンダリング** — 表、コードハイライト（オフライン）、**mermaid ダイアグラム**（オフライン、テーマ連動）。
 - **目次サイドバー** — 現在のセクションを追従して強調表示（scroll-spy）。
 - **編集 ↔ プレビュー** — `Ctrl+E` で切り替え、スクロール位置は両モード間で同期。
-- **書式バー** — 編集モードで表示：太字・見出し・リスト・チェックボックス・引用・コード・リンク・表・区切り線をワンクリックで。**Markdown 記法を知らなくても OK**（すべて `Ctrl+Z` で取り消し可能）。
+- **書式バー** — 編集モードで太字・見出し・リスト・チェックボックス・引用・コード・リンク・表・区切り線を挿入できます。変更は `Ctrl+Z` で取り消せます。
 - **右クリックメニュー** — プレビュー（コピー・リンクを開く・リンクのアドレスをコピー・画像を表示・検索）、エディター（切り取り / コピー / 貼り付け / すべて選択）。
 - **検索 / 置換** — `Ctrl+F` はプレビュー（全一致ハイライト）と編集の両方で動作。`Ctrl+H` の置換は編集モードで。
 - **PDF エクスポート** — 保存ボタン横の `📄`、または `Ctrl+P`。常にライトテーマで出力。
@@ -41,7 +40,7 @@
 
 ![言語メニュー](docs/images/ja/menu.png)
 
-## 🚀 インストール
+## インストール
 
 Windows 10 バージョン 1809 以降 / Windows 11 x64 向けに 2 種類のパッケージを用意しています。どちらも管理者権限は不要です。
 
@@ -87,7 +86,7 @@ Start-Process "$dest\MarkDownEditor.exe"
 > **初回起動時に青い SmartScreen 画面が出るのは正常です。** コード署名がないため、Windows が「Windows によって PC が保護されました」と警告します。**詳細情報 → 実行** を選んでください。表示されるのは 1 回だけです。
 > 署名のないバイナリを実行したくない場合は、下の *ソースからビルド* の手順でコマンド 2 つでビルドできます。
 
-### ステップ 3 — `.md` の既定のアプリに設定する *(実はこれが本題)*
+### ステップ 3 — `.md` の既定のアプリに設定する
 
 一度設定すれば、エクスプローラーで Markdown ファイルをダブルクリックした瞬間にレンダリング済みの文書が開きます。
 

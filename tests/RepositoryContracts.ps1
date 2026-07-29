@@ -15,6 +15,7 @@ $appJs = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\app.js") -Raw
 $installer = Get-Content -LiteralPath (Join-Path $repoRoot "installer\MarkDownEditor.iss") -Raw
 $site = Get-Content -LiteralPath (Join-Path $repoRoot "docs\index.html") -Raw
 $changelog = Get-Content -LiteralPath (Join-Path $repoRoot "CHANGELOG.md") -Raw
+$workflows = Get-ChildItem -LiteralPath (Join-Path $repoRoot ".github\workflows") -Filter "*.yml"
 
 Assert-True ($version -match '^\d+\.\d+\.\d+$') "Project version must have three numeric parts."
 Assert-True ($target -eq "net10.0-windows") "Target framework must be net10.0-windows."
@@ -35,6 +36,13 @@ Assert-True (-not ($appJs -match "mousedown'[\s\S]{0,180}postMessage\(\{ cmd: 'w
 Assert-True ($site.Contains(('"softwareVersion": "' + $version + '"'))) "Website version is stale."
 Assert-True ($site.Contains('html lang="en"') -or $site.Contains('<html lang="en"')) "Website must use English as the global default."
 Assert-True ($changelog.Contains("## $version")) "Changelog does not contain the current version."
+foreach ($workflow in $workflows) {
+    $content = Get-Content -LiteralPath $workflow.FullName -Raw
+    foreach ($use in [regex]::Matches($content, 'uses:\s*[^\s@]+@([^\s#]+)')) {
+        Assert-True ($use.Groups[1].Value -match '^[0-9a-f]{40}$') `
+            "$($workflow.Name) has an action that is not pinned to a commit SHA: $($use.Value)"
+    }
+}
 
 $readmes = [ordered]@{
     "README.md" = "en"; "README.ko.md" = "ko"; "README.ja.md" = "ja";
@@ -56,6 +64,21 @@ foreach ($pair in $readmes.GetEnumerator()) {
 $imageManifest = Get-Content -LiteralPath (Join-Path $repoRoot "docs\images\manifest.json") -Raw | ConvertFrom-Json
 Assert-True ($imageManifest.appVersion -eq $version) "Screenshot manifest version is stale."
 Assert-True ($imageManifest.locales.Count -eq $readmes.Count) "Screenshot manifest locale count is incomplete."
+Add-Type -AssemblyName System.Drawing
+foreach ($locale in $imageManifest.locales) {
+    Assert-True ($readmes.Values -contains $locale.code) "Screenshot manifest has an unknown locale: $($locale.code)"
+    foreach ($kind in @("preview", "menu")) {
+        $relative = [string]$locale.$kind
+        $path = Join-Path (Join-Path $repoRoot "docs\images") $relative
+        Assert-True (Test-Path -LiteralPath $path -PathType Leaf) "Screenshot is missing: $relative"
+        $hashProperty = $kind + "Sha256"
+        $actualHash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+        Assert-True ($actualHash -eq $locale.$hashProperty) "Screenshot hash is stale: $relative"
+        $image = [Drawing.Image]::FromFile($path)
+        try { Assert-True ($image.Width -eq 1440 -and $image.Height -eq 900) "Screenshot size must be 1440x900: $relative" }
+        finally { $image.Dispose() }
+    }
+}
 
 foreach ($fileName in $readmes.Keys) {
     $path = Join-Path $repoRoot $fileName

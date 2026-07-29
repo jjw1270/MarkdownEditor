@@ -5,14 +5,20 @@ $publish = Join-Path $qaRoot "publish"
 $server = Join-Path $qaRoot "server"
 New-Item -ItemType Directory -Force -Path $publish, $server | Out-Null
 
+[xml]$project = Get-Content -LiteralPath (Join-Path $repo "src\MarkDownEditor.csproj")
+$currentVersion = [version][string]$project.Project.PropertyGroup.Version
+$currentVersionText = $currentVersion.ToString(3)
+$nextVersion = [version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
+$nextVersionText = $nextVersion.ToString(3)
+
 & dotnet publish (Join-Path $repo "src\MarkDownEditor.csproj") -c Release -r win-x64 `
     --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
-    -p:Version=1.3.1 -o $publish
+    "-p:Version=$nextVersionText" -o $publish
 if ($LASTEXITCODE -ne 0) { throw "Fake update publish failed" }
 
 $inno = Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 7\ISCC.exe"
 $bootstrap = Join-Path $repo "artifacts\cache\MicrosoftEdgeWebview2Setup.exe"
-& $inno "/DAppVersion=1.3.1" "/DSourceDir=$publish" "/DRepoRoot=$repo" `
+& $inno "/DAppVersion=$nextVersionText" "/DSourceDir=$publish" "/DRepoRoot=$repo" `
     "/DOutputDir=$server" "/DWebView2Bootstrapper=$bootstrap" `
     (Join-Path $repo "installer\MarkDownEditor.iss") | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "Fake update installer build failed" }
@@ -21,7 +27,7 @@ $fakeSetup = Join-Path $server "MarkDownEditor-Setup-x64.exe"
 $size = (Get-Item -LiteralPath $fakeSetup).Length
 $sha = (Get-FileHash -LiteralPath $fakeSetup -Algorithm SHA256).Hash.ToLowerInvariant()
 $release = @{
-    tag_name = "v1.3.1"
+    tag_name = "v$nextVersionText"
     body = "Installer update E2E"
     assets = @(@{
         name = "MarkDownEditor-Setup-x64.exe"
@@ -62,7 +68,7 @@ try {
         Start-Sleep -Seconds 1
         if (Test-Path -LiteralPath $installedExe) {
             $installedVersion = (Get-Item -LiteralPath $installedExe).VersionInfo.FileVersion
-            if ($installedVersion -like "1.3.1*") { $updated = $true; break }
+            if ($installedVersion -like "$nextVersionText*") { $updated = $true; break }
         }
     } while ((Get-Date) -lt $deadline)
 
@@ -107,7 +113,7 @@ try {
         AssociationsRegistered = $associationsRegistered
         StaleRuntimeRemoved = $staleRuntimeRemoved
     } | Format-List
-    if (-not $updated -or $uninstall.DisplayVersion -ne "1.3.1" -or -not $setupRemoved -or
+    if (-not $updated -or $uninstall.DisplayVersion -ne $nextVersionText -or -not $setupRemoved -or
         -not $helperRemoved -or -not $associationsRegistered -or -not $staleRuntimeRemoved) {
         throw "Installed update E2E failed"
     }
@@ -129,8 +135,8 @@ finally {
 $finalSetup = Join-Path $repo "artifacts\MarkDownEditor-Setup-x64.exe"
 $final = Start-Process -FilePath $finalSetup `
     -ArgumentList "/CURRENTUSER /VERYSILENT /NORESTART /SUPPRESSMSGBOXES" -Wait -PassThru
-if ($final.ExitCode -ne 0) { throw "Final v1.3.0 reinstall failed: $($final.ExitCode)" }
+if ($final.ExitCode -ne 0) { throw "Final v$currentVersionText reinstall failed: $($final.ExitCode)" }
 $finalExe = Join-Path $env:LOCALAPPDATA "Programs\MarkDownEditor\MarkDownEditor.exe"
 $finalVersion = (Get-Item -LiteralPath $finalExe).VersionInfo.FileVersion
 Write-Host "FinalInstalledVersion=$finalVersion"
-if ($finalVersion -notlike "1.3.0*") { throw "Final installed version mismatch" }
+if ($finalVersion -notlike "$currentVersionText*") { throw "Final installed version mismatch" }

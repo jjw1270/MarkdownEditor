@@ -38,8 +38,8 @@ public partial class MainWindow : Window
     // ---- 외부 변경 감지: 열린 문서가 다른 프로그램에서 저장되면 웹에 알림 ----
     private readonly Dictionary<string, FileSystemWatcher> _watchers = new(StringComparer.OrdinalIgnoreCase);   // 폴더 → 감시자
     private readonly HashSet<string> _watchedFiles = new(StringComparer.OrdinalIgnoreCase);                     // 열린 파일 전체 경로
-    private readonly Dictionary<string, DateTime> _selfWrites = new(StringComparer.OrdinalIgnoreCase);          // 우리 저장 직후 이벤트 무시용
     private readonly Dictionary<string, System.Windows.Threading.DispatcherTimer> _reloadTimers = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, Task> _saveChains = new(StringComparer.OrdinalIgnoreCase);             // 같은 파일 저장 순서 보장
 
     public MainWindow()
     {
@@ -265,6 +265,7 @@ public partial class MainWindow : Window
             case "save":
                 Save(
                     msg.TryGetProperty("id", out var sid) ? sid.GetInt32() : -1,
+                    msg.TryGetProperty("request", out var sr) ? sr.GetInt32() : 0,
                     msg.TryGetProperty("path", out var sp) ? sp.GetString() : null,
                     msg.TryGetProperty("text", out var t) ? t.GetString() ?? "" : "");
                 break;
@@ -711,7 +712,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void Save(int id, string? path, string text)
+    private async void Save(int id, int request, string? path, string text)
     {
         // 경로가 없으면 (새 문서) 다른 이름으로 저장
         if (string.IsNullOrEmpty(path))
@@ -729,33 +730,52 @@ public partial class MainWindow : Window
         try
         {
             var full = Path.GetFullPath(path);
-            // 우리 저장이 외부 변경으로 감지되지 않게 시각 기록 (쓰기 시작 전에)
-            _selfWrites[full] = DateTime.UtcNow;
-            // 쓰기 + 이미지 맵 재생성은 UI 스레드 밖에서 (큰 문서·이미지에도 창 안 멈춤)
-            var imgMap = await Task.Run(() =>
+            // 같은 파일에 저장 요청이 겹쳐도 요청 순서대로 기록한다. 이전 저장보다 오래된 내용이
+            // 마지막에 덮어쓰는 경쟁 상태를 막고, 서로 다른 파일 저장은 계속 병렬로 처리한다.
+            var previous = _saveChains.TryGetValue(full, out var pending) ? pending : Task.CompletedTask;
+            var current = SaveFileQueuedAsync(previous, full, text);
+            _saveChains[full] = current;
+            Dictionary<string, string>? imgMap;
+            try
             {
-                // 임시 파일에 쓴 뒤 교체 — 쓰기 도중 크래시·전원 차단에도 원본이 잘린 채 남지 않게 (UTF-8, BOM 없음)
-                var tmp = full + ".mde-tmp";
-                try
-                {
-                    File.WriteAllText(tmp, text, new UTF8Encoding(false));
-                    File.Move(tmp, full, overwrite: true);
-                }
-                finally
-                {
-                    if (File.Exists(tmp)) try { File.Delete(tmp); } catch { }
-                }
-                // 저장 본문 기준으로 이미지 맵 재생성 → 편집 중 추가한 로컬 이미지가 미리보기에 반영됨
-                return BuildImageMap(text, Path.GetDirectoryName(full) ?? "");
-            });
-            // id를 되돌려줘 웹이 어느 탭인지 식별 (저장 중 탭 전환에도 안전)
-            SendToWeb(new { cmd = "saved", id, path = full, name = Path.GetFileName(full), imgMap });
+                imgMap = await current;
+            }
+            finally
+            {
+                if (_saveChains.TryGetValue(full, out var latest) && ReferenceEquals(latest, current))
+                    _saveChains.Remove(full);
+            }
+            // 요청 번호를 되돌려줘 웹이 겹친 저장 응답 중 최신 요청만 상태에 반영하게 한다.
+            SendToWeb(new { cmd = "saved", id, request, path = full, name = Path.GetFileName(full), imgMap });
         }
         catch (Exception ex)
         {
             MessageBox.Show(this, Loc.SaveError(ex.Message), Loc.CapError,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+    }
+
+    private static async Task<Dictionary<string, string>?> SaveFileQueuedAsync(Task previous, string full, string text)
+    {
+        try { await previous.ConfigureAwait(false); }
+        catch { /* 앞선 저장 실패가 다음 저장까지 막지는 않음 */ }
+
+        return await Task.Run(() =>
+        {
+            // 임시 파일에 쓴 뒤 교체 — 쓰기 도중 크래시·전원 차단에도 원본이 잘린 채 남지 않게 (UTF-8, BOM 없음)
+            var tmp = full + ".mde-tmp";
+            try
+            {
+                File.WriteAllText(tmp, text, new UTF8Encoding(false));
+                File.Move(tmp, full, overwrite: true);
+            }
+            finally
+            {
+                if (File.Exists(tmp)) try { File.Delete(tmp); } catch { }
+            }
+            // 저장 본문 기준으로 이미지 맵 재생성 → 편집 중 추가한 로컬 이미지가 미리보기에 반영됨
+            return BuildImageMap(text, Path.GetDirectoryName(full) ?? "");
+        }).ConfigureAwait(false);
     }
 
     // 웹이 활성 탭/변경 상태를 알려옴 → 창 제목 + 닫기 가드 + 외부 변경 감시 대상 갱신
@@ -845,8 +865,6 @@ public partial class MainWindow : Window
 
     private async void NotifyFileChanged(string path)
     {
-        // 우리 자신의 저장이 일으킨 이벤트는 무시 (웹 쪽 내용 비교가 2차 안전망)
-        if (_selfWrites.TryGetValue(path, out var at) && (DateTime.UtcNow - at).TotalSeconds < 2) return;
         if (!File.Exists(path)) return;                    // 삭제/이동은 열린 탭을 그대로 둠
         try
         {

@@ -1,7 +1,6 @@
 # MarkDownEditor
 
-**A free Markdown viewer and editor for Windows 10 / 11.**
-Double-click any `.md` file and it opens instantly — with a lightweight installer or a fully portable package, and no account or telemetry.
+MarkDownEditor is a Markdown viewer and editor for Windows 10 and 11. Set it as the default app for `.md` files and they open in a rendered view from Explorer. It is available as an installer or a portable ZIP and does not require an account or collect telemetry.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -12,7 +11,7 @@ Double-click any `.md` file and it opens instantly — with a lightweight instal
 
 [한국어](README.ko.md) · **English** · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Windows installer](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [Portable ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[what's new](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### [Windows installer](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [Portable ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[what's new](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![Preview — English UI](docs/images/en/preview.png)
 
@@ -20,18 +19,16 @@ Double-click any `.md` file and it opens instantly — with a lightweight instal
 
 ## Why this exists
 
-Most Markdown apps on Windows want an installer, a workspace, a vault, or a subscription. This one wants none of them. It is a **Markdown file viewer first** — the app you set as the default handler for `.md`, so that double-clicking a README, a spec, or a folder of notes just shows you the rendered document. Editing is one keystroke away when you need it.
+I built MarkDownEditor because opening a Markdown file on Windows often meant starting a full code editor or using a browser extension. This app is meant to behave more like Notepad: double-click a file to read it, then press `Ctrl+E` if you need to edit it.
 
-- **Your choice of delivery** — use the small per-user installer for normal Windows integration, or unzip the self-contained portable package anywhere, including a USB stick.
-- **Portable when you need it** — portable settings and cache live next to the executable. If that folder is read-only, the app falls back to `%TEMP%\MarkDownEditor`.
-- **Offline document processing** — rendering and editing stay local. The app checks GitHub Releases anonymously for new versions, and downloads a release only when you explicitly start an update.
-- **Free and open source** — MIT licensed.
-
-If you have been looking for a lightweight **Typora alternative**, a **free Markdown preview app for Windows**, or simply a way to **open `.md` files without a browser extension or a full code editor**, this is built for exactly that.
+- The installer adds Start menu and Open With entries for the current user.
+- The portable package keeps its settings and cache beside the executable when that folder is writable. It falls back to `%TEMP%\MarkDownEditor` for read-only locations.
+- Rendering and editing happen locally. The only routine network request is an anonymous check for new GitHub releases.
+- The project is released under the MIT license.
 
 ---
 
-## ✨ Features
+## Features
 
 **Reading**
 
@@ -42,7 +39,7 @@ If you have been looking for a lightweight **Typora alternative**, a **free Mark
 - **Syntax highlighting** — fenced blocks with a language tag (` ```cs `, ` ```bash `) get colored. Bundled offline, theme-aware.
 - **Mermaid diagrams** — the same ` ```mermaid ` syntax GitHub and GitLab use: flowcharts, sequence, gantt, state. Bundled offline, theme-aware.
 - **Table-of-contents sidebar** — toggled with `☰`, with scroll-spy highlighting of the section you are reading.
-- **Every link works** — `.md` opens in a new tab, web links in your browser, folders in Explorer, and `pdf` / `docx` / `xlsx` / `hwp` in their default apps. Cross-document anchors (`doc.md#section`) are supported.
+- **Document links** — `.md` opens in a new tab, web links in your browser, folders in Explorer, and `pdf` / `docx` / `xlsx` / `hwp` in their default apps. Cross-document anchors (`doc.md#section`) are supported.
 - **Back / Forward** — toolbar `←` `→`, `Alt+←` / `Alt+→`, or mouse buttons 4 and 5. Scroll position is remembered per document.
 - **Local images** — relative and absolute image paths (`![](diagram.png)`) resolve automatically. Click any image to view it full-screen.
 - **Keyboard-first** — scroll with `PageUp` / `PageDown` / arrows / `Home` / `End` the moment the app launches, no click needed.
@@ -51,7 +48,7 @@ If you have been looking for a lightweight **Typora alternative**, a **free Mark
 **Writing**
 
 - **Edit ↔ Preview in one keystroke** — `Ctrl+E`, with scroll position synchronized between the two modes.
-- **Formatting bar** — bold, italic, strikethrough, headings, bullet / numbered / task lists, quote, code, link, table, divider. One click each, all undoable with `Ctrl+Z`. **You do not need to know Markdown syntax.**
+- **Formatting bar** — buttons for bold, italic, strikethrough, headings, lists, quotes, code, links, tables, and dividers. Changes remain undoable with `Ctrl+Z`.
 - **Find and replace** — `Ctrl+F` works in *both* preview (all matches highlighted) and edit mode; `Ctrl+H` replaces, with case sensitivity and Replace All.
 - **Paste screenshots** — `Ctrl+V` an image while editing and it is saved into an `images/` folder next to the document, with the link inserted for you.
 - **Export to PDF** — one button, or `Ctrl+P`, turns the rendered preview into a PDF.
@@ -64,12 +61,12 @@ If you have been looking for a lightweight **Typora alternative**, a **free Mark
 - **Dark and light themes** — including the Windows title bar. Remembered across runs.
 - **10 UI languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português (Brasil). Follows your OS language by default; switch anytime from `🌐`.
 - **Compact chrome** — tabs and tools live in a custom title bar, Notepad-style.
-- **Remembers everything** — zoom level (`Ctrl+Wheel`), scroll position, and even the editor caret position, per tab.
+- **Per-tab state** — zoom level (`Ctrl+Wheel`), scroll position, and editor caret position are restored when you switch tabs.
 - **In-app updates** — a red dot appears next to the version when a new release is out. Portable installs atomically replace their ZIP payload; installed copies run the verified next installer so Windows' uninstall metadata stays correct.
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | Document preview | Language and version menu |
 |:---:|:---:|
@@ -77,7 +74,7 @@ If you have been looking for a lightweight **Typora alternative**, a **free Mark
 
 ---
 
-## 🚀 Installation
+## Installation
 
 Both packages are for Windows 10 version 1809 or newer / Windows 11, x64. Neither requires administrator rights.
 
@@ -115,7 +112,7 @@ The folder holds `MarkDownEditor.exe` plus `web/` (the UI), `Runtime/` (the bund
 > **The blue SmartScreen dialog on first run is expected.** The executable is not code-signed, so Windows shows *"Windows protected your PC"*. Click **More info → Run anyway**. It only appears once.
 > If you would rather not run an unsigned binary, building it yourself takes two commands — see *Building from source* below.
 
-### Make it the default app for `.md` files *(this is the point)*
+### Make it the default app for `.md` files
 
 Once this is set, double-clicking any Markdown file in Explorer opens it rendered, instantly.
 
@@ -137,7 +134,7 @@ On startup the app anonymously checks GitHub Releases and puts a **red dot** nex
 
 ---
 
-## ⌨️ Keyboard shortcuts
+## Keyboard shortcuts
 
 | Key | Action |
 |------|------|
@@ -160,9 +157,9 @@ On startup the app anonymously checks GitHub Releases and puts a **red dot** nex
 
 ---
 
-## 🧜 Mermaid diagrams
+## Mermaid diagrams
 
-Tag a fenced block `mermaid` and it renders as a diagram — the [full mermaid syntax](https://mermaid.js.org/), offline, matching your current theme.
+Tag a fenced block `mermaid` and the bundled renderer displays it offline using the current theme. See the [Mermaid documentation](https://mermaid.js.org/) for supported syntax.
 
 ````markdown
 ```mermaid
@@ -175,21 +172,21 @@ flowchart TD
 ```
 ````
 
-Diagrams written here render identically on GitHub and GitLab, and vice versa. A block with a syntax error shows the error in place; the rest of the document still renders.
+The fenced-block format is also understood by GitHub and GitLab. A syntax error is shown in that block without stopping the rest of the document from rendering.
 
 ---
 
-## 🔒 Privacy
+## Privacy
 
 - Your documents and settings never leave your machine. All rendering, editing, and exporting is local.
 - During app use, network access is limited to the auto-update check: an anonymous GitHub Releases request and a release download only when you start an update. On first installation, Setup may also download Microsoft's WebView2 Runtime if Windows does not already have it. No document content, analytics, or identifiers are sent.
 - The installed edition stores theme and language preferences, session recovery data, recent-document paths, and WebView2 cache under `%LOCALAPPDATA%\MarkDownEditor`. The portable edition stores them in `WebView2Data/` beside the executable, with `%TEMP%\MarkDownEditor` as a read-only fallback.
-- A strict **Content Security Policy** blocks inline scripts, plugins, base-URL rewriting, and automatic remote-image requests from previewed documents. Local images are resolved by the native host and rendered as local data.
+- Previewed HTML is stripped of scripts, frames, forms, event handlers, and document-wide styles. A **Content Security Policy** also blocks plugins, base-URL rewriting, form submission, frames, and automatic remote-image requests. Local images are resolved by the native host and rendered as local data.
 - Release builds disable the browser context menu and developer tools. (The app's own right-click menus work normally.)
 
 ---
 
-## 🛠️ Building from source
+## Building from source
 
 ```powershell
 .\tests\RepositoryContracts.ps1
@@ -198,7 +195,7 @@ Diagrams written here render identically on GitHub and GitLab, and vice versa. A
 
 The repository pins .NET SDK 10.0.302 and Inno Setup 7.0.2. The release script publishes one self-contained app, creates both distributions, verifies the pinned WebView2 bootstrapper, and writes SHA-256 sums plus a machine-readable manifest. See [DESIGN.md](DESIGN.md) for distribution and trust boundaries.
 
-The current end-to-end release evidence is recorded in [QA_REPORT_2026-07-28.md](QA_REPORT_2026-07-28.md).
+The current end-to-end release evidence is recorded in [QA_REPORT_2026-07-29.md](QA_REPORT_2026-07-29.md).
 
 ### Project layout
 
@@ -237,13 +234,11 @@ A full feature tour is also available in [Korean](README.ko.md).
 
 ---
 
-## 💬 Feedback
+## Feedback
 
 Bug reports and feature requests are welcome on [GitHub Issues](https://github.com/jjw1270/MarkdownEditor/issues/new/choose). You can also click the version label next to the title inside the app — the bug report form arrives pre-filled with your version.
 
-If the app is useful to you, a ⭐ helps other people find it.
-
-## 📄 License
+## License
 
 MIT — see [LICENSE](LICENSE). Bundled third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (the mermaid bundle carries one small local patch, documented there).
 

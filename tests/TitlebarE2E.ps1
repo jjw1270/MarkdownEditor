@@ -48,9 +48,15 @@ try {
     if ($process.HasExited -or $process.MainWindowHandle -eq 0) { throw "Main window did not start" }
     $handle = [IntPtr]$process.MainWindowHandle
     [TitlebarE2ENative]::ShowWindow($handle, 9) | Out-Null
+    $restoreDeadline = (Get-Date).AddSeconds(5)
+    while ([TitlebarE2ENative]::IsZoomed($handle) -and (Get-Date) -lt $restoreDeadline) {
+        [TitlebarE2ENative]::ShowWindow($handle, 9) | Out-Null
+        Start-Sleep -Milliseconds 100
+    }
+    if ([TitlebarE2ENative]::IsZoomed($handle)) { throw "Main window did not restore before titlebar E2E" }
     [TitlebarE2ENative]::MoveWindow($handle, 120, 120, 1200, 800, $true) | Out-Null
     [TitlebarE2ENative]::SetForegroundWindow($handle) | Out-Null
-    Start-Sleep -Seconds 2
+    Start-Sleep -Milliseconds 700
 
     $normal = Get-Rect $handle
     DoubleClick ($normal.Right - 450) ($normal.Top + 36)

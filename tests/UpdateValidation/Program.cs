@@ -163,7 +163,11 @@ try
     }
 
     var required = new[] { "MarkDownEditor.exe", "web/index.html", "Runtime/msedgewebview2.exe" };
-    ExpectSuccess("minimal allowed archive", () => Invoke("ValidateUpdateArchive", MakeZip("valid.zip", required)));
+    ExpectSuccess("minimal allowed archive", () =>
+    {
+        var expanded = (long)(Invoke("ValidateUpdateArchive", MakeZip("valid.zip", required)) ?? -1L);
+        if (expanded <= 0) throw new InvalidDataException("expanded size was not reported");
+    });
     ExpectInvalid("unexpected root", () =>
         Invoke("ValidateUpdateArchive", MakeZip("extra.zip", [.. required, "secret.txt"])));
     ExpectInvalid("path traversal", () =>
@@ -172,6 +176,38 @@ try
         Invoke("ValidateUpdateArchive", MakeZip("missing.zip", "MarkDownEditor.exe", "web/index.html")));
     ExpectInvalid("duplicate entry", () =>
         Invoke("ValidateUpdateArchive", MakeZip("duplicate.zip", [.. required, "web/index.html"])));
+    ExpectInvalid("ambiguous empty path segment", () =>
+        Invoke("ValidateUpdateArchive", MakeZip("empty-segment.zip", [.. required, "web//extra.js"])));
+    ExpectInvalid("ambiguous dot path segment", () =>
+        Invoke("ValidateUpdateArchive", MakeZip("dot-segment.zip", [.. required, "web/./extra.js"])));
+    ExpectInvalid("alternate data stream path", () =>
+        Invoke("ValidateUpdateArchive", MakeZip("ads.zip", [.. required, "web/extra.js:payload"])));
+    ExpectInvalid("trailing-dot path", () =>
+        Invoke("ValidateUpdateArchive", MakeZip("trailing-dot.zip", [.. required, "web/extra.js."])));
+    ExpectInvalid("symbolic link entry", () =>
+    {
+        var path = MakeZip("symlink.zip", required);
+        using (var zip = ZipFile.Open(path, ZipArchiveMode.Update))
+        {
+            var link = zip.CreateEntry("web/link.js");
+            link.ExternalAttributes = unchecked((int)0xA1FF0000);
+        }
+        Invoke("ValidateUpdateArchive", path);
+    });
+
+    await ExpectSuccessAsync("overlapping saves preserve request order", async () =>
+    {
+        var path = Path.Combine(temp, "ordered-save.md");
+        var gate = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var first = (Task?)Invoke("SaveFileQueuedAsync", gate.Task, path, "older")
+            ?? throw new InvalidDataException("first save did not return Task");
+        var second = (Task?)Invoke("SaveFileQueuedAsync", first, path, "newest")
+            ?? throw new InvalidDataException("second save did not return Task");
+        gate.SetResult(true);
+        await Task.WhenAll(first, second);
+        if (File.ReadAllText(path) != "newest")
+            throw new InvalidDataException("an older save overwrote the newest request");
+    });
 
     ExpectSuccess("helper rollback on locked executable", () =>
     {

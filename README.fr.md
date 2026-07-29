@@ -1,7 +1,6 @@
 # MarkDownEditor
 
-**Un visualiseur et éditeur Markdown rapide et portable pour Windows.**
-Double-cliquez sur un fichier `.md` et il s'ouvre, tout simplement — aucune installation requise.
+MarkDownEditor est un visualiseur et éditeur Markdown pour Windows 10 et 11. Il est proposé sous forme d'installateur ou de ZIP portable, sans compte ni télémétrie.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d6)
@@ -12,21 +11,21 @@ Double-cliquez sur un fichier `.md` et il s'ouvre, tout simplement — aucune in
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · **Français** · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### ⬇️ [Programme d'installation Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ZIP portable](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[nouveautés](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
+### [Programme d'installation Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ZIP portable](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[nouveautés](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
 
 ![Aperçu — interface française](docs/images/fr/preview.png)
 
-## Points forts
+## Fonctionnalités
 
-- **Portable par défaut** — décompressez et lancez. Le runtime WebView2 est inclus ; les paramètres et le cache restent à côté de l'exe. Si ce dossier est en lecture seule, `%TEMP%\MarkDownEditor` est utilisé.
-- **Mise à jour automatique** — l'application vérifie discrètement GitHub Releases au démarrage ; quand une nouvelle version est disponible, une pastille rouge apparaît à côté de la version dans la barre de titre. Cliquez sur la version → **Nouvelle version disponible** et mettez à jour directement dans l'application avec une barre de progression — paramètres et session sont conservés. (La mise à jour automatique — vérification de version anonyme et téléchargement uniquement si vous la lancez — est le seul accès réseau de l'application ; aucun document ni donnée personnelle n'est jamais envoyé.)
+- **Deux paquets** — l'installateur intègre l'application à Windows pour l'utilisateur actuel. Le ZIP portable contient WebView2 et conserve ses données près de l'exécutable lorsque le dossier est accessible en écriture.
+- **Mise à jour automatique** — l'application consulte anonymement GitHub Releases au démarrage. Le téléchargement ne commence que lorsque vous lancez la mise à jour et aucun document n'est transmis.
 - **Une fenêtre, plusieurs onglets** — chaque fichier s'ouvre dans un onglet d'une fenêtre unique (instance unique via mutex + named pipe). Les onglets se réordonnent par glisser-déposer et se parcourent avec `Ctrl+Tab`.
-- **Tous les liens fonctionnent** — les liens `.md` s'ouvrent dans un nouvel onglet, les liens web dans votre navigateur, les dossiers dans l'Explorateur, les autres documents dans leur application par défaut. Les ancres entre documents (`doc.md#section`) sont prises en charge.
+- **Liens de document** — les liens `.md` s'ouvrent dans un nouvel onglet, les liens web dans le navigateur, les dossiers dans l'Explorateur et les documents pris en charge dans leur application par défaut. Les ancres entre documents (`doc.md#section`) sont prises en charge.
 - **Précédent / Suivant** — boutons de la barre d'outils, `Alt+←`/`Alt+→`, ou boutons 4/5 de la souris.
 - **Rendu façon GitHub** — tableaux, coloration syntaxique (hors ligne) et **diagrammes mermaid** (hors ligne, adaptés au thème).
 - **Sommaire latéral** — avec mise en évidence de la section en cours de lecture (scroll-spy).
 - **Édition ↔ Aperçu** — `Ctrl+E`, avec position de défilement synchronisée entre les deux modes.
-- **Barre de mise en forme** — visible en mode édition : gras, titres, listes, cases à cocher, citation, code, lien, tableau, séparateur — un clic chacun, **aucune connaissance de Markdown requise** (tout est annulable avec `Ctrl+Z`).
+- **Barre de mise en forme** — insère du gras, des titres, des listes, des cases à cocher, des citations, du code, des liens, des tableaux et des séparateurs. Les modifications restent annulables avec `Ctrl+Z`.
 - **Menus contextuels** — clic droit dans l'aperçu (copier, ouvrir le lien, copier l'adresse, afficher l'image, rechercher) ou dans l'éditeur (couper/copier/coller/tout sélectionner).
 - **Rechercher / Remplacer** — `Ctrl+F` fonctionne dans l'aperçu (surlignage de toutes les correspondances) comme en édition ; `Ctrl+H` remplace en mode édition.
 - **Export PDF** — le bouton `📄` à côté d'Enregistrer, ou `Ctrl+P`, toujours en thème clair.
@@ -41,7 +40,7 @@ Double-cliquez sur un fichier `.md` et il s'ouvre, tout simplement — aucune in
 
 ![Menu des langues](docs/images/fr/menu.png)
 
-## 🚀 Installation
+## Installation
 
 Deux paquets sont proposés pour Windows 10 version 1809 ou ultérieure et Windows 11 (x64). Aucun ne demande de droits administrateur.
 
@@ -87,7 +86,7 @@ Le dossier contient `MarkDownEditor.exe` ainsi que `web/` (l'interface), `Runtim
 > **La fenêtre bleue SmartScreen au premier lancement est normale.** L'exécutable n'est pas signé, Windows affiche donc *« Windows a protégé votre ordinateur »*. Cliquez sur **Informations complémentaires → Exécuter quand même**. Cela n'apparaît qu'une fois.
 > Si vous préférez ne pas exécuter un binaire non signé, le compiler vous-même tient en deux commandes — voir *Compiler depuis les sources* plus bas.
 
-### Étape 3 — En faire l'application par défaut pour `.md` *(c'est tout l'intérêt)*
+### Étape 3 — En faire l'application par défaut pour `.md`
 
 Une fois cela réglé, un double-clic sur n'importe quel fichier Markdown dans l'Explorateur l'ouvre rendu, instantanément.
 

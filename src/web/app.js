@@ -151,6 +151,10 @@ marked.setOptions({ gfm: true, breaks: false });
 if (typeof hljs !== 'undefined') hljs.configure({ ignoreUnescapedHTML: true });
 
 function activeTab() { return tabs.find(t => t.id === activeId) || null; }
+function samePath(a, b) {
+  return typeof a === 'string' && typeof b === 'string'
+    && (a === b || a.toLowerCase() === b.toLowerCase());
+}
 
 // ---- mermaid 다이어그램 렌더 (```mermaid → SVG, 테마 연동) ----
 // 번들(3.4MB)은 시작 시 파싱하지 않고 mermaid 블록을 처음 만날 때 지연 로드 (시작 속도 최적화).
@@ -161,6 +165,7 @@ let mermaidLoad = null;               // 로드 프라미스 (1회만)
 function mermaidInit(theme) {
   mermaid.initialize({
     startOnLoad: false,
+    securityLevel: 'strict',
     theme: theme === 'dark' ? 'dark' : 'default',
     markdownAutoWrap: false,               // 라벨 자동 줄바꿈 해제 → 노드 폭이 내용에 맞게 늘어남
     flowchart: { wrappingWidth: 99999 },   // 노드 텍스트 최대폭(기본 200px) 제한 해제
@@ -274,6 +279,7 @@ function render(force) {
   }
   // .md-body로 감싸 좌우 여백 적용 (스크롤바는 전체 너비 #preview에 유지)
   els.preview.innerHTML = '<div class="md-body">' + marked.parse((t ? t.text : '') || '') + '</div>';
+  sanitizeRenderedContent(els.preview);
   assignHeadingIds();                  // 헤딩에 id 부여 → 문서 내 #앵커 링크 이동 지원
   applyImageMap(t ? t.img : null);     // 로컬 이미지 src를 로드 가능한 URL로 교체
   renderMermaid();
@@ -298,6 +304,25 @@ function render(force) {
       t.htmlTheme = theme;
       t.htmlImg = img;
     });
+  }
+}
+
+// Markdown의 일반 HTML은 유지하되 앱 실행·내비게이션·전체 UI 스타일에 영향을 주는 요소는 제거한다.
+// 링크 클릭과 로컬 이미지는 아래의 전용 처리기가 맡으므로 이벤트 속성이나 폼이 필요하지 않다.
+function sanitizeRenderedContent(root) {
+  root.querySelectorAll('script, style, base, iframe, object, embed, link, meta, form').forEach((n) => n.remove());
+  for (const el of root.querySelectorAll('*')) {
+    for (const attr of [...el.attributes]) {
+      const name = attr.name.toLowerCase();
+      const value = attr.value.trim();
+      const normalizedUrl = value.replace(/[\u0000-\u0020\u007f-\u009f]/g, '');
+      if (name.startsWith('on') || name === 'style' || name === 'srcdoc' || name === 'formaction'
+          || name === 'autofocus' || name === 'background'
+          || ((name === 'href' || name === 'src' || name.endsWith(':href'))
+              && /^(?:javascript|vbscript):/i.test(normalizedUrl))) {
+        el.removeAttribute(attr.name);
+      }
+    }
   }
 }
 
@@ -414,7 +439,7 @@ function assignHeadingIds() {
 }
 function slugify(s) {
   return s.trim().toLowerCase()
-    .replace(/[^\w\s가-힣-]/g, '')      // 단어문자·공백·하이픈·한글만 남김
+    .replace(/[^\p{L}\p{M}\p{N}_\s-]/gu, '')  // 모든 언어의 글자·결합문자·숫자 유지
     .replace(/\s+/g, '-');
 }
 function scrollToAnchor(id) {
@@ -654,7 +679,7 @@ function setDirty(v) {
 function openOrFocus(doc) {
   // 같은 경로가 이미 열려 있으면 새로 만들지 않고 그 탭으로 이동 (중복 방지)
   if (doc.path) {
-    const exist = tabs.find(t => t.path === doc.path);
+    const exist = tabs.find(t => samePath(t.path, doc.path));
     if (exist) { focusTab(exist.id); return; }
   }
   // 파일을 여는데 유일한 탭이 아무것도 입력하지 않은 새 문서면 자리를 내주고 사라짐 (VS Code 방식)
@@ -672,6 +697,8 @@ function openOrFocus(doc) {
     selEnd: 0,
     editScroll: 0,
     img: doc.img || null,    // { 원본src: 로드가능URL } — 로컬 이미지 표시용 (C#이 제공)
+    saveRequest: 0,          // 겹친 저장 응답 중 최신 요청을 식별
+    pendingSaves: new Map(), // request → 해당 요청이 기록한 본문
   };
   tabs.push(tab);
   focusTab(tab.id);
@@ -897,8 +924,10 @@ function save() {
   const t = activeTab();
   if (!t) return;
   if (t.editing) t.text = els.editor.value;  // 편집 중이면 최신값 반영
-  t.savedText = t.text;                      // saved 응답에서 그 사이 입력 여부 판정용
-  if (host) host.postMessage({ cmd: 'save', id: t.id, path: t.path, text: t.text });
+  const request = ++t.saveRequest;
+  t.pendingSaves.clear();                    // 이전 응답은 무시하므로 최신 요청 본문만 유지
+  t.pendingSaves.set(request, t.text);        // saved 응답에서 그 사이 입력 여부 판정용
+  if (host) host.postMessage({ cmd: 'save', id: t.id, request, path: t.path, text: t.text });
 }
 
 function openFile() {
@@ -1927,7 +1956,7 @@ function offerRestore() {
     return;
   }
   for (const en of entries) {
-    const exist = en.path ? tabs.find(x => x.path === en.path) : null;
+    const exist = en.path ? tabs.find(x => samePath(x.path, en.path)) : null;
     if (exist) {                                 // 같은 파일이 이미 열려 있으면 백업 내용으로 교체
       exist.text = en.text || '';
       exist.dirty = true;
@@ -1991,7 +2020,7 @@ function insertPastedImage(m) {
 // 열린 문서가 다른 프로그램에서 저장되면 C#이 fileChanged로 새 내용을 보내온다.
 // 미저장 편집이 없으면 조용히 반영(+토스트), 있으면 덮어쓸지 확인한다.
 function applyExternalChange(m) {
-  const t = tabs.find(x => x.path === m.path);
+  const t = tabs.find(x => samePath(x.path, m.path));
   if (!t) return;
   const newText = m.text || '';
   const curText = (t.id === activeId && t.editing) ? els.editor.value : t.text;
@@ -2089,12 +2118,15 @@ if (host) {
     } else if (m.cmd === 'saved') {
       const t = tabs.find(x => x.id === m.id);
       if (!t) return;
+      const request = Number.isInteger(m.request) ? m.request : 0;
+      const savedText = t.pendingSaves.get(request);
+      t.pendingSaves.delete(request);
+      if (request !== t.saveRequest || savedText === undefined) return; // 오래된 저장 응답은 상태를 되돌리지 않음
       t.path = m.path || t.path;
       t.name = m.name || t.name;
       // 저장 요청~응답 사이에 입력이 있었다면 dirty 유지 (그 사이 편집분이 미저장 표시 없이 사라지는 것 방지)
       const curText = (t.id === activeId && t.editing) ? els.editor.value : t.text;
-      t.dirty = t.savedText !== undefined && curText !== t.savedText;
-      t.savedText = undefined;
+      t.dirty = curText !== savedText;
       t.img = m.imgMap || null;               // 저장 시점 기준 이미지 맵 (편집 중 추가분 반영)
       backupNow();                            // 저장된 탭은 백업에서 즉시 제거
       renderTabs();

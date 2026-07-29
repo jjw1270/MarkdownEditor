@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.1 — 2026-07-29
+
+- **Reliable overlapping saves** — serializes writes to the same file and tags save responses so an older request cannot overwrite or mark a newer edit as saved.
+- **External-change and path fixes** — no longer drops an external write made immediately after an in-app save, and treats Windows paths that differ only by case as the same open document.
+- **Unicode anchors** — heading IDs now retain letters, combining marks, and numbers from every supported UI language.
+- **Safer rendered HTML** — removes scripts, frames, forms, event handlers, and document-wide styles, with tighter CSP rules for frames, forms, media, and network connections.
+- **Update hardening** — rejects ambiguous ZIP paths, alternate data streams, and link entries, and checks free space against the expanded payload size before extraction.
+- **Release QA refresh** — adds browser-level save, reload, Unicode, sanitization, and duplicate-tab E2E coverage; updates pinned GitHub Actions and verifies the current Fixed WebView2 Runtime used by portable builds.
+- **README copy edit** — replaces promotional and repetitive wording with shorter, factual descriptions across the main documentation and localized installation headings.
+
 ## 1.3.0 — 2026-07-28
 
 - **Two supported distributions** — added a lightweight, per-user Windows installer alongside the fully self-contained portable ZIP. The installer uses Evergreen WebView2, adds Start menu and Open With registrations without changing the user's default app, and preserves user data on uninstall.
