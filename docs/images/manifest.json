@@ -1,77 +1,77 @@
 {
-    "appVersion":  "1.3.1",
-    "capturedAtUtc":  "2026-07-29T08:37:42Z",
+    "appVersion":  "1.3.2",
+    "capturedAtUtc":  "2026-07-29T16:36:22Z",
     "window":  "1440x900",
     "locales":  [
                     {
                         "code":  "en",
                         "preview":  "en/preview.png",
                         "menu":  "en/menu.png",
-                        "previewSha256":  "89771c778328c4ba073f0f646f532066e9a2beb1b0cf8984a1a637bfa0a5bf67",
-                        "menuSha256":  "a17bc94404ca90e331ea0c41c7a49371589309e3cecbc90ba4b8e8e909ffdf11"
+                        "previewSha256":  "8bcf8a45f8eca782a242a9957eeca80a62cc4c5a1c87479510a6195f3da6eb5c",
+                        "menuSha256":  "b58239dcee2c7f8625eed4a9efa719b2cbfa48307e736ce2d09ded1e666f2141"
                     },
                     {
                         "code":  "ko",
                         "preview":  "ko/preview.png",
                         "menu":  "ko/menu.png",
-                        "previewSha256":  "713c3ddcaf1203310f683425a55e2ad451fee1f8ee7da4a31b964d642e167879",
-                        "menuSha256":  "654f56373a417f57d365a81991142519d8496919b2f373a159be7a4cfb16360e"
+                        "previewSha256":  "98b93cba2858cb60c4c1f973bbd673d837ce37b0387c64135428542a245328d1",
+                        "menuSha256":  "552f506fd2d253bcd98f64b637d8c0abfaad8b8f2221a061df3c42a2df3f8d39"
                     },
                     {
                         "code":  "ja",
                         "preview":  "ja/preview.png",
                         "menu":  "ja/menu.png",
-                        "previewSha256":  "cb6e53ea363373fe255e38e03f52d25e59ec7f0db025296eace3d8e0f9b93f3a",
-                        "menuSha256":  "69c686223414f030adeee2d438f48b80ddeaee93e7fedb24ddc6e98f082ae223"
+                        "previewSha256":  "e536f09268bcf706c968ecbfd58b6fb37aed0cb5fee3b4484c8aa60bd851c527",
+                        "menuSha256":  "2ee65ea101a9b18d1964545522fb509886329c73fd43bc05699ca471da587fa7"
                     },
                     {
                         "code":  "zh-CN",
                         "preview":  "zh-CN/preview.png",
                         "menu":  "zh-CN/menu.png",
-                        "previewSha256":  "22e4af509deb895488374fb475c42b5c9bab416cc554d1ff6541509fe2962850",
-                        "menuSha256":  "ddb703cd8153a409f3cf6d4c094f2c0f94ef92fd078911652b8d022e80ea8269"
+                        "previewSha256":  "3c8fcb26275ebff8aabcbae509b6062db0820c18384a459d8abf16faeec43ece",
+                        "menuSha256":  "785611ecdece68992775758d14659c405d5d56e2349f22dbbd888c0ede4ff3ef"
                     },
                     {
                         "code":  "zh-TW",
                         "preview":  "zh-TW/preview.png",
                         "menu":  "zh-TW/menu.png",
-                        "previewSha256":  "77900ebcf826e8ac2a8627c880ea387c1746574cc2ef4e1fc134f381aa64ccce",
-                        "menuSha256":  "1d44ebff4bc8df892b074267428db537eaab4ee54405c1b7eedc49604f3651ab"
+                        "previewSha256":  "46f53487b02040e09ff6de989fa6201a866abfc7cdbd0b8a05224b146ca6f72b",
+                        "menuSha256":  "ba6fa6101d0e91d141f24ef40527b001079ebd9b2f5d556af57de6c8a9b95904"
                     },
                     {
                         "code":  "es",
                         "preview":  "es/preview.png",
                         "menu":  "es/menu.png",
-                        "previewSha256":  "08043cafadab757734d3d9a3d0d517942e60c44f3146ff817a302deba8d4c7db",
-                        "menuSha256":  "d5d45f021943aa2b6c24764e778733c759cc48121fce3c5cef316c6289526511"
+                        "previewSha256":  "453dd5b9f37b26277ad70d8c8e05a0b6d0d5bb46c39a99b3b6a1c7336868cbe4",
+                        "menuSha256":  "46c5442c86e6bafef1b0248d82658404914be8cbc4b7b3075838cad3588a9624"
                     },
                     {
                         "code":  "fr",
                         "preview":  "fr/preview.png",
                         "menu":  "fr/menu.png",
-                        "previewSha256":  "cc00e67878dff9b409363f1751e6204c300017b2f5376f5ad5a65510d21184c9",
-                        "menuSha256":  "ad505f9a81d98e42cb1adc4b17ae766a4169f736d778105e624131913b38a734"
+                        "previewSha256":  "0d77f03d057565485ef1905480c0e699c3018aacb8a46c055a98333b1966a1c5",
+                        "menuSha256":  "043f11327c4e06bb1a51e788742bb14b87d53646807908b2c797ccb99ae12f1e"
                     },
                     {
                         "code":  "de",
                         "preview":  "de/preview.png",
                         "menu":  "de/menu.png",
-                        "previewSha256":  "f02240b2c9d52b0b96e85ac61a8e2aaed3ea09aeeb7be82814a42a51cf25bbcc",
-                        "menuSha256":  "b28610e065049cf39db7d0b265c38c47ccef448e8522b5ada992620c7b5267cb"
+                        "previewSha256":  "c2420fb5a1851c6d1c6abecd651e2b6170c8736cfb12cc5d14dedd7fdb482682",
+                        "menuSha256":  "bfc244552978c17178798a9b5b2f2bf74abc69e2960bea1760a6e5331f474af9"
                     },
                     {
                         "code":  "ru",
                         "preview":  "ru/preview.png",
                         "menu":  "ru/menu.png",
-                        "previewSha256":  "8d45a2955d717f361988ed1c61f1f0ee974b0a353c24fceb78206839da877053",
-                        "menuSha256":  "4069030ddc65cb3bec3b4b2fc1b51ba5cc86efbdb0d5787c43325e628acd5cb7"
+                        "previewSha256":  "75e637dadf027b9fcf96be4d7b692d1b89cb205c67a7671cf8679bc6ee043afc",
+                        "menuSha256":  "f3818d046da617b0c9fc52974307650a12eb0cba7f16d590792e58a10b709059"
                     },
                     {
                         "code":  "pt-BR",
                         "preview":  "pt-BR/preview.png",
                         "menu":  "pt-BR/menu.png",
-                        "previewSha256":  "c79b73fa8f1ec551be5006b6e1d2eb4f8262f5da65d23d68a013cf4de1c22dfd",
-                        "menuSha256":  "02370c17d485a3c3bd0a8d17557c75fe9e8d9fe5f4079ee58e9bbc051f89b5a7"
+                        "previewSha256":  "34683bbca662152d2ff0857e5787a3649c9ee734d884607a6720fedc2602aa9d",
+                        "menuSha256":  "0a351a84ac4617980ea96a732d5bae4248dd8d49fc685faf243643c3fda95ce7"
                     }
                 ]
 }

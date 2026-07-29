@@ -1,14 +1,13 @@
-MarkDownEditor 1.3.1 is a maintenance release focused on saving, file reloads, document anchors, and update safety.
+MarkDownEditor 1.3.2 improves document zoom and the tab strip without changing the compact application layout.
 
 ## Changes
 
-- Saves to the same file now run in request order. If `Ctrl+S` is pressed again while a save is still running, an older request can no longer overwrite the newer text or clear its unsaved marker.
-- An external edit made immediately after an in-app save is detected instead of being ignored by the save-event debounce.
-- Windows paths that differ only by letter case resolve to the same tab.
-- Heading anchors preserve Japanese, Chinese, accented, Cyrillic, Korean, and other Unicode text.
-- Raw HTML in a Markdown preview can no longer add scripts, frames, forms, event handlers, or styles that affect the whole application window.
-- Portable updates reject ambiguous archive paths, alternate data streams, and link entries. Available disk space is checked against the expanded package size before extraction.
-- The automated QA suite now covers these cases through the running WebView2 application. Release workflows use current SHA-pinned GitHub Actions and verify the bundled Fixed WebView2 Runtime version.
+- `Ctrl+Wheel`, `Ctrl++`, and `Ctrl+-` now resize only the document preview and editor text. Tabs, toolbars, dialogs, and window controls remain at 100%.
+- The tab row displays the current document zoom. Click the percentage or press `Ctrl+0` to reset it to 100%.
+- Document zoom is remembered across launches, keeps the reading position stable while text reflows, and does not change PDF output size.
+- The new-document button uses a centered SVG icon and remains visible when the tab list scrolls horizontally.
+- A new keyboard button opens a localized shortcut reference; press `Ctrl+/` to open it without leaving the document.
+- The WebView2 behavior suite now exercises zoom isolation, editor/preview consistency, reset, persistence after restart, and tab-control geometry in an isolated profile.
 
 ## Downloads
 

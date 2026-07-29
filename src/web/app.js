@@ -3,6 +3,9 @@ const host = window.chrome && window.chrome.webview;
 
 const els = {
   tabs: document.getElementById('tabs'),
+  newTabBtn: document.getElementById('newTabBtn'),
+  zoomBtn: document.getElementById('zoomBtn'),
+  zoomPct: document.getElementById('zoomPct'),
   preview: document.getElementById('preview'),
   editor: document.getElementById('editor'),
   bar: document.getElementById('bar'),
@@ -23,6 +26,12 @@ const els = {
   pdfBtn: document.getElementById('pdfBtn'),
   themeBtn: document.getElementById('themeBtn'),
   langBtn: document.getElementById('langBtn'),
+  shortcutsBtn: document.getElementById('shortcutsBtn'),
+  shortcutOverlay: document.getElementById('shortcutOverlay'),
+  shortcutDialog: document.getElementById('shortcutDialog'),
+  shortcutTitle: document.getElementById('shortcutTitle'),
+  shortcutClose: document.getElementById('shortcutClose'),
+  shortcutList: document.getElementById('shortcutList'),
   toast: document.getElementById('toast'),
   ctxmenu: document.getElementById('ctxmenu'),
   toggleBtn: document.getElementById('toggleBtn'),
@@ -89,10 +98,16 @@ function applyLocale(lang) {
   setTitle(els.saveBtn, L.saveTitle);
   setTitle(els.pdfBtn, L.menuPdf);
   setTitle(els.langBtn, `${L.menuLang} — ${langCurrent.toUpperCase()}`);
+  setTitle(els.shortcutsBtn, L.shortcutsOpenTitle);
+  els.shortcutTitle.textContent = L.shortcutsTitle;
+  setTitle(els.shortcutClose, L.findCloseTitle);
+  renderShortcutList();
   updateThemeTitle();
   setTitle(els.backBtn, L.backTitle);
   setTitle(els.fwdBtn, L.fwdTitle);
   setTitle(els.tocBtn, L.tocBtnTitle);
+  setTitle(els.newTabBtn, L.tabNew);
+  updateDocumentZoomUi();
   // 서식 바 (아이콘/약자 버튼 — 라벨은 툴팁으로만)
   const fmtTips = {
     fmtBold: `${L.fmtBold} (Ctrl+B)`, fmtItalic: `${L.fmtItalic} (Ctrl+I)`, fmtStrike: L.fmtStrike,
@@ -139,6 +154,59 @@ function applyLocale(lang) {
 let tabs = [];
 let activeId = null;
 let nextId = 1;
+
+// ---- 문서 배율: WebView 전체 UI는 100%로 두고 편집기·미리보기 타이포만 확대한다. ----
+const DOCUMENT_ZOOM_MIN = 50;
+const DOCUMENT_ZOOM_MAX = 200;
+const DOCUMENT_ZOOM_STEP = 10;
+let documentZoom = 100;
+
+function normalizeDocumentZoom(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 100;
+  const stepped = Math.round(n / DOCUMENT_ZOOM_STEP) * DOCUMENT_ZOOM_STEP;
+  return Math.min(DOCUMENT_ZOOM_MAX, Math.max(DOCUMENT_ZOOM_MIN, stepped));
+}
+
+function updateDocumentZoomUi() {
+  if (!els.zoomBtn || !els.zoomPct) return;
+  els.zoomPct.textContent = `${documentZoom}%`;
+  els.zoomBtn.classList.toggle('zoomed', documentZoom !== 100);
+  const current = typeof L.zoomCurrent === 'function'
+    ? L.zoomCurrent(documentZoom) : `${documentZoom}%`;
+  setTitle(els.zoomBtn, `${current} — ${L.zoomResetTitle}`);
+}
+
+function setDocumentZoom(value, persist = true) {
+  const next = normalizeDocumentZoom(value);
+  if (next === documentZoom) { updateDocumentZoomUi(); return; }
+
+  // 글꼴 재배치 전후의 논리적 위치를 보존해 확대할 때 읽던 문단이 튀지 않게 한다.
+  const t = activeTab();
+  const editing = !!(t && t.editing);
+  const position = t ? (editing ? measureEditorPos(t) : measurePreviewPos()) : null;
+
+  documentZoom = next;
+  document.documentElement.style.setProperty('--preview-font-size', `${14 * next / 100}px`);
+  document.documentElement.style.setProperty('--editor-font-size', `${13 * next / 100}px`);
+  updateDocumentZoomUi();
+
+  if (t && position && activeTab() === t && t.editing === editing) {
+    if (editing) {
+      applyEditorPos(t, position);
+      t.editScroll = els.editor.scrollTop;
+    } else {
+      applyPreviewPos(t, position);
+      saveScroll();
+      t.syncBase = t.scroll;
+    }
+  }
+  if (persist && host) host.postMessage({ cmd: 'documentZoom', value: next / 100 });
+}
+
+function adjustDocumentZoom(direction) {
+  setDocumentZoom(documentZoom + Math.sign(direction) * DOCUMENT_ZOOM_STEP);
+}
 
 // ---- 문서 내비게이션(뒤로/앞으로) : 방문한 탭 순서를 기록 (VS Code 식) ----
 let navStack = [];        // 방문 순서대로 쌓인 tabId
@@ -392,6 +460,14 @@ els.preview.addEventListener('scroll', () => {
 for (const ev of ['wheel', 'mousedown', 'keydown']) {
   els.preview.addEventListener(ev, () => { tocClicked = null; }, { passive: true });
 }
+
+function onDocumentWheel(e) {
+  if (!(e.ctrlKey || e.metaKey) || !e.deltaY) return;
+  e.preventDefault();
+  adjustDocumentZoom(e.deltaY < 0 ? 1 : -1);
+}
+els.preview.addEventListener('wheel', onDocumentWheel, { passive: false });
+els.editor.addEventListener('wheel', onDocumentWheel, { passive: false });
 
 function applyToc() {
   const preview = !els.preview.hidden;
@@ -906,18 +982,14 @@ function renderTabs() {
     els.tabs.appendChild(el);
   }
 
-  // 탭 줄 끝의 새 문서(+) 버튼
-  const plus = document.createElement('button');
-  plus.className = 'tab-new';
-  plus.title = L.tabNew;
-  plus.textContent = '+';
-  plus.addEventListener('click', newDoc);
-  els.tabs.appendChild(plus);
 }
 
 function newDoc() {
   openOrFocus({ path: null, name: L.newDoc, text: '' });
 }
+
+els.newTabBtn.addEventListener('click', newDoc);
+els.zoomBtn.addEventListener('click', () => setDocumentZoom(100));
 
 // ---- 파일 동작 ----
 function save() {
@@ -1257,6 +1329,77 @@ menuButton(els.recentBtn, showRecentMenu);
 // ---- PDF·테마 버튼 (구 ⋯ 메뉴 해체 — 언어만 🌐 메뉴에 남음, 버전은 타이틀 옆 표시) ----
 els.pdfBtn.addEventListener('click', exportPdf);
 els.themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
+
+// 단축키 표는 기존 로케일 문자열을 재사용해 버튼·메뉴와 번역이 어긋나지 않게 한다.
+function shortcutLabel(text) {
+  return String(text || '').replace(/\s*\([^)]*\)\s*$/, '');
+}
+
+function renderShortcutList() {
+  if (!els.shortcutList || !L) return;
+  const rows = [
+    ['Ctrl+O', shortcutLabel(L.openTitle)],
+    ['Ctrl+N', shortcutLabel(L.tabNew)],
+    ['Ctrl+S', shortcutLabel(L.saveTitle)],
+    ['Ctrl+P', shortcutLabel(L.menuPdf)],
+    ['Ctrl+E', shortcutLabel(L.toggleTitle)],
+    ['Ctrl+F / Ctrl+H', `${L.findPh} / ${L.replacePh}`],
+    ['Enter / Shift+Enter', L.shortcutFindNav],
+    ['Ctrl+B / Ctrl+I', `${L.fmtBold} / ${L.fmtItalic}`],
+    ['Ctrl+K', L.fmtLink],
+    ['Tab / Shift+Tab', L.shortcutIndent],
+    ['Ctrl+Tab / Ctrl+Shift+Tab', L.shortcutNextTab],
+    ['Ctrl+W', shortcutLabel(L.tabClose)],
+    ['Alt+← / Alt+→', `${shortcutLabel(L.backTitle)} / ${shortcutLabel(L.fwdTitle)}`],
+    ['Ctrl+Wheel / Ctrl++ / Ctrl+-', L.shortcutZoom],
+    ['Ctrl+0', shortcutLabel(L.zoomResetTitle)],
+    ['Ctrl+/', L.shortcutsTitle],
+  ];
+  const fragment = document.createDocumentFragment();
+  for (const [keys, action] of rows) {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.scope = 'row';
+    const kbd = document.createElement('kbd');
+    kbd.textContent = keys;
+    th.appendChild(kbd);
+    const td = document.createElement('td');
+    td.textContent = action;
+    tr.append(th, td);
+    fragment.appendChild(tr);
+  }
+  els.shortcutList.replaceChildren(fragment);
+}
+
+let shortcutReturnFocus = null;
+function showShortcutPopup() {
+  if (!els.shortcutOverlay.hidden) return;
+  const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const focusWasInTransientUi = previousFocus && (
+    els.updOverlay.contains(previousFocus) || els.ctxmenu.contains(previousFocus) || els.lightbox.contains(previousFocus));
+  hideTabMenu();
+  if (!els.lightbox.hidden) closeLightbox();
+  if (!els.updOverlay.hidden) hideUpdatePopup();
+  shortcutReturnFocus = focusWasInTransientUi ? els.shortcutsBtn : (previousFocus || els.shortcutsBtn);
+  renderShortcutList();
+  els.shortcutOverlay.hidden = false;
+  els.shortcutClose.focus();
+}
+function hideShortcutPopup() {
+  if (els.shortcutOverlay.hidden) return;
+  els.shortcutOverlay.hidden = true;
+  const target = shortcutReturnFocus;
+  shortcutReturnFocus = null;
+  if (target && target.isConnected) target.focus();
+}
+els.shortcutsBtn.addEventListener('click', showShortcutPopup);
+els.shortcutClose.addEventListener('click', hideShortcutPopup);
+els.shortcutOverlay.addEventListener('click', (e) => {
+  if (e.target === els.shortcutOverlay) hideShortcutPopup();
+});
+els.shortcutDialog.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') { e.preventDefault(); els.shortcutClose.focus(); }
+});
 
 // 테마 버튼 툴팁은 "누르면 바뀔 테마"를 안내 — 로케일·테마가 바뀔 때마다 갱신
 function updateThemeTitle() {
@@ -1887,6 +2030,16 @@ els.preview.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   // 라이트박스가 열려 있으면 Esc로 닫기 (최우선)
   if (e.key === 'Escape' && !els.lightbox.hidden) { e.preventDefault(); closeLightbox(); return; }
+  // 단축키 팝업이 열려 있으면 Esc로 닫고 열었던 버튼/편집 위치로 포커스 복귀
+  if (e.key === 'Escape' && !els.shortcutOverlay.hidden) { e.preventDefault(); hideShortcutPopup(); return; }
+  // 모달이 열린 동안 배경 문서 명령은 실행하지 않는다. Ctrl+/는 닫기 토글로만 동작한다.
+  if (!els.shortcutOverlay.hidden) {
+    const modalCtrl = e.ctrlKey || e.metaKey;
+    const modalKey = e.key.toLowerCase();
+    if (modalCtrl && modalKey === '/') { e.preventDefault(); hideShortcutPopup(); }
+    else if (modalCtrl && modalKey !== 'c' && modalKey !== 'a') e.preventDefault();
+    return;
+  }
   // 업데이트 팝업이 열려 있으면 Esc로 닫기
   if (e.key === 'Escape' && !els.updOverlay.hidden) { e.preventDefault(); hideUpdatePopup(); return; }
   // 우클릭 메뉴가 열려 있으면 Esc로 닫기
@@ -1901,7 +2054,11 @@ document.addEventListener('keydown', (e) => {
   const ctrl = e.ctrlKey || e.metaKey;
   if (!ctrl) return;
   const k = e.key.toLowerCase();
-  if (k === 's') { e.preventDefault(); save(); }
+  if (k === '/') { e.preventDefault(); showShortcutPopup(); }
+  else if (k === '0') { e.preventDefault(); setDocumentZoom(100); }
+  else if (k === '+' || k === '=') { e.preventDefault(); adjustDocumentZoom(1); }
+  else if (k === '-') { e.preventDefault(); adjustDocumentZoom(-1); }
+  else if (k === 's') { e.preventDefault(); save(); }
   else if (k === 'e') { e.preventDefault(); toggleMode(); }
   else if (k === 'o') { e.preventDefault(); openFile(); }
   else if (k === 'n') { e.preventDefault(); newDoc(); }
@@ -2150,6 +2307,7 @@ if (host) {
       // C#이 확정한 언어(설정 > MDE_LANG > OS)와 버전 — 브라우저 추정과 다르면 재적용
       if (m.langMode) langMode = m.langMode;
       if (m.lang) applyLocale(m.lang);
+      if (typeof m.documentZoom === 'number') setDocumentZoom(m.documentZoom * 100, false);
       if (m.version) {
         appVersion = m.version;
         els.appTitle.title = `MarkDownEditor v${appVersion}`;

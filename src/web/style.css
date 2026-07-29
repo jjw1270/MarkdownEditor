@@ -257,22 +257,24 @@ body {
 .tab-close:hover { opacity: 1; background: var(--border); }
 /* 탭 드래그 재정렬: 드롭 대상 표시 */
 .tab.drag-over { box-shadow: inset 2px 0 0 var(--accent); }
-/* 새 문서(+) 버튼 — 탭 줄 끝 (바닥 정렬된 탭들 사이에서 시각적 중앙으로) */
-.tab-new {
-  flex: 0 0 auto;
-  align-self: center;
-  width: 26px;
-  height: 26px;
-  margin: 0 2px 5px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
+/* 새 문서 버튼은 스크롤되는 탭 목록 밖에 고정하고, 글꼴 기준선 대신 SVG 박스를 중앙 정렬한다. */
+#tabrow > .tab-new {
+  width: 30px;
+  height: 30px;
+  margin-left: 1px;
+  margin-right: 3px;
 }
-.tab-new:hover { background: var(--btn-hover); color: var(--fg); }
+.tab-new svg { display: block; }
+
+/* 문서 배율 표시를 누르면 즉시 100%로 돌아간다. 상단 UI 자체는 확대하지 않는다. */
+#tabrow > #zoomBtn {
+  width: 46px;
+  padding: 0 4px;
+  color: var(--muted);
+  font: 11.5px/1 "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+#zoomBtn.zoomed { color: var(--accent); }
 
 /* 서식 바 (편집 모드 전용) — 툴바와 같은 플랫 톤, 그룹은 얇은 구분선으로 */
 #fmtbar {
@@ -394,6 +396,7 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
 /* 본문은 화면 전체 폭 사용, 좌우는 여백만 소폭 유지 */
 #preview .md-body {
   padding: 28px 48px;
+  font-size: var(--preview-font-size, 14px);
 }
 
 /* 미리보기·목차 스크롤바를 얇고 테마에 맞게 */
@@ -421,7 +424,9 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
   outline: none;
   resize: none;
   padding: 28px 36px;
-  font: 13px/1.7 "Cascadia Code", "D2Coding", Consolas, "맑은 고딕", monospace;
+  font-family: "Cascadia Code", "D2Coding", Consolas, "맑은 고딕", monospace;
+  font-size: var(--editor-font-size, 13px);
+  line-height: 1.7;
   color: var(--fg);
   background: var(--bg);
   tab-size: 2;
@@ -568,6 +573,60 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
   max-height: 92vh;
   border-radius: 4px;
   box-shadow: 0 12px 48px rgba(0, 0, 0, .55);
+}
+
+/* 키보드 단축키 팝업 — 키 조합과 동작을 두 열로 빠르게 훑을 수 있게 한다. */
+#shortcutOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 66;
+  background: rgba(0, 0, 0, .35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#shortcutOverlay[hidden] { display: none; }
+#shortcutDialog {
+  width: 520px;
+  max-width: calc(100vw - 48px);
+  max-height: min(620px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 18px;
+  background: var(--bar);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, .3);
+  font-size: 13px;
+}
+.shortcut-head { display: flex; align-items: center; margin-bottom: 10px; }
+#shortcutTitle { flex: 1; font-weight: 600; font-size: 14px; }
+#shortcutClose {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+#shortcutClose:hover, #shortcutClose:focus-visible { background: var(--btn-hover); color: var(--fg); }
+.shortcut-scroll { min-height: 0; overflow: auto; }
+.shortcut-table { width: 100%; border-collapse: collapse; }
+.shortcut-table th, .shortcut-table td { padding: 6px 8px; border-top: 1px solid var(--border); text-align: left; }
+.shortcut-table tr:first-child th, .shortcut-table tr:first-child td { border-top: 0; }
+.shortcut-table th { width: 43%; font-weight: 400; white-space: nowrap; }
+.shortcut-table td { color: var(--muted); }
+.shortcut-table kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 11.5px/1.45 "Cascadia Code", Consolas, monospace;
 }
 
 /* 업데이트 팝업 (타이틀 옆 ! 배지 클릭) */
@@ -734,9 +793,10 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
     --hl-fn: #8250df;
     --hl-attr: #953800;
   }
-  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox, #updOverlay { display: none !important; }
+  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox, #shortcutOverlay, #updOverlay { display: none !important; }
   ::highlight(mdfind), ::highlight(mdfind-cur) { background-color: transparent; }   /* 찾기 표시는 인쇄 제외 */
   html, body { height: auto; }
   main { display: block; }
   #preview { height: auto; overflow: visible; }
+  #preview .md-body { font-size: 14px; }
 }

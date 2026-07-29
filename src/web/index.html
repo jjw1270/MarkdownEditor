@@ -33,7 +33,7 @@
     <!-- 남은 빈 공간 전체가 창 드래그 영역 -->
     <div class="spacer"></div>
 
-    <!-- 앱 설정(테마·언어)은 타이틀바 우측 — 창 버튼과는 여백으로 구분 -->
+    <!-- 앱 전역 도구(테마·언어·도움말)는 타이틀바 우측 — 창 버튼과는 여백으로 구분 -->
     <button id="themeBtn" title="다크 테마">
       <svg class="ic-moon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M13.1 9.6a5.5 5.5 0 0 1-6.7-6.7 5.7 5.7 0 1 0 6.7 6.7z"
@@ -51,6 +51,13 @@
         <circle cx="8" cy="8" r="6.1" stroke="currentColor" stroke-width="1.5"/>
         <ellipse cx="8" cy="8" rx="2.7" ry="6.1" stroke="currentColor" stroke-width="1.5"/>
         <path d="M2.2 8h11.6" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+    <button id="shortcutsBtn" title="키보드 단축키 보기 (Ctrl+/)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <rect x="1.8" y="3.1" width="12.4" height="9.8" rx="1.7" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M4.2 6h.1M6.7 6h.1M9.2 6h.1M11.7 6h.1M4.2 8.4h.1M6.7 8.4h.1M9.2 8.4h.1M11.7 8.4h.1M5.2 10.7h5.6"
+              stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
       </svg>
     </button>
 
@@ -91,7 +98,13 @@
       </svg>
     </button>
     <nav id="tabs"></nav>
+    <button id="newTabBtn" class="tab-new" title="새 문서 (Ctrl+N)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
     <div class="spacer"></div>
+    <button id="zoomBtn" title="문서 배율 초기화 (Ctrl+0)"><span id="zoomPct">100%</span></button>
     <button id="toggleBtn" title="편집/미리보기 전환 (Ctrl+E)">
       <svg class="ic-edit" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M9.9 3.2l2.9 2.9-7.2 7.2-3.6 1 1-3.6zM8.8 4.3l2.9 2.9"
@@ -235,6 +248,19 @@
 
   <!-- 이미지 클릭 확대 (라이트박스): 클릭·Esc로 닫기 -->
   <div id="lightbox" hidden><img id="lightboxImg" alt="" /></div>
+
+  <!-- 키보드 단축키: 현재 언어에 맞춰 JS가 표 내용을 채움 -->
+  <div id="shortcutOverlay" hidden>
+    <div id="shortcutDialog" role="dialog" aria-modal="true" aria-labelledby="shortcutTitle">
+      <div class="shortcut-head">
+        <span id="shortcutTitle">키보드 단축키</span>
+        <button id="shortcutClose" title="닫기 (Esc)">✕</button>
+      </div>
+      <div class="shortcut-scroll">
+        <table class="shortcut-table"><tbody id="shortcutList"></tbody></table>
+      </div>
+    </div>
+  </div>
 
   <!-- 업데이트 팝업 (타이틀 옆 ! 배지 클릭) — 문자열은 applyLocale이 채움 -->
   <div id="updOverlay" hidden>

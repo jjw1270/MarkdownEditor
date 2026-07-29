@@ -35,6 +35,8 @@ MarkDownEditor é um visualizador e editor de Markdown para Windows 10 e 11. Ele
 - **Detecção de codificação coreana** — arquivos CP949/EUC-KR sem BOM abrem corretamente, assim como UTF-8.
 - **Tema escuro / claro** — alternado pelo botão `🌙`/`☀` da barra de título, lembrado entre execuções, incluindo a barra de título do Windows.
 - **Interface em 10 idiomas** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Segue o idioma do sistema por padrão; troque a qualquer momento pelo botão `🌐`.
+- **Zoom somente do documento** — `Ctrl+roda` altera o texto da visualização e do editor sem ampliar abas ou barras. Clique na porcentagem ou pressione `Ctrl+0` para voltar a 100%; o nível é lembrado entre execuções.
+- **Referência de atalhos** — use o botão de teclado na barra de título ou `Ctrl+/` para ver os principais atalhos sem sair do documento.
 - **Interface compacta estilo Bloco de Notas** — abas e ferramentas integradas em uma barra de título personalizada (arraste a área vazia para mover, duplo clique para maximizar).
 
 ![Menu de idiomas](docs/images/pt-BR/menu.png)
@@ -120,6 +122,9 @@ Ao iniciar, o aplicativo consulta o GitHub Releases anonimamente. Depois de clic
 | `Tab` / `Shift+Tab` | Aumentar / diminuir recuo (várias linhas) |
 | `Ctrl+Tab` / `Ctrl+Shift+Tab` | Próxima / aba anterior |
 | `Ctrl+W` | Fechar aba |
+| `Ctrl+roda` / `Ctrl++` / `Ctrl+-` | Ampliar / reduzir o documento (lembrado) |
+| `Ctrl+0` | Redefinir o zoom do documento para 100% |
+| `Ctrl+/` | Ver os atalhos de teclado |
 | `Alt+←` / `Alt+→` | Voltar / Avançar |
 
 ## Privacidade

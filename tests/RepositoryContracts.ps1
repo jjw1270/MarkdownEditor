@@ -12,6 +12,7 @@ $global = Get-Content -LiteralPath (Join-Path $repoRoot "global.json") -Raw | Co
 $update = Get-Content -LiteralPath (Join-Path $repoRoot "src\MainWindow.Update.cs") -Raw
 $window = Get-Content -LiteralPath (Join-Path $repoRoot "src\MainWindow.xaml.cs") -Raw
 $appJs = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\app.js") -Raw
+$indexHtml = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\index.html") -Raw
 $installer = Get-Content -LiteralPath (Join-Path $repoRoot "installer\MarkDownEditor.iss") -Raw
 $site = Get-Content -LiteralPath (Join-Path $repoRoot "docs\index.html") -Raw
 $changelog = Get-Content -LiteralPath (Join-Path $repoRoot "CHANGELOG.md") -Raw
@@ -25,6 +26,9 @@ Assert-True ($update.Contains('PortableUpdateAssetName = "MarkDownEditor-standal
 Assert-True ($update.Contains('InstallerUpdateAssetName = "MarkDownEditor-Setup-x64.exe"')) "Installer update asset contract is missing."
 Assert-True ($window.Contains('installed.marker')) "Installed-edition marker detection is missing."
 Assert-True ($window.Contains('!IsInstalledEdition && File.Exists')) "Installed edition must never select a bundled Fixed Runtime."
+Assert-True ($window.Contains('core.Settings.IsZoomControlEnabled = false')) "Native WebView zoom must stay disabled."
+Assert-True ($window.Contains('core.Settings.IsPinchZoomEnabled = false')) "Native WebView pinch zoom must stay disabled."
+Assert-True ($window.Contains('Web.ZoomFactor = 1.0')) "Application chrome zoom must stay at 100%."
 Assert-True ($installer.Contains("B33FB6E9-7620-4348-B504-AC4770CC586C")) "Installer AppId changed."
 Assert-True ($installer.Contains("PrivilegesRequired=lowest")) "Installer must remain per-user and non-elevated."
 Assert-True ($installer.Contains('Type: filesandordirs; Name: "{app}\Runtime"')) "Installer must remove a stale portable Fixed Runtime."
@@ -32,6 +36,14 @@ Assert-True (-not ($installer -match 'ValueType:\s*none;\s*ValueName:')) "Named 
 Assert-True ($installer.Contains('AfterInstall: VerifyWebView2Installed')) "Installer must fail when Evergreen WebView2 installation fails."
 Assert-True ($update.Contains('$installed = $installer.ExitCode -eq 0')) "Installer updater must check the Setup exit code."
 Assert-True ($appJs.Contains("TITLEBAR_DRAG_THRESHOLD_SQ")) "Titlebar drag threshold is missing."
+Assert-True ($appJs.Contains("function onDocumentWheel")) "Document-only Ctrl+wheel zoom is missing."
+Assert-True ($appJs.Contains("setDocumentZoom(100)")) "Document zoom reset is missing."
+Assert-True ($appJs.Contains("function showShortcutPopup")) "Keyboard shortcut viewer is missing."
+Assert-True ($indexHtml.Contains('id="shortcutOverlay"')) "Keyboard shortcut dialog markup is missing."
+Assert-True ($indexHtml -match '(?s)<header id="bar">.*id="shortcutsBtn".*</header>') `
+    "Keyboard shortcut viewer must stay in the global title-bar tools."
+Assert-True ($indexHtml -match '(?s)</nav>\s*<button id="newTabBtn"') `
+    "New-document button must stay outside the scrollable tab list."
 Assert-True (-not ($appJs -match "mousedown'[\s\S]{0,180}postMessage\(\{ cmd: 'windrag' \}\)")) `
     "Titlebar drag must not start directly from mousedown."
 Assert-True ($site.Contains(('"softwareVersion": "' + $version + '"'))) "Website version is stale."

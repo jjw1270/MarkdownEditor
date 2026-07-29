@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.2 — 2026-07-30
+
+- **Document-only zoom** — `Ctrl+Wheel`, `Ctrl++`, and `Ctrl+-` now resize preview and editor text without scaling tabs, toolbars, dialogs, or other application chrome.
+- **Visible zoom reset** — the tab row shows the current document percentage; click it or press `Ctrl+0` to return to 100%. The selected level is restored across launches and does not affect PDF output.
+- **Centered new-document control** — replaced the font-based `+` with a centered SVG button that stays visible beside the horizontally scrolling tab list.
+- **Built-in shortcut reference** — added a localized keyboard button and `Ctrl+/` dialog with the main file, editing, navigation, tab, and document-zoom shortcuts.
+- **Zoom and layout regression coverage** — the running WebView2 E2E suite now verifies fixed application chrome, preview/editor scaling, reset behavior, persistent restart state, and new-tab control geometry in an isolated app profile.
+
 ## 1.3.1 — 2026-07-29
 
 - **Reliable overlapping saves** — serializes writes to the same file and tags save responses so an older request cannot overwrite or mark a newer edit as saved.

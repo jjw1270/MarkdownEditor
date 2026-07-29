@@ -60,7 +60,9 @@ I built MarkDownEditor because opening a Markdown file on Windows often meant st
 - **Dark and light themes** — including the Windows title bar. Remembered across runs.
 - **10 UI languages** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português (Brasil). Follows your OS language by default; switch anytime from `🌐`.
 - **Compact chrome** — tabs and tools live in a custom title bar, Notepad-style.
-- **Per-tab state** — zoom level (`Ctrl+Wheel`), scroll position, and editor caret position are restored when you switch tabs.
+- **Document zoom** — `Ctrl+Wheel` changes preview and editor text without enlarging the app chrome. Click the percentage or press `Ctrl+0` to reset; the level is remembered across runs.
+- **Shortcut reference** — click the keyboard icon or press `Ctrl+/` to see the main shortcuts without leaving the document.
+- **Per-tab position** — scroll position and editor caret position are restored when you switch tabs.
 - **In-app updates** — a red dot appears next to the version when a new release is available. Choose **Update** to download and install the matching package.
 
 ---
@@ -152,7 +154,9 @@ On startup the app anonymously checks GitHub Releases and puts a **red dot** nex
 | `Ctrl+Tab` / `Ctrl+Shift+Tab` | Next / previous tab |
 | `Ctrl+W` | Close tab |
 | `Alt+←` / `Alt+→` | Back / forward between documents |
-| `Ctrl+Wheel` | Zoom (remembered across runs) |
+| `Ctrl+Wheel` / `Ctrl++` / `Ctrl+-` | Document zoom (remembered across runs) |
+| `Ctrl+0` | Reset document zoom to 100% |
+| `Ctrl+/` | View keyboard shortcuts |
 
 ---
 

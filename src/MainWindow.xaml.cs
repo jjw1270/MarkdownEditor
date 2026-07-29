@@ -137,9 +137,12 @@ public partial class MainWindow : Window
 
             var core = Web.CoreWebView2;
 
-            // Ctrl+휠로 조절한 줌 배율을 기억해 다음 실행에도 유지
-            RestoreZoom();
-            Web.ZoomFactorChanged += (_, _) => QueueZoomSave();
+            // 앱 셸은 항상 100%로 유지하고, 문서 배율은 웹의 편집기·미리보기 안에서만 조절한다.
+            Web.ZoomFactor = 1.0;
+            Web.ZoomFactorChanged += (_, _) =>
+            {
+                if (Math.Abs(Web.ZoomFactor - 1.0) > 0.001) Web.ZoomFactor = 1.0;
+            };
 
             // web/ 폴더를 가상 호스트로 매핑 → https://app.md.local/index.html
             var webRoot = Path.Combine(AppContext.BaseDirectory, "web");
@@ -152,6 +155,8 @@ public partial class MainWindow : Window
             // 앱 셸로 동작: F5/Ctrl+R(새로고침 시 열린 탭·미저장 편집 전부 소실)·Ctrl+P 등
             // 브라우저 단축키 차단. 편집 단축키(Ctrl+C/V/Z)와 페이지 스크립트 단축키는 영향 없음.
             core.Settings.AreBrowserAcceleratorKeysEnabled = false;
+            core.Settings.IsZoomControlEnabled = false;      // Ctrl+휠이 WebView 전체 레이아웃을 확대하지 않게 함
+            core.Settings.IsPinchZoomEnabled = false;        // 터치패드 핀치가 앱 셸 전체를 확대하지 않게 함
             core.Settings.IsSwipeNavigationEnabled = false;    // 터치 스와이프 뒤로가기로 페이지 이탈 방지
             core.Settings.IsStatusBarEnabled = false;          // 링크 호버 시 좌하단 URL 말풍선 제거
             core.Settings.IsGeneralAutofillEnabled = false;    // 편집기·찾기창에 브라우저 자동완성 차단
@@ -203,7 +208,11 @@ public partial class MainWindow : Window
             case "ready":
                 _webReady = true;
                 // 확정 언어(설정 > MDE_LANG > OS)와 버전을 웹에 전달 — UI 문자열·정보 표시에 사용
-                SendToWeb(new { cmd = "app", version = AppVersion, lang = Loc.Lang, langMode = Loc.Mode });
+                SendToWeb(new
+                {
+                    cmd = "app", version = AppVersion, lang = Loc.Lang, langMode = Loc.Mode,
+                    documentZoom = LoadDocumentZoom()
+                });
                 SendToWeb(new { cmd = "winstate", maximized = WindowState == WindowState.Maximized });
                 LoadStartupFiles();
                 foreach (var p in _pendingFiles) LoadFile(p);   // 준비 전 도착분 반영
@@ -216,6 +225,9 @@ public partial class MainWindow : Window
                 var themeName = msg.TryGetProperty("value", out var th) ? th.GetString() ?? "" : "";
                 SaveTheme(themeName);
                 ApplyTitleBarTheme(themeName);   // 제목표시줄도 함께 전환
+                break;
+            case "documentZoom":
+                QueueDocumentZoomSave(msg.TryGetProperty("value", out var zv) ? zv.GetDouble() : 1.0);
                 break;
             case "lang":
                 // 언어 메뉴 선택 → 저장 후 확정값 회신 (웹이 UI 문자열 재적용)
@@ -642,26 +654,32 @@ public partial class MainWindow : Window
         try { File.WriteAllText(ThemeFile, theme); } catch { }
     }
 
-    // ---- 줌 배율 기억 (Ctrl+휠) ----
+    // ---- 문서 배율 기억 (앱 UI 배율과 분리) ----
     private static string ZoomFile => Path.Combine(DataDir, "zoom.txt");
     private System.Windows.Threading.DispatcherTimer? _zoomTimer;
+    private double _pendingDocumentZoom = 1.0;
+    private bool _documentZoomPending;
 
-    private void RestoreZoom()
+    private static double LoadDocumentZoom()
     {
         try
         {
-            if (!File.Exists(ZoomFile)) return;
+            if (!File.Exists(ZoomFile)) return 1.0;
             if (double.TryParse(File.ReadAllText(ZoomFile).Trim(),
                     System.Globalization.NumberStyles.Float,
                     System.Globalization.CultureInfo.InvariantCulture, out var z)
-                && z is >= 0.25 and <= 5.0)
-                Web.ZoomFactor = z;
+                && z is >= 0.5 and <= 2.0)
+                return z;
         }
         catch { /* 손상된 값 → 기본 배율 */ }
+        return 1.0;
     }
 
-    private void QueueZoomSave()   // 휠 틱마다 파일 쓰기 방지 (500ms 디바운스)
+    private void QueueDocumentZoomSave(double zoom)
     {
+        if (zoom is < 0.5 or > 2.0 || double.IsNaN(zoom) || double.IsInfinity(zoom)) return;
+        _pendingDocumentZoom = zoom;
+        _documentZoomPending = true;
         _zoomTimer ??= CreateZoomTimer();
         _zoomTimer.Stop();
         _zoomTimer.Start();
@@ -673,14 +691,22 @@ public partial class MainWindow : Window
         t.Tick += (_, _) =>
         {
             t.Stop();
-            try
-            {
-                File.WriteAllText(ZoomFile,
-                    Web.ZoomFactor.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            }
-            catch { }
+            FlushDocumentZoomSave();
         };
         return t;
+    }
+
+    private void FlushDocumentZoomSave()
+    {
+        _zoomTimer?.Stop();
+        if (!_documentZoomPending) return;
+        try
+        {
+            File.WriteAllText(ZoomFile,
+                _pendingDocumentZoom.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            _documentZoomPending = false;
+        }
+        catch { }
     }
 
     private static string ResolveDataDir()
@@ -898,6 +924,7 @@ public partial class MainWindow : Window
             }
         }
         if (e.Cancel) CancelPendingApply();   // 업데이트로 시작된 종료가 취소됨 → 적용 보류 해제
+        else FlushDocumentZoomSave();         // 마지막 휠 입력 직후 닫아도 선택한 배율을 잃지 않음
     }
 
     private void SendToWeb(object payload)

@@ -95,27 +95,49 @@ tests/
 
 ## Tests
 
-Run the repository and compilation gates first:
+Use the smallest gate that covers the changed risk. Do not repeat a successful compile in every later gate: release packaging already performs a Release publish, and the stateful tests consume those artifacts.
+
+### 1. Source gate — every change
 
 ```powershell
 .\tests\RepositoryContracts.ps1
 node --check .\src\web\app.js
 node --check .\src\web\i18n.js
+```
+
+For changes that will not be packaged immediately, add one compile:
+
+```powershell
 dotnet build .\src\MarkDownEditor.csproj -c Release
 ```
 
-After building release artifacts, validate the package and the running WebView:
+### 2. Feature gate — affected running behavior
+
+Build release artifacts once, then run only the E2E suites that exercise the changed area. Web UI, document state, and WebView bridge changes use:
+
+```powershell
+.\scripts\build-release.ps1
+.\tests\WebViewBehaviorE2E.ps1 -AppPath .\artifacts\publish\MarkDownEditor.exe
+```
+
+Window chrome changes additionally use `TitlebarE2E.ps1`. File launch or single-instance changes additionally use `FileOpenE2E.ps1` for each affected distribution.
+
+### 3. Package gate — every release
+
+Validate the already-built packages without rebuilding them:
 
 ```powershell
 dotnet run --project .\tests\UpdateValidation\UpdateValidation.csproj -c Release -- `
   .\artifacts\MarkDownEditor-standalone.zip `
   .\artifacts\MarkDownEditor-standalone `
   .\artifacts\MarkDownEditor-Setup-x64.exe
-
-.\tests\WebViewBehaviorE2E.ps1 -AppPath .\artifacts\publish\MarkDownEditor.exe
 ```
 
-The following tests change the local installation state and should be run on a disposable Windows test account or machine:
+Check both package manifests and perform one launch smoke test per distribution. The tag workflow independently rebuilds and validates the public assets, so a green workflow plus public hash/version verification is the final release gate.
+
+### 4. Stateful risk gate — updater, installer, or scheduled full regression
+
+The following suites are intentionally not part of every UI-only change. They rebuild synthetic versions or mutate the local installation, so run them when updater/installer/association behavior changes, or for a scheduled full release regression on a disposable Windows test account or machine:
 
 ```powershell
 .\tests\PortableUpdateE2E.ps1
@@ -125,7 +147,7 @@ The following tests change the local installation state and should be run on a d
 .\tests\TitlebarE2E.ps1
 ```
 
-The latest complete release matrix is recorded in [QA_REPORT_2026-07-29.md](QA_REPORT_2026-07-29.md).
+The latest release matrix is recorded in [QA_REPORT_2026-07-30.md](QA_REPORT_2026-07-30.md).
 
 ## Release packages
 
