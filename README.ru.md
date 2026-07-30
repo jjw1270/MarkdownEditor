@@ -10,8 +10,6 @@ MarkDownEditor — просмотрщик и редактор Markdown для Wi
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Русский** · [Português (Brasil)](README.pt-BR.md)
 
-### [Установщик Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [Портативный ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[что нового](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
-
 ![Предпросмотр — русский интерфейс](docs/images/ru/preview.png)
 
 ## Возможности
