@@ -10,8 +10,6 @@ MarkDownEditor é um visualizador e editor de Markdown para Windows 10 e 11. Ele
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · **Português (Brasil)**
 
-### [Instalador do Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [ZIP portátil](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[novidades](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
-
 ![Prévia — interface em português](docs/images/pt-BR/preview.png)
 
 ## Recursos
