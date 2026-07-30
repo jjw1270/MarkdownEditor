@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$AppPath = "",
-    [string]$OutputRoot = ""
+    [string]$OutputRoot = "",
+    [string[]]$LocaleFilter = @()
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,6 +23,7 @@ public static class ReadmeCaptureNative {
   [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left, Top, Right, Bottom; }
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
   [DllImport("user32.dll")] public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int width, int height, bool repaint);
+  [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hWnd, IntPtr insertAfter, int x, int y, int width, int height, uint flags);
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int command);
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
   [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
@@ -65,10 +67,13 @@ $locales = [ordered]@{
 
 $demoRoot = Join-Path $repoRoot "artifacts\screenshot-docs"
 New-Item -ItemType Directory -Force -Path $demoRoot | Out-Null
+$unknownLocales = @($LocaleFilter | Where-Object { -not $locales.Contains($_) })
+if ($unknownLocales.Count -gt 0) { throw "Unknown locale: $($unknownLocales -join ', ')" }
 $previousLang = $env:MDE_LANG
 try {
     foreach ($entry in $locales.GetEnumerator()) {
         $code = $entry.Key
+        if ($LocaleFilter.Count -gt 0 -and $code -notin $LocaleFilter) { continue }
         $t = $entry.Value
         $markdown = @"
 # $($t[0])
@@ -101,6 +106,7 @@ try {
         New-Item -ItemType Directory -Force -Path $localeOutput | Out-Null
 
         $env:MDE_LANG = $code
+        $handle = [IntPtr]::Zero
         $process = Start-Process -FilePath $AppPath -ArgumentList ('"' + $demoPath + '"') -PassThru
         try {
             $deadline = (Get-Date).AddSeconds(25)
@@ -110,13 +116,20 @@ try {
             $handle = [IntPtr]$process.MainWindowHandle
             [ReadmeCaptureNative]::ShowWindow($handle, 9) | Out-Null
             [ReadmeCaptureNative]::MoveWindow($handle, 40, 40, 1440, 900, $true) | Out-Null
+            # CopyFromScreen은 앞에 뜬 창까지 찍으므로 캡처 동안 대상 창을 최상단에 고정한다.
+            [ReadmeCaptureNative]::SetWindowPos($handle, [IntPtr](-1), 0, 0, 0, 0, 0x0043) | Out-Null
             [ReadmeCaptureNative]::SetForegroundWindow($handle) | Out-Null
-            Start-Sleep -Seconds 3
-            Save-WindowImage $handle (Join-Path $localeOutput "preview.png")
-
             $rect = New-Object ReadmeCaptureNative+RECT
             [ReadmeCaptureNative]::GetWindowRect($handle, [ref]$rect) | Out-Null
             $scale = [ReadmeCaptureNative]::GetDpiForWindow($handle) / 96.0
+            # SetForegroundWindow가 거부되어도 다른 창에 가려지지 않는 제목 표시줄 클릭으로 전면 활성화한다.
+            [ReadmeCaptureNative]::SetCursorPos(
+                $rect.Left + [int](720 * $scale), $rect.Top + [int](20 * $scale)) | Out-Null
+            [ReadmeCaptureNative]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
+            [ReadmeCaptureNative]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
+            Start-Sleep -Seconds 3
+            Save-WindowImage $handle (Join-Path $localeOutput "preview.png")
+
             # 언어 버튼은 우측 창 제어 버튼 묶음의 왼쪽에 있으며 CSS 좌표를 실제 픽셀로 환산한다.
             [ReadmeCaptureNative]::SetCursorPos(
                 $rect.Right - [int](154 * $scale), $rect.Top + [int](24 * $scale)) | Out-Null
@@ -129,6 +142,9 @@ try {
             Save-WindowImage $handle (Join-Path $localeOutput "menu.png")
         }
         finally {
+            if ($handle -ne [IntPtr]::Zero) {
+                [ReadmeCaptureNative]::SetWindowPos($handle, [IntPtr](-2), 0, 0, 0, 0, 0x0003) | Out-Null
+            }
             if (-not $process.HasExited) {
                 $process.CloseMainWindow() | Out-Null
                 if (-not $process.WaitForExit(5000)) { Stop-Process -Id $process.Id }
@@ -160,4 +176,5 @@ $manifest = [ordered]@{
     (Join-Path $OutputRoot "manifest.json"),
     ($manifest | ConvertTo-Json -Depth 4), [Text.UTF8Encoding]::new($false))
 
-Write-Host "Localized README screenshots captured for $($locales.Count) languages."
+$capturedLocaleCount = if ($LocaleFilter.Count -gt 0) { $LocaleFilter.Count } else { $locales.Count }
+Write-Host "Localized README screenshots captured for $capturedLocaleCount languages."

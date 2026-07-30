@@ -1,14 +1,14 @@
 {
     "appVersion":  "1.3.2",
-    "capturedAtUtc":  "2026-07-29T16:36:22Z",
+    "capturedAtUtc":  "2026-07-30T14:48:18Z",
     "window":  "1440x900",
     "locales":  [
                     {
                         "code":  "en",
                         "preview":  "en/preview.png",
                         "menu":  "en/menu.png",
-                        "previewSha256":  "8bcf8a45f8eca782a242a9957eeca80a62cc4c5a1c87479510a6195f3da6eb5c",
-                        "menuSha256":  "b58239dcee2c7f8625eed4a9efa719b2cbfa48307e736ce2d09ded1e666f2141"
+                        "previewSha256":  "64f2697cb8a7e654b7e5bec94248f9f5f192bb47949aaf177a4d86c4d741152f",
+                        "menuSha256":  "2c2f3961e3d3b74f25b2e52680f232b5032841a91602ebd6264751cdf5ee30df"
                     },
                     {
                         "code":  "ko",
