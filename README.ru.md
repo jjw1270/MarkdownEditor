@@ -10,6 +10,8 @@ MarkDownEditor — просмотрщик и редактор Markdown для Wi
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Русский** · [Português (Brasil)](README.pt-BR.md)
 
+### [Скачать через GitHub Releases](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![Предпросмотр — русский интерфейс](docs/images/ru/preview.png)
 
 ## Возможности
@@ -45,36 +47,16 @@ MarkDownEditor — просмотрщик и редактор Markdown для Wi
 
 | Пакет | Для чего | Размер | Среда и данные |
 |---|---|---:|---|
-| **[Установщик Windows](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | Обычное ежедневное использование | около 45 МБ | Установка для текущего пользователя, автоматически обслуживаемый Evergreen WebView2, меню «Пуск» и «Открыть с помощью». Данные в `%LOCALAPPDATA%\MarkDownEditor`. Интернет нужен только при отсутствии WebView2; если компонент не устанавливается, Setup сообщает об ошибке. |
-| **[Портативный ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB, офлайн и без установки | около 325 МБ | Включает WebView2 Fixed Runtime; данные хранятся рядом с приложением, если папка доступна для записи. |
+| **Установщик Windows** | Обычное ежедневное использование | около 45 МБ | Установка для текущего пользователя, автоматически обслуживаемый Evergreen WebView2, меню «Пуск» и «Открыть с помощью». Данные в `%LOCALAPPDATA%\MarkDownEditor`. Интернет нужен только при отсутствии WebView2; если компонент не устанавливается, Setup сообщает об ошибке. |
+| **Портативный ZIP** | USB, офлайн и без установки | около 325 МБ | Включает WebView2 Fixed Runtime; данные хранятся рядом с приложением, если папка доступна для записи. |
 
 ### Портативный вариант
-
-**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — эта ссылка **всегда ведёт на последнюю версию**.
 
 | | |
 |---|---|
 | **Размер** | около 325 МБ — полная среда WebView2 включена для автономной работы |
 | **Требования** | Windows 10 или 11, 64-разрядная. Больше ничего. |
 | **Ещё** | [Все выпуски](https://github.com/jjw1270/MarkdownEditor/releases) · [Что нового в этой версии](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Полная история изменений](CHANGELOG.md) |
-
-<details>
-<summary><b>Привыкли к терминалу?</b> Скачать, распаковать и запустить одним блоком PowerShell</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-Чтобы обновиться позже, просто выполните тот же блок ещё раз — или воспользуйтесь встроенным обновлением, описанным ниже.
-
-</details>
 
 ### Шаг 2 — Распаковать и запустить
 

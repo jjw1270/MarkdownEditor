@@ -10,6 +10,8 @@ MarkDownEditor ist ein Markdown-Viewer und -Editor für Windows 10 und 11. Es gi
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · **Deutsch** · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
+### [Von GitHub Releases herunterladen](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![Vorschau — deutsche Oberfläche](docs/images/de/preview.png)
 
 ## Funktionen
@@ -45,36 +47,16 @@ Zwei Pakete stehen für Windows 10 ab Version 1809 und Windows 11 (x64) bereit. 
 
 | Paket | Geeignet für | Größe | Laufzeit und Daten |
 |---|---|---:|---|
-| **[Windows-Installer](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | Normaler täglicher Einsatz | ca. 45 MB | Installation pro Benutzer, automatisch gewartetes Evergreen WebView2, Startmenü und „Öffnen mit“. Daten unter `%LOCALAPPDATA%\MarkDownEditor`. Internet ist nur nötig, wenn WebView2 fehlt; bei einem Fehler der Voraussetzung schlägt Setup eindeutig fehl. |
-| **[Portable ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB, offline und ohne Installation | ca. 325 MB | Enthält die feste WebView2-Laufzeit; Daten liegen, wenn möglich, neben der App. |
+| **Windows-Installer** | Normaler täglicher Einsatz | ca. 45 MB | Installation pro Benutzer, automatisch gewartetes Evergreen WebView2, Startmenü und „Öffnen mit“. Daten unter `%LOCALAPPDATA%\MarkDownEditor`. Internet ist nur nötig, wenn WebView2 fehlt; bei einem Fehler der Voraussetzung schlägt Setup eindeutig fehl. |
+| **Portable ZIP** | USB, offline und ohne Installation | ca. 325 MB | Enthält die feste WebView2-Laufzeit; Daten liegen, wenn möglich, neben der App. |
 
 ### Portable Variante
-
-**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — dieser Link zeigt **immer auf die neueste Version**.
 
 | | |
 |---|---|
 | **Größe** | ca. 325 MB — die vollständige WebView2-Laufzeit ist für den Offline-Betrieb enthalten |
 | **Voraussetzung** | Windows 10 oder 11, 64-Bit. Sonst nichts. |
 | **Mehr** | [Alle Releases](https://github.com/jjw1270/MarkdownEditor/releases) · [Was in dieser Version neu ist](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Vollständiges Changelog](CHANGELOG.md) |
-
-<details>
-<summary><b>Lieber im Terminal?</b> Herunterladen, entpacken und starten mit einem PowerShell-Block</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-Zum Aktualisieren später denselben Block erneut ausführen — oder einfach die unten beschriebene In-App-Aktualisierung nutzen.
-
-</details>
 
 ### Schritt 2 — Entpacken und starten
 

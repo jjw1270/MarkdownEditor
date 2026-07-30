@@ -10,6 +10,8 @@ MarkDownEditor は Windows 10・11 用の Markdown ビューアー兼エディ�
 
 [한국어](README.ko.md) · [English](README.md) · **日本語** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
+### [GitHub Releases からダウンロード](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![プレビュー — 日本語 UI](docs/images/ja/preview.png)
 
 ## 機能
@@ -45,36 +47,16 @@ Windows 10 バージョン 1809 以降 / Windows 11 x64 向けに 2 種類のパ
 
 | パッケージ | おすすめ用途 | サイズ | Runtime とデータ |
 |---|---|---:|---|
-| **[Windows インストーラー](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 通常の日常利用 | 約 45 MB | ユーザー単位でインストールし、自動保守される Evergreen WebView2、スタートメニュー、「プログラムから開く」を利用します。データは `%LOCALAPPDATA%\MarkDownEditor`。WebView2 がない場合だけ接続が必要で、必須 Runtime を導入できなければセットアップはエラーを表示します。 |
-| **[ポータブル ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB・オフライン・無インストール | 約 325 MB | WebView2 Fixed Runtime を同梱し、書き込み可能ならデータはアプリの隣に保存します。 |
+| **Windows インストーラー** | 通常の日常利用 | 約 45 MB | ユーザー単位でインストールし、自動保守される Evergreen WebView2、スタートメニュー、「プログラムから開く」を利用します。データは `%LOCALAPPDATA%\MarkDownEditor`。WebView2 がない場合だけ接続が必要で、必須 Runtime を導入できなければセットアップはエラーを表示します。 |
+| **ポータブル ZIP** | USB・オフライン・無インストール | 約 325 MB | WebView2 Fixed Runtime を同梱し、書き込み可能ならデータはアプリの隣に保存します。 |
 
 ### ポータブル版
-
-**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — このリンクは**常に最新版**を指します。
 
 | | |
 |---|---|
 | **サイズ** | 約 325 MB — オフライン利用向けに完全な WebView2 ランタイムを同梱 |
 | **動作環境** | Windows 10 / 11（64 ビット）。それ以外は不要です。 |
 | **その他** | [リリース一覧](https://github.com/jjw1270/MarkdownEditor/releases) · [今回の変更点](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [変更履歴すべて](CHANGELOG.md) |
-
-<details>
-<summary><b>ターミナル派の方へ</b> — PowerShell 1 ブロックでダウンロード・解凍・起動</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-あとで更新するときは同じブロックをもう一度実行しても、下記の**アプリ内自動更新**を使っても構いません。
-
-</details>
 
 ### ステップ 2 — 解凍して実行
 

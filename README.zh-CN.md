@@ -10,6 +10,8 @@ MarkDownEditor 是适用于 Windows 10 和 11 的 Markdown 查看器与编辑器
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
+### [从 GitHub Releases 下载](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![预览 — 简体中文界面](docs/images/zh-CN/preview.png)
 
 ## 功能
@@ -45,36 +47,16 @@ MarkDownEditor 是适用于 Windows 10 和 11 的 Markdown 查看器与编辑器
 
 | 软件包 | 适合场景 | 大小 | Runtime 与数据 |
 |---|---|---:|---|
-| **[Windows 安装程序](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 日常使用 | 约 45 MB | 按用户安装，使用自动维护的 Evergreen WebView2，并注册开始菜单和“打开方式”。数据位于 `%LOCALAPPDATA%\MarkDownEditor`。仅在缺少 WebView2 时需要联网；若前置组件安装失败，安装程序会明确报错。 |
-| **[便携 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | U 盘、离线、免安装 | 约 325 MB | 包含 WebView2 Fixed Runtime；位置可写时，数据保存在应用旁边。 |
+| **Windows 安装程序** | 日常使用 | 约 45 MB | 按用户安装，使用自动维护的 Evergreen WebView2，并注册开始菜单和“打开方式”。数据位于 `%LOCALAPPDATA%\MarkDownEditor`。仅在缺少 WebView2 时需要联网；若前置组件安装失败，安装程序会明确报错。 |
+| **便携 ZIP** | U 盘、离线、免安装 | 约 325 MB | 包含 WebView2 Fixed Runtime；位置可写时，数据保存在应用旁边。 |
 
 ### 便携版
-
-**⬇️ [MarkDownEditor-standalone.zip](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** — 此链接**始终指向最新版本**。
 
 | | |
 |---|---|
 | **体积** | 约 325 MB — 内置完整 WebView2，适合离线使用 |
 | **系统要求** | Windows 10 / 11（64 位）。除此之外别无要求。 |
 | **更多** | [全部版本](https://github.com/jjw1270/MarkdownEditor/releases) · [本次更新内容](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [完整更新日志](CHANGELOG.md) |
-
-<details>
-<summary><b>习惯用命令行？</b> 一段 PowerShell 完成下载、解压和启动</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-以后升级时再跑一遍同样的代码即可，也可以直接用下面说的**应用内自动更新**。
-
-</details>
 
 ### 第 2 步 — 解压并运行
 

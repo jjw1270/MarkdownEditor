@@ -10,6 +10,8 @@ MarkDownEditor is a Markdown viewer and editor for Windows 10 and 11. Set it as 
 
 [한국어](README.ko.md) · **English** · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
+### [Download from GitHub Releases](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![Preview — English UI](docs/images/en/preview.png)
 
 ---
@@ -79,28 +81,10 @@ Both packages are for Windows 10 version 1809 or newer / Windows 11, x64. Neithe
 
 | Package | Best for | Approximate download | Runtime and data |
 |---|---|---:|---|
-| **[Windows installer](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | Normal daily use | 45 MB | Installs per-user, uses automatically serviced Evergreen WebView2, adds Start menu and Open With entries. Data is under `%LOCALAPPDATA%\MarkDownEditor`. Internet is needed only if WebView2 is not installed; Setup fails clearly if the prerequisite cannot be installed. |
-| **[Portable ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB, offline and no-install use | 325 MB | Includes a fixed WebView2 runtime. Data stays in `WebView2Data/` beside the app when writable. |
+| **Windows installer** | Normal daily use | 45 MB | Installs per-user, uses automatically serviced Evergreen WebView2, adds Start menu and Open With entries. Data is under `%LOCALAPPDATA%\MarkDownEditor`. Internet is needed only if WebView2 is not installed; Setup fails clearly if the prerequisite cannot be installed. |
+| **Portable ZIP** | USB, offline and no-install use | 325 MB | Includes a fixed WebView2 runtime. Data stays in `WebView2Data/` beside the app when writable. |
 
 [All releases](https://github.com/jjw1270/MarkdownEditor/releases) · [Latest release notes](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [Full changelog](CHANGELOG.md)
-
-<details>
-<summary><b>Prefer the terminal?</b> Download, unpack and launch with one PowerShell block</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-To update later, run the same block again — or just use the in-app updater described below.
-
-</details>
 
 ### Portable setup
 

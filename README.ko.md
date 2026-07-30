@@ -10,6 +10,8 @@ MarkDownEditor는 Windows 10·11용 마크다운 뷰어 겸 에디터입니다. 
 
 **한국어** · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
+### [GitHub 릴리즈에서 다운로드](https://github.com/jjw1270/MarkdownEditor/releases/latest)
+
 ![미리보기 — 한국어 UI](docs/images/ko/preview.png)
 
 ---
@@ -74,28 +76,10 @@ MarkDownEditor는 Windows 10·11용 마크다운 뷰어 겸 에디터입니다. 
 
 | 패키지 | 권장 용도 | 대략적인 용량 | Runtime·데이터 |
 |---|---|---:|---|
-| **[Windows 설치판](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe)** | 일반적인 일상 사용 | 45 MB | 현재 사용자용으로 설치하고 자동 보안 업데이트되는 Evergreen WebView2를 사용합니다. 시작 메뉴와 연결 프로그램 후보를 등록하며 데이터는 `%LOCALAPPDATA%\MarkDownEditor`에 보관합니다. WebView2가 없을 때만 인터넷이 필요하며 필수 Runtime 설치에 실패하면 설치 오류를 표시합니다. |
-| **[포터블 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip)** | USB·오프라인·무설치 사용 | 325 MB | Fixed WebView2 Runtime을 포함하며, 쓸 수 있는 위치에서는 데이터가 실행 파일 옆 `WebView2Data/`에 남습니다. |
+| **Windows 설치판** | 일반적인 일상 사용 | 45 MB | 현재 사용자용으로 설치하고 자동 보안 업데이트되는 Evergreen WebView2를 사용합니다. 시작 메뉴와 연결 프로그램 후보를 등록하며 데이터는 `%LOCALAPPDATA%\MarkDownEditor`에 보관합니다. WebView2가 없을 때만 인터넷이 필요하며 필수 Runtime 설치에 실패하면 설치 오류를 표시합니다. |
+| **포터블 ZIP** | USB·오프라인·무설치 사용 | 325 MB | Fixed WebView2 Runtime을 포함하며, 쓸 수 있는 위치에서는 데이터가 실행 파일 옆 `WebView2Data/`에 남습니다. |
 
 [전체 릴리즈](https://github.com/jjw1270/MarkdownEditor/releases) · [최신 릴리즈 노트](https://github.com/jjw1270/MarkdownEditor/releases/latest) · [전체 변경 이력](CHANGELOG.md)
-
-<details>
-<summary><b>터미널이 편하다면</b> — PowerShell 한 블록으로 내려받기 · 압축 해제 · 실행</summary>
-
-```powershell
-$dest = "$env:LOCALAPPDATA\Programs\MarkDownEditor-Portable"
-$zip  = "$env:TEMP\MarkDownEditor-standalone.zip"
-
-Invoke-WebRequest "https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip" -OutFile $zip
-Expand-Archive $zip -DestinationPath $dest -Force
-Remove-Item $zip
-
-Start-Process "$dest\MarkDownEditor.exe"
-```
-
-나중에 업데이트할 때 같은 블록을 다시 실행해도 되고, 아래의 **앱 내 자동 업데이트**를 써도 됩니다.
-
-</details>
 
 ### 포터블판 실행
 
