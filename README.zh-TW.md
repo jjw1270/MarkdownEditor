@@ -10,8 +10,6 @@ MarkDownEditor 是適用於 Windows 10 和 11 的 Markdown 檢視器與編輯器
 
 [한국어](README.ko.md) · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### [Windows 安裝程式](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [可攜式 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[查看更新內容](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
-
 ![預覽 — 繁體中文介面](docs/images/zh-TW/preview.png)
 
 ## 功能
