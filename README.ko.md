@@ -10,8 +10,6 @@ MarkDownEditor는 Windows 10·11용 마크다운 뷰어 겸 에디터입니다. 
 
 **한국어** · [English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português (Brasil)](README.pt-BR.md)
 
-### [Windows 설치판](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-Setup-x64.exe) &nbsp;·&nbsp; [포터블 ZIP](https://github.com/jjw1270/MarkdownEditor/releases/latest/download/MarkDownEditor-standalone.zip) &nbsp;·&nbsp; <sub>[바뀐 점 보기](https://github.com/jjw1270/MarkdownEditor/releases/latest)</sub>
-
 ![미리보기 — 한국어 UI](docs/images/ko/preview.png)
 
 ---
