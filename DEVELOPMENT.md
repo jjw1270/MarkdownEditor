@@ -147,7 +147,7 @@ The following suites are intentionally not part of every UI-only change. They re
 .\tests\TitlebarE2E.ps1
 ```
 
-The latest release matrix is recorded in [QA_REPORT_2026-07-30.md](QA_REPORT_2026-07-30.md).
+The latest release matrix is recorded in [docs/qa/QA_REPORT_2026-08-01.md](docs/qa/QA_REPORT_2026-08-01.md).
 
 ## Release packages
 

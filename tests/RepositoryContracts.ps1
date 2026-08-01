@@ -12,6 +12,7 @@ $global = Get-Content -LiteralPath (Join-Path $repoRoot "global.json") -Raw | Co
 $update = Get-Content -LiteralPath (Join-Path $repoRoot "src\MainWindow.Update.cs") -Raw
 $window = Get-Content -LiteralPath (Join-Path $repoRoot "src\MainWindow.xaml.cs") -Raw
 $appJs = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\app.js") -Raw
+$i18n = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\i18n.js") -Raw
 $indexHtml = Get-Content -LiteralPath (Join-Path $repoRoot "src\web\index.html") -Raw
 $installer = Get-Content -LiteralPath (Join-Path $repoRoot "installer\MarkDownEditor.iss") -Raw
 $site = Get-Content -LiteralPath (Join-Path $repoRoot "docs\index.html") -Raw
@@ -38,6 +39,13 @@ Assert-True ($update.Contains('$installed = $installer.ExitCode -eq 0')) "Instal
 Assert-True ($appJs.Contains("TITLEBAR_DRAG_THRESHOLD_SQ")) "Titlebar drag threshold is missing."
 Assert-True ($appJs.Contains("function onDocumentWheel")) "Document-only Ctrl+wheel zoom is missing."
 Assert-True ($appJs.Contains("setDocumentZoom(100)")) "Document zoom reset is missing."
+Assert-True ($indexHtml.Contains('id="zoomPopup"') -and $indexHtml.Contains('aria-controls="zoomPopup"')) `
+    "Document zoom popup markup or trigger relationship is missing."
+Assert-True ($appJs.Contains("els.zoomOutBtn.addEventListener('click', () => adjustDocumentZoom(-1))") -and `
+             $appJs.Contains("els.zoomInBtn.addEventListener('click', () => adjustDocumentZoom(1))")) `
+    "Document zoom popup adjustment controls are missing."
+Assert-True (([regex]::Matches($i18n, 'zoomAdjustTitle:')).Count -eq 10) `
+    "Document zoom popup labels must cover all UI locales."
 Assert-True ($appJs.Contains("function showShortcutPopup")) "Keyboard shortcut viewer is missing."
 Assert-True ($indexHtml.Contains('id="shortcutOverlay"')) "Keyboard shortcut dialog markup is missing."
 Assert-True ($indexHtml -match '(?s)<header id="bar">.*id="shortcutsBtn".*</header>') `

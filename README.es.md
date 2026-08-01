@@ -34,7 +34,7 @@ MarkDownEditor es un visor y editor de Markdown para Windows 10 y 11. Está disp
 - **Detección de codificación coreana** — los archivos CP949/EUC-KR sin BOM se abren correctamente junto con UTF-8.
 - **Tema oscuro / claro** — se alterna con el botón `🌙`/`☀` de la barra de título, se recuerda entre sesiones e incluye la barra de título de Windows.
 - **Interfaz en 10 idiomas** — 한국어, English, 日本語, 简体中文, 繁體中文, Español, Français, Deutsch, Русский, Português. Sigue el idioma del sistema por defecto; cámbialo cuando quieras desde el botón `🌐`.
-- **Zoom solo del documento** — `Ctrl+rueda` cambia el texto de la vista previa y del editor sin ampliar pestañas ni barras. Haz clic en el porcentaje o pulsa `Ctrl+0` para volver al 100 %; el nivel se conserva entre ejecuciones.
+- **Zoom solo del documento** — `Ctrl+rueda` cambia el texto de la vista previa y del editor sin ampliar pestañas ni barras. Haz clic en el porcentaje para abrir los controles `−`/`+`; haz clic en el valor central o pulsa `Ctrl+0` para volver al 100 %. El nivel se conserva entre ejecuciones.
 - **Referencia de atajos** — usa el botón de teclado de la barra de título o `Ctrl+/` para consultar los atajos principales sin salir del documento.
 - **Interfaz compacta estilo Bloc de notas** — pestañas y herramientas integradas en una barra de título personalizada (arrastra la zona vacía para mover, doble clic para maximizar).
 

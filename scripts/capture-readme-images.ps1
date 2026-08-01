@@ -14,6 +14,10 @@ if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
     $OutputRoot = Join-Path $repoRoot "docs\images"
 }
 if (-not (Test-Path -LiteralPath $AppPath -PathType Leaf)) { throw "App not found: $AppPath" }
+$runningApps = @(Get-Process MarkDownEditor -ErrorAction SilentlyContinue)
+if ($runningApps.Count -gt 0) {
+    throw "Close every running MarkDownEditor instance before capturing localized images."
+}
 
 Add-Type -AssemblyName System.Drawing
 $nativeSource = @'
@@ -130,9 +134,10 @@ try {
             Start-Sleep -Seconds 3
             Save-WindowImage $handle (Join-Path $localeOutput "preview.png")
 
-            # 언어 버튼은 우측 창 제어 버튼 묶음의 왼쪽에 있으며 CSS 좌표를 실제 픽셀로 환산한다.
+            # 언어 버튼은 테마와 단축키 버튼 사이에 있다. 우측 창 버튼 묶음까지의
+            # 현재 CSS 폭을 반영해 좌표를 실제 픽셀로 환산한다.
             [ReadmeCaptureNative]::SetCursorPos(
-                $rect.Right - [int](154 * $scale), $rect.Top + [int](24 * $scale)) | Out-Null
+                $rect.Right - [int](207 * $scale), $rect.Top + [int](24 * $scale)) | Out-Null
             [ReadmeCaptureNative]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
             [ReadmeCaptureNative]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
             # 메뉴를 연 뒤 포인터를 문서로 옮겨 언어 버튼의 hover 툴팁이 캡처에 남지 않게 한다.

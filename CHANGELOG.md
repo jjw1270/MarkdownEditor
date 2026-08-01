@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.3 — 2026-08-01
+
+- **Direct zoom controls** — clicking the document percentage now opens compact minus, reset, and plus controls while keeping the existing keyboard and wheel shortcuts.
+- **Accessible popup behavior** — the zoom controls expose their state to assistive technology, disable at the 50% and 200% limits, and close on Escape, outside click, focus loss, resize, or window deactivation.
+- **Zoom regression coverage** — the running WebView2 suite now verifies popup focus, increments, limits, dismissal, viewport placement, and minimum target sizes.
+- **QA report organization** — moved dated QA reports from the repository root into `docs/qa` and documented the location for future reports.
+
 ## 1.3.2 — 2026-07-30
 
 - **Document-only zoom** — `Ctrl+Wheel`, `Ctrl++`, and `Ctrl+-` now resize preview and editor text without scaling tabs, toolbars, dialogs, or other application chrome.

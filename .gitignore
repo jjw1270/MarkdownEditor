@@ -11,12 +11,12 @@ theme.txt
 zoom.txt
 
 # 배포 폴더·압축본 (릴리스는 GitHub Releases로 배포)
-MarkDownEditor-standalone/
+/MarkDownEditor-standalone/
 *.zip
-artifacts/
+/artifacts/
 
 # 임시 QA 산출물
-qa/
+/qa/
 
 # 로컬 도구 설정
 .claude/

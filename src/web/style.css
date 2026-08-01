@@ -266,7 +266,7 @@ body {
 }
 .tab-new svg { display: block; }
 
-/* 문서 배율 표시를 누르면 즉시 100%로 돌아간다. 상단 UI 자체는 확대하지 않는다. */
+/* 문서 배율 표시는 조절 팝업의 진입점이다. 상단 UI 자체는 확대하지 않는다. */
 #tabrow > #zoomBtn {
   width: 46px;
   padding: 0 4px;
@@ -275,6 +275,47 @@ body {
   font-variant-numeric: tabular-nums;
 }
 #zoomBtn.zoomed { color: var(--accent); }
+
+/* 배율 조절기는 탭 줄 공간을 차지하지 않는 가벼운 flyout이다. */
+#zoomPopup {
+  position: fixed;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--bar);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  user-select: none;
+}
+#zoomPopup[hidden] { display: none; }
+#zoomPopup button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+#zoomPopup button:hover { background: var(--btn-hover); color: var(--fg); }
+#zoomPopup button:active { background: var(--btn-press); }
+#zoomPopup button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#zoomPopup button:disabled { opacity: .35; cursor: default; background: transparent; }
+#zoomPopup #zoomResetBtn {
+  width: 52px;
+  padding: 0 5px;
+  color: var(--muted);
+  font: 11.5px/1 "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+#zoomPopup #zoomResetBtn.zoomed { color: var(--accent); }
 
 /* 서식 바 (편집 모드 전용) — 툴바와 같은 플랫 톤, 그룹은 얇은 구분선으로 */
 #fmtbar {
@@ -793,7 +834,7 @@ main { flex: 1; min-height: 0; position: relative; display: flex; }
     --hl-fn: #8250df;
     --hl-attr: #953800;
   }
-  #bar, #tabs, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox, #shortcutOverlay, #updOverlay { display: none !important; }
+  #bar, #tabs, #zoomPopup, #findbar, #fmtbar, #tocRail, #toc, #editor, #toast, #lightbox, #shortcutOverlay, #updOverlay { display: none !important; }
   ::highlight(mdfind), ::highlight(mdfind-cur) { background-color: transparent; }   /* 찾기 표시는 인쇄 제외 */
   html, body { height: auto; }
   main { display: block; }

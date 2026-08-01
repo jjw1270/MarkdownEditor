@@ -104,7 +104,8 @@
       </svg>
     </button>
     <div class="spacer"></div>
-    <button id="zoomBtn" title="문서 배율 초기화 (Ctrl+0)"><span id="zoomPct">100%</span></button>
+    <button id="zoomBtn" title="문서 배율 조정" aria-haspopup="dialog" aria-expanded="false"
+            aria-controls="zoomPopup"><span id="zoomPct">100%</span></button>
     <button id="toggleBtn" title="편집/미리보기 전환 (Ctrl+E)">
       <svg class="ic-edit" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M9.9 3.2l2.9 2.9-7.2 7.2-3.6 1 1-3.6zM8.8 4.3l2.9 2.9"
@@ -131,6 +132,21 @@
         <path d="M9.1 2.4v3.4h3.4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
         <path d="M8 7.3v3.2M6.5 9.1 8 10.7l1.5-1.6" stroke="currentColor" stroke-width="1.5"
               stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 현재 배율 버튼에 붙는 비모달 조절기. 상단 줄을 넓히지 않고 필요할 때만 표시한다. -->
+  <div id="zoomPopup" role="dialog" aria-label="문서 배율 조정" hidden>
+    <button id="zoomOutBtn" title="문서 축소 (Ctrl+-)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button id="zoomResetBtn" title="문서 배율 초기화 (Ctrl+0)"><span id="zoomPopupPct">100%</span></button>
+    <button id="zoomInBtn" title="문서 확대 (Ctrl++)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
   </div>

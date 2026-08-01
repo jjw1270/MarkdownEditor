@@ -97,6 +97,33 @@ const chromeAndZoom = await evaluate(`(() => {
   const createdOnce = tabs.length === originalCount + 1 && activeId !== originalId;
   closeTab(activeId);
 
+  els.zoomBtn.click();
+  const zoomPopup = {
+    opened: !els.zoomPopup.hidden,
+    expanded: els.zoomBtn.getAttribute('aria-expanded') === 'true',
+    firstFocused: document.activeElement === els.zoomOutBtn,
+    groupLabel: els.zoomPopup.getAttribute('aria-label'),
+    triggerLabel: els.zoomBtn.getAttribute('aria-label'),
+    anchor: rect(els.zoomBtn), popup: rect(els.zoomPopup),
+    outButton: rect(els.zoomOutBtn), resetButton: rect(els.zoomResetBtn), inButton: rect(els.zoomInBtn),
+  };
+  els.zoomInBtn.click();
+  zoomPopup.increased = documentZoom === 110 && els.zoomPct.textContent === '110%'
+    && els.zoomPopupPct.textContent === '110%';
+  els.zoomResetBtn.click();
+  zoomPopup.reset = documentZoom === 100 && els.zoomPopupPct.textContent === '100%';
+  setDocumentZoom(DOCUMENT_ZOOM_MIN);
+  zoomPopup.minDisabled = els.zoomOutBtn.disabled && !els.zoomInBtn.disabled;
+  setDocumentZoom(DOCUMENT_ZOOM_MAX);
+  zoomPopup.maxDisabled = els.zoomInBtn.disabled && !els.zoomOutBtn.disabled;
+  setDocumentZoom(100);
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+  zoomPopup.escapeClosed = els.zoomPopup.hidden && els.zoomBtn.getAttribute('aria-expanded') === 'false'
+    && document.activeElement === els.zoomBtn;
+  els.zoomBtn.click();
+  els.preview.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  zoomPopup.outsideClosed = els.zoomPopup.hidden && els.zoomBtn.getAttribute('aria-expanded') === 'false';
+
   setMode(true);
   els.editor.focus();
   openLightbox('data:image/gif;base64,R0lGODlhAQABAAAAACw=');
@@ -141,7 +168,7 @@ const chromeAndZoom = await evaluate(`(() => {
   setMode(false);
   document.dispatchEvent(new KeyboardEvent('keydown', { key: '0', ctrlKey: true, bubbles: true, cancelable: true }));
   return {
-    initial, afterPreviewZoom, toolbarWheelZoom, editorFont, createdOnce, shortcutDialog,
+    initial, afterPreviewZoom, toolbarWheelZoom, editorFont, createdOnce, zoomPopup, shortcutDialog,
     resetZoom: documentZoom, resetLabel: els.zoomPct.textContent,
     plusParent: els.newTabBtn.parentElement && els.newTabBtn.parentElement.id,
   };
@@ -149,6 +176,22 @@ const chromeAndZoom = await evaluate(`(() => {
 
 if (chromeAndZoom.plusParent !== 'tabrow') throw new Error(`new button is not fixed in tab row: ${chromeAndZoom.plusParent}`);
 if (!chromeAndZoom.createdOnce) throw new Error('new-document button did not create exactly one tab');
+if (!chromeAndZoom.zoomPopup.opened || !chromeAndZoom.zoomPopup.expanded
+    || !chromeAndZoom.zoomPopup.firstFocused || !chromeAndZoom.zoomPopup.groupLabel
+    || !chromeAndZoom.zoomPopup.triggerLabel || !chromeAndZoom.zoomPopup.increased
+    || !chromeAndZoom.zoomPopup.reset || !chromeAndZoom.zoomPopup.minDisabled
+    || !chromeAndZoom.zoomPopup.maxDisabled || !chromeAndZoom.zoomPopup.escapeClosed
+    || !chromeAndZoom.zoomPopup.outsideClosed)
+  throw new Error(`document zoom popup contract failed: ${JSON.stringify(chromeAndZoom.zoomPopup)}`);
+if (chromeAndZoom.zoomPopup.popup.top < chromeAndZoom.zoomPopup.anchor.bottom
+    || chromeAndZoom.zoomPopup.popup.left < 0
+    || chromeAndZoom.zoomPopup.popup.right > chromeAndZoom.initial.innerWidth)
+  throw new Error(`document zoom popup placement failed: ${JSON.stringify(chromeAndZoom.zoomPopup)}`);
+for (const target of ['outButton', 'resetButton', 'inButton']) {
+  const rect = chromeAndZoom.zoomPopup[target];
+  if (rect.width < 24 || rect.height < 24)
+    throw new Error(`document zoom popup target is too small: ${target}=${JSON.stringify(rect)}`);
+}
 if (!chromeAndZoom.shortcutDialog.opened || !chromeAndZoom.shortcutDialog.closed
     || chromeAndZoom.shortcutDialog.rows < 16 || !chromeAndZoom.shortcutDialog.title
     || !chromeAndZoom.shortcutDialog.closeFocused || !chromeAndZoom.shortcutDialog.focusRestored

@@ -6,6 +6,11 @@ const els = {
   newTabBtn: document.getElementById('newTabBtn'),
   zoomBtn: document.getElementById('zoomBtn'),
   zoomPct: document.getElementById('zoomPct'),
+  zoomPopup: document.getElementById('zoomPopup'),
+  zoomOutBtn: document.getElementById('zoomOutBtn'),
+  zoomResetBtn: document.getElementById('zoomResetBtn'),
+  zoomPopupPct: document.getElementById('zoomPopupPct'),
+  zoomInBtn: document.getElementById('zoomInBtn'),
   preview: document.getElementById('preview'),
   editor: document.getElementById('editor'),
   bar: document.getElementById('bar'),
@@ -169,12 +174,20 @@ function normalizeDocumentZoom(value) {
 }
 
 function updateDocumentZoomUi() {
-  if (!els.zoomBtn || !els.zoomPct) return;
+  if (!els.zoomBtn || !els.zoomPct || !els.zoomPopupPct) return;
   els.zoomPct.textContent = `${documentZoom}%`;
+  els.zoomPopupPct.textContent = `${documentZoom}%`;
   els.zoomBtn.classList.toggle('zoomed', documentZoom !== 100);
+  els.zoomResetBtn.classList.toggle('zoomed', documentZoom !== 100);
+  els.zoomOutBtn.disabled = documentZoom <= DOCUMENT_ZOOM_MIN;
+  els.zoomInBtn.disabled = documentZoom >= DOCUMENT_ZOOM_MAX;
   const current = typeof L.zoomCurrent === 'function'
     ? L.zoomCurrent(documentZoom) : `${documentZoom}%`;
-  setTitle(els.zoomBtn, `${current} — ${L.zoomResetTitle}`);
+  setTitle(els.zoomBtn, `${current} — ${L.zoomAdjustTitle}`);
+  setTitle(els.zoomOutBtn, L.zoomOutTitle);
+  setTitle(els.zoomResetBtn, `${current} — ${L.zoomResetTitle}`);
+  setTitle(els.zoomInBtn, L.zoomInTitle);
+  els.zoomPopup.setAttribute('aria-label', L.zoomAdjustTitle);
 }
 
 function setDocumentZoom(value, persist = true) {
@@ -206,6 +219,31 @@ function setDocumentZoom(value, persist = true) {
 
 function adjustDocumentZoom(direction) {
   setDocumentZoom(documentZoom + Math.sign(direction) * DOCUMENT_ZOOM_STEP);
+}
+
+function positionZoomPopup() {
+  if (els.zoomPopup.hidden) return;
+  const anchor = els.zoomBtn.getBoundingClientRect();
+  const popup = els.zoomPopup.getBoundingClientRect();
+  const centered = anchor.left + (anchor.width - popup.width) / 2;
+  els.zoomPopup.style.left = Math.max(4, Math.min(centered, window.innerWidth - popup.width - 4)) + 'px';
+  els.zoomPopup.style.top = Math.max(4, Math.min(anchor.bottom + 4, window.innerHeight - popup.height - 4)) + 'px';
+}
+
+function showZoomPopup() {
+  if (!els.zoomPopup.hidden) return;
+  hideTabMenu();
+  els.zoomPopup.hidden = false;
+  els.zoomBtn.setAttribute('aria-expanded', 'true');
+  positionZoomPopup();
+  (els.zoomOutBtn.disabled ? els.zoomResetBtn : els.zoomOutBtn).focus();
+}
+
+function hideZoomPopup(restoreFocus = false) {
+  if (els.zoomPopup.hidden) return;
+  els.zoomPopup.hidden = true;
+  els.zoomBtn.setAttribute('aria-expanded', 'false');
+  if (restoreFocus) els.zoomBtn.focus();
 }
 
 // ---- 문서 내비게이션(뒤로/앞으로) : 방문한 탭 순서를 기록 (VS Code 식) ----
@@ -989,7 +1027,25 @@ function newDoc() {
 }
 
 els.newTabBtn.addEventListener('click', newDoc);
-els.zoomBtn.addEventListener('click', () => setDocumentZoom(100));
+els.zoomBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (els.zoomPopup.hidden) showZoomPopup();
+  else hideZoomPopup();
+});
+els.zoomOutBtn.addEventListener('click', () => adjustDocumentZoom(-1));
+els.zoomResetBtn.addEventListener('click', () => setDocumentZoom(100));
+els.zoomInBtn.addEventListener('click', () => adjustDocumentZoom(1));
+els.zoomPopup.addEventListener('click', (e) => e.stopPropagation());
+els.zoomPopup.addEventListener('focusout', () => {
+  setTimeout(() => {
+    if (!els.zoomPopup.contains(document.activeElement) && document.activeElement !== els.zoomBtn) hideZoomPopup();
+  }, 0);
+});
+document.addEventListener('pointerdown', (e) => {
+  if (!els.zoomPopup.hidden && !els.zoomPopup.contains(e.target) && !els.zoomBtn.contains(e.target)) hideZoomPopup();
+}, true);
+window.addEventListener('blur', () => hideZoomPopup());
+window.addEventListener('resize', () => hideZoomPopup());
 
 // ---- 파일 동작 ----
 function save() {
@@ -1376,8 +1432,10 @@ function showShortcutPopup() {
   if (!els.shortcutOverlay.hidden) return;
   const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const focusWasInTransientUi = previousFocus && (
-    els.updOverlay.contains(previousFocus) || els.ctxmenu.contains(previousFocus) || els.lightbox.contains(previousFocus));
+    els.updOverlay.contains(previousFocus) || els.ctxmenu.contains(previousFocus)
+    || els.zoomPopup.contains(previousFocus) || els.lightbox.contains(previousFocus));
   hideTabMenu();
+  hideZoomPopup();
   if (!els.lightbox.hidden) closeLightbox();
   if (!els.updOverlay.hidden) hideUpdatePopup();
   shortcutReturnFocus = focusWasInTransientUi ? els.shortcutsBtn : (previousFocus || els.shortcutsBtn);
@@ -2044,6 +2102,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !els.updOverlay.hidden) { e.preventDefault(); hideUpdatePopup(); return; }
   // 우클릭 메뉴가 열려 있으면 Esc로 닫기
   if (e.key === 'Escape' && !els.ctxmenu.hidden) { e.preventDefault(); hideTabMenu(); return; }
+  // 배율 조절기는 비모달이므로 Esc로 닫고 진입점에 포커스를 돌려준다.
+  if (e.key === 'Escape' && !els.zoomPopup.hidden) { e.preventDefault(); hideZoomPopup(true); return; }
   // 찾기 바가 열려 있으면 Esc로 닫기 (포커스가 에디터 등 어디에 있든)
   if (e.key === 'Escape' && !els.findbar.hidden) { e.preventDefault(); closeFind(); return; }
   // 문서 내비게이션 (Alt+← / Alt+→)
